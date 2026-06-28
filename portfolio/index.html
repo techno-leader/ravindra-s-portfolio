@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ravindra Bhanawat — Product & Conversion Designer</title>
+  <meta name="description" content="Product & Conversion Designer. I turn landing pages into profitable growth engines. +222% CVR, +314% EPV.">
+  <meta property="og:title" content="Ravindra Bhanawat — Product & Conversion Designer">
+  <meta property="og:description" content="Product designer working at the intersection of persuasion, trust architecture, and craft.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F9F7F4;
+      --bg-white:     #FFFFFF;
+      --text:         #1A1A1A;
+      --text-muted:   #6B6560;
+      --text-subtle:  #A09890;
+      --accent:       #C8922A;
+      --accent-light: #F5E9D5;
+      --border:       #E5E0D8;
+      --border-strong:#C8C0B4;
+
+      --font-ui:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+      --max-w: 1200px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2.5rem;
+      background: var(--bg);
+      border-bottom: 1px solid transparent;
+      transition: border-color 250ms ease, background 250ms ease;
+    }
+    .nav.is-scrolled {
+      border-color: var(--border);
+      background: rgba(249, 247, 244, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .nav-brand {
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 150ms ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── LAYOUT ──────────────────────────────────────── */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    /* ── HERO ────────────────────────────────────────── */
+    .hero {
+      padding: clamp(5rem, 14vw, 11rem) 0 clamp(4rem, 9vw, 8rem);
+      max-width: 860px;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(3.25rem, 7.5vw, 6.5rem);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-body {
+      font-size: clamp(1rem, 1.6vw, 1.125rem);
+      color: var(--text-muted);
+      max-width: 460px;
+      margin-bottom: 2.75rem;
+      line-height: 1.75;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: var(--text);
+      color: var(--bg);
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      transition: background 200ms ease, transform 200ms ease;
+    }
+    .btn:hover {
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+    .btn-arrow {
+      font-size: 1rem;
+      transition: transform 200ms ease;
+    }
+    .btn:hover .btn-arrow { transform: translateX(3px); }
+
+    /* ── WORK SECTION ────────────────────────────────── */
+    .section { padding: clamp(4rem, 8vw, 7rem) 0; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 2.75rem;
+    }
+
+    /* Featured project — editorial horizontal card */
+    .project-featured {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+      margin-bottom: 1.25rem;
+    }
+    .project-featured:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(26, 26, 26, 0.08);
+      border-color: var(--border-strong);
+    }
+    .project-featured-body {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 3rem;
+      padding: 3rem;
+      align-items: start;
+    }
+    .project-tag {
+      font-size: 0.695rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-bottom: 0.875rem;
+    }
+    .project-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.875rem;
+      color: var(--text);
+    }
+    .project-desc {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .project-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding-top: 0.25rem;
+    }
+    .stat-item {}
+    .stat-value {
+      display: block;
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      font-feature-settings: 'tnum';
+    }
+    .stat-label {
+      display: block;
+      font-size: 0.695rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+      margin-top: 0.3rem;
+    }
+    .project-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 3rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color 200ms ease;
+    }
+    .project-featured:hover .project-footer { color: var(--accent); }
+    .project-footer-arrow { transition: transform 200ms ease; }
+    .project-featured:hover .project-footer-arrow { transform: translateX(4px); }
+
+    /* Secondary project grid */
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .project-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    }
+    .project-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(26, 26, 26, 0.07);
+      border-color: var(--border-strong);
+    }
+    .project-card .project-title { font-size: 1.5rem; margin-bottom: 0.625rem; }
+    .project-card-metric {
+      display: inline-block;
+      margin-top: 2rem;
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      font-feature-settings: 'tnum';
+    }
+
+    /* ── ABOUT ───────────────────────────────────────── */
+    .about-section {
+      border-top: 1px solid var(--border);
+      padding: clamp(4rem, 8vw, 7rem) 0;
+    }
+    .about-text {
+      max-width: 640px;
+      font-size: clamp(1.0625rem, 1.8vw, 1.25rem);
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .about-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 2.5rem;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .footer-name {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .footer-email {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 150ms ease;
+    }
+    .footer-email:hover { color: var(--accent); }
+    .footer-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 150ms ease;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── ENTRANCE ANIMATIONS ─────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 80ms; }
+    .reveal-delay-2 { transition-delay: 160ms; }
+    .reveal-delay-3 { transition-delay: 240ms; }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .project-featured-body {
+        grid-template-columns: 1fr;
+        padding: 2.25rem;
+      }
+      .project-stats {
+        flex-direction: row;
+        gap: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+      }
+      .project-footer { padding: 1rem 2.25rem; }
+    }
+    @media (max-width: 640px) {
+      .nav { padding: 1rem 1.25rem; }
+      .container { padding: 0 1.25rem; }
+      .project-grid { grid-template-columns: 1fr; }
+      .project-stats { flex-wrap: wrap; }
+      footer {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1.5rem 1.25rem;
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      * { transition-duration: 0ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="main-nav" role="navigation" aria-label="Main">
+  <a href="index.html" class="nav-brand">Ravindra Bhanawat</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="mailto:singhravindrapratap812@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="container">
+
+    <section class="hero" aria-labelledby="hero-headline">
+      <p class="hero-eyebrow reveal">Product &amp; Conversion Designer</p>
+      <h1 class="hero-headline reveal reveal-delay-1" id="hero-headline">
+        Design that<br><em>converts.</em>
+      </h1>
+      <p class="hero-body reveal reveal-delay-2">
+        I work at the intersection of trust architecture, visual hierarchy,
+        and paid traffic. My work is measured in CVR and ROAS,
+        not just pixels. Currently open to senior IC roles.
+      </p>
+      <a href="#work" class="btn reveal reveal-delay-3">
+        View Work <span class="btn-arrow" aria-hidden="true">→</span>
+      </a>
+    </section>
+
+    <section class="section" id="work" aria-labelledby="work-label">
+      <p class="section-label reveal" id="work-label">Selected Work</p>
+
+      <a href="viewryt.html" class="project-featured reveal" aria-label="ViewRyt — The Ayurveda Experience. Landing page redesign. +222% CVR, +314% EPV. View case study.">
+        <div class="project-featured-body">
+          <div>
+            <p class="project-tag">Conversion Design · E-commerce · Health Supplements</p>
+            <h2 class="project-title">ViewRyt — The Ayurveda Experience</h2>
+            <p class="project-desc">
+              Redesigned a Shopify landing page for a macular health supplement.
+              Same copy as the original. Same product. The only variable was design —
+              and it turned a money-losing campaign profitable.
+            </p>
+          </div>
+          <div class="project-stats" aria-label="Key metrics">
+            <div class="stat-item">
+              <span class="stat-value">+222%</span>
+              <span class="stat-label">CVR</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">+314%</span>
+              <span class="stat-label">EPV</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">1.06×</span>
+              <span class="stat-label">ROAS</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-footer">
+          View Case Study <span class="project-footer-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+
+      <div class="project-grid">
+        <a href="#" class="project-card reveal reveal-delay-1" aria-label="IRBS Portal — IIT Guwahati. Design system and portal. 200+ students daily.">
+          <p class="project-tag">Design System · Portal · Education</p>
+          <h2 class="project-title">IRBS Portal</h2>
+          <p class="project-desc">
+            Room booking system redesign for IIT Guwahati.
+            Replaced a broken legacy flow used by 15+ student clubs.
+          </p>
+          <span class="project-card-metric">200+ students daily</span>
+        </a>
+        <a href="#" class="project-card reveal reveal-delay-2" aria-label="Nail n Mane HK — Localisation and conversion design. SGD 19,595 revenue.">
+          <p class="project-tag">Localisation · Conversion Design · Hong Kong</p>
+          <h2 class="project-title">Nail n Mane HK</h2>
+          <p class="project-desc">
+            Chinese-market landing page designed from the ground up.
+            Localised trust signals, layout, and copy for HK buyers.
+          </p>
+          <span class="project-card-metric">SGD 19,595 revenue</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="about-section" id="about" aria-labelledby="about-label">
+      <p class="section-label reveal" id="about-label">About</p>
+      <p class="about-text reveal">
+        I design for <strong>the moment someone decides to buy</strong> — not just
+        for the moment they arrive. Most designers optimize for aesthetics or
+        usability. I optimize for both, and then I check the numbers.
+        Based in India. Available for senior IC roles globally.
+      </p>
+    </section>
+
+  </div><!-- /container -->
+</main>
+
+<footer role="contentinfo">
+  <div class="footer-left">
+    <span class="footer-name">Ravindra Bhanawat</span>
+    <a href="mailto:singhravindrapratap812@gmail.com" class="footer-email">singhravindrapratap812@gmail.com</a>
+  </div>
+  <ul class="footer-links">
+    <li><a href="https://github.com/docnps95" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+    <li><a href="https://bhanawatravindra.framer.website" target="_blank" rel="noopener noreferrer">Framer</a></li>
+  </ul>
+</footer>
+
+<script>
+  const nav = document.getElementById('main-nav');
+  let ticking = false;
+
+  function onScroll() {
+    nav.classList.toggle('is-scrolled', window.scrollY > 24);
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.08, rootMargin: '0px 0px -32px 0px' }
+  );
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
