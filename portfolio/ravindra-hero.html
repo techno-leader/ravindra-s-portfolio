@@ -39,7 +39,7 @@
   nav .links{display:flex;gap:28px;}
   nav a{color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;}
   nav a:hover{opacity:1;}
-  nav .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;color:var(--mut);}
+  nav .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;color:var(--mut);}
 
   /* ---------- hero copy ---------- */
   .hero{
@@ -69,8 +69,8 @@
     letter-spacing:-.01em;
   }
   .sub{
-    margin-top:34px;
-    font-size:15px;line-height:1.6;color:var(--mut);max-width:36ch;
+    margin-top:30px;
+    font-size:18px;line-height:1.6;color:var(--mut);max-width:42ch;
   }
   .meta-row{
     position:fixed;left:44px;right:44px;bottom:32px;z-index:20;
@@ -112,8 +112,8 @@
   .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:24px;}
   .sec-head h2{font-family:"Space Grotesk","Inter",sans-serif;font-size:clamp(30px,4vw,54px);letter-spacing:-.03em;font-weight:600;}
   h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:#6a58e0;}
-  .mono-label{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;letter-spacing:.26em;color:var(--lav);text-transform:uppercase;}
-  .sec-intro{color:var(--mut);font-size:15px;line-height:1.65;max-width:52ch;margin-bottom:20px;}
+  .mono-label{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;letter-spacing:.24em;color:var(--lav);text-transform:uppercase;}
+  .sec-intro{color:var(--mut);font-size:18px;line-height:1.65;max-width:58ch;margin-bottom:20px;}
 
   /* ---- case studies ---- */
   .case{
@@ -121,39 +121,39 @@
     padding:84px 0;border-top:1px solid #eceaf6;
   }
   .case.flip .case-visual{order:-1;}
-  .case-idx{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.26em;color:var(--lav);margin-bottom:14px;}
+  .case-idx{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.24em;color:var(--lav);margin-bottom:16px;}
   .case h3{font-family:"Space Grotesk","Inter",sans-serif;font-size:clamp(26px,3vw,40px);letter-spacing:-.025em;font-weight:600;margin-bottom:14px;}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
   .chip{
-    font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.08em;color:var(--mut);
-    border:1px solid #e7e4f6;border-radius:999px;padding:6px 12px;text-transform:uppercase;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.06em;color:var(--mut);
+    border:1px solid #e7e4f6;border-radius:999px;padding:7px 14px;text-transform:uppercase;
   }
-  .case p{color:var(--mut);font-size:15px;line-height:1.7;margin-bottom:16px;max-width:52ch;}
+  .case p{color:var(--mut);font-size:18px;line-height:1.62;margin-bottom:20px;max-width:50ch;}
   .case p strong{color:var(--ink);font-weight:600;}
   .did{list-style:none;margin:0 0 26px;}
   .did li{
-    position:relative;padding-left:22px;margin-bottom:9px;
-    color:var(--mut);font-size:14.5px;line-height:1.6;
+    position:relative;padding-left:22px;margin-bottom:10px;
+    color:var(--mut);font-size:16px;line-height:1.6;
   }
   .did li::before{content:"→";position:absolute;left:0;color:var(--lav);}
-  .metrics{display:flex;gap:36px;border-top:1px solid #eceaf6;padding-top:22px;}
+  .metrics{display:flex;flex-wrap:wrap;gap:28px 40px;border-top:1px solid #eceaf6;padding-top:24px;margin-top:4px;}
   .metric b{display:block;font-size:clamp(24px,2.4vw,34px);letter-spacing:-.02em;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;}
-  .metric span{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;color:var(--mut);text-transform:uppercase;}
-  .metric i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#b7b2cc;margin-top:3px;letter-spacing:.04em;}
+  .metric span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--mut);text-transform:uppercase;}
+  .metric i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b7b2cc;margin-top:5px;letter-spacing:.02em;}
 
   /* ---- craft lab ---- */
-  .lab{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px;padding-bottom:60px;}
+  .lab{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:32px;padding-bottom:60px;}
   .tile{
-    position:relative;border:1px solid #eceaf6;border-radius:18px;background:#fdfcff;
-    min-height:240px;display:flex;flex-direction:column;overflow:hidden;
+    position:relative;border:1px solid #eceaf6;border-radius:20px;background:#fdfcff;
+    min-height:264px;display:flex;flex-direction:column;overflow:hidden;
     transition:transform .55s cubic-bezier(.22,1,.36,1),box-shadow .55s ease,border-color .3s ease;
   }
   .tile:hover{transform:translateY(-5px);border-color:#ded9fa;box-shadow:0 24px 48px -26px rgba(106,88,224,.28);}
-  .tile .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:38px 20px;
+  .tile .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:44px 24px;
     background:radial-gradient(circle at 1px 1px,rgba(143,127,240,.10) 1px,transparent 1.6px) 0 0/12px 12px;}
-  .tile .cap{border-top:1px solid #eceaf6;padding:13px 18px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:#fff;}
-  .tile .cap b{font-size:12.5px;font-weight:600;letter-spacing:.01em;color:var(--ink);}
-  .tile .cap span{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#b7b2cc;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;}
+  .tile .cap{border-top:1px solid #eceaf6;padding:16px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;background:#fff;}
+  .tile .cap b{font-size:16px;font-weight:600;letter-spacing:-.005em;color:var(--ink);}
+  .tile .cap span{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b7b2cc;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;}
 
   /* 01 dithered fill button */
   .d-btn{position:relative;font:inherit;font-size:13px;padding:13px 28px;border-radius:999px;border:1px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;overflow:hidden;transition:color .3s ease .1s;}
@@ -204,7 +204,7 @@
   /* case-study link */
   .case-link{
     display:inline-flex;align-items:center;gap:10px;margin-top:26px;
-    font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;letter-spacing:.18em;
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;letter-spacing:.16em;
     text-transform:uppercase;text-decoration:none;color:var(--ink);
     border-bottom:1px solid var(--lav);padding-bottom:6px;
     transition:color .3s ease,border-color .3s ease;
@@ -320,9 +320,9 @@
 
   /* ---- about ---- */
   .about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:64px;border-top:1px solid #eceaf6;padding-top:64px;}
-  .about-grid p{color:var(--mut);font-size:16px;line-height:1.75;margin-bottom:18px;}
+  .about-grid p{color:var(--mut);font-size:18px;line-height:1.72;margin-bottom:18px;}
   .about-grid p strong{color:var(--ink);font-weight:600;}
-  .skills h4{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;margin:26px 0 12px;}
+  .skills h4{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.18em;color:var(--lav);text-transform:uppercase;margin:26px 0 14px;}
   .skills h4:first-child{margin-top:0;}
   .taglist{display:flex;flex-wrap:wrap;gap:8px;}
 
@@ -415,7 +415,7 @@
           <div class="chips">
             <span class="chip">CRO</span><span class="chip">Landing Page</span><span class="chip">Solo Designer</span><span class="chip">D2C · US Market</span>
           </div>
-          <p>A supplement landing page converting at 1.44% and losing money on every ad dollar. I redesigned it with <strong>identical copy</strong> — isolating design as the only variable — and took it from loss to profit.</p>
+          <p>A D2C supplement landing page for the US market was losing money on ads. I rebuilt it with <strong>identical copy</strong>, so design was the only variable — and turned it profitable.</p>
           <div class="metrics">
             <div class="metric"><b data-count="222" data-pre="+" data-suf="%">+0%</b><span>Conversion rate</span><i>1.44% → 4.65%</i></div>
             <div class="metric"><b data-count="314" data-pre="+" data-suf="%">+0%</b><span>Earnings / visitor</span><i>$0.36 → $1.50</i></div>
@@ -441,7 +441,7 @@
           <div class="chips">
             <span class="chip">SaaS Platform</span><span class="chip">Design + Build</span><span class="chip">Patient Retention</span>
           </div>
-          <p>Indian clinics pay ₹6,000–15,000/mo just to message patients on WhatsApp. I founded, designed and built the platform that makes that cost zero — and brings patients back automatically.</p>
+          <p>A SaaS platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month "WhatsApp tax" Indian dental clinics pay to message patients — and bring them back automatically.</p>
           <div class="metrics">
             <div class="metric"><b data-count="200" data-suf="+">0</b><span>Clinics onboard</span><i>across India</i></div>
             <div class="metric"><b data-count="30" data-pre="+" data-suf="%">+0%</b><span>Returning patients</span><i>90-day pilot data</i></div>
@@ -467,7 +467,7 @@
           <div class="chips">
             <span class="chip">Design Lead</span><span class="chip">Mobile UX</span><span class="chip">User Research</span><span class="chip">Shipped Live</span>
           </div>
-          <p>Campus room booking ran on a broken legacy portal, so students chased rooms by hand. I led the research and design of a three-step booking flow inside OneStop — live since September 2023.</p>
+          <p>A <strong>three-step room-booking flow</strong> I researched and designed for IIT Guwahati's OneStop app, replacing a broken legacy portal. Live for the campus since September 2023.</p>
           <div class="metrics">
             <div class="metric"><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span><i>NEW SAC facilities</i></div>
             <div class="metric"><b data-count="200" data-suf="+">0</b><span>Students daily</span><i>since Sept 2023</i></div>
