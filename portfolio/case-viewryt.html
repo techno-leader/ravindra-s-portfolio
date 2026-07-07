@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ViewRyt — Case Study · Ravindra Pratap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16141f;
+    --lav:#8f7ff0;
+    --lav-deep:#6a58e0;
+    --mut:#8b87a0;
+    --line:#eceaf6;
+    --paper:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:#e6e1fb;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--lav);z-index:40;width:0;}
+
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:30;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 44px;font-size:13px;
+    background:linear-gradient(rgba(255,255,255,.92),rgba(255,255,255,0));
+  }
+  nav .logo{font-weight:600;text-decoration:none;color:var(--ink);}
+  nav .links{display:flex;gap:26px;}
+  nav a{color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;}
+  nav a:hover{opacity:1;}
+  nav .back{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
+
+  header{position:relative;padding:180px 0 90px;overflow:hidden;}
+  header::before{
+    content:"";position:absolute;inset:0;z-index:-2;
+    background:radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px);
+    background-size:11px 11px;
+    -webkit-mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
+            mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
+  }
+  #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;
+       animation:orbdrift 14s ease-in-out infinite alternate;}
+  @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
+  .kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.28em;color:var(--lav);text-transform:uppercase;margin-bottom:26px;}
+  h1{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:clamp(46px,6.6vw,96px);line-height:1.0;letter-spacing:-0.035em;font-weight:600;
+    max-width:15ch;
+  }
+  h1 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);letter-spacing:-.01em;}
+  .lede{margin-top:30px;font-size:20px;line-height:1.6;color:var(--mut);max-width:48ch;}
+  .facts{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
+    border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
+  }
+  .facts small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .facts b{font-weight:500;font-size:16px;}
+
+  section{padding:84px 0 10px;}
+  .sec-label{
+    display:flex;align-items:center;gap:14px;margin-bottom:30px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.24em;color:var(--lav);text-transform:uppercase;
+  }
+  .sec-label::after{content:"";flex:1;height:1px;background:var(--line);}
+  h2{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:clamp(28px,3.6vw,46px);letter-spacing:-.03em;font-weight:600;line-height:1.1;
+    max-width:22ch;margin-bottom:22px;
+  }
+  h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  p{color:#5d5970;font-size:18px;line-height:1.7;margin-bottom:18px;max-width:62ch;}
+  p strong{color:var(--ink);font-weight:600;}
+
+  .pull{
+    font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
+    font-size:clamp(24px,3vw,38px);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
+    border-left:2px solid var(--lav);padding:6px 0 6px 30px;margin:34px 0;max-width:26ch;
+  }
+  .pull .mono{font-style:normal;display:block;font-size:12px;letter-spacing:.18em;color:var(--mut);margin-top:14px;text-transform:uppercase;}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
+  .cards.four{grid-template-columns:repeat(4,1fr);}
+  .card{
+    border:1px solid var(--line);border-radius:14px;padding:20px;
+    background:linear-gradient(160deg,#fbfaff, #f5f3fd);
+    transition:transform .45s cubic-bezier(.22,1,.36,1), border-color .3s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .card i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--lav);margin-bottom:10px;text-transform:uppercase;}
+  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em;}
+  .card p{font-size:16px;line-height:1.55;margin:0;color:var(--mut);}
+
+  .steps{counter-reset:st;margin:26px 0;}
+  .step{display:flex;gap:22px;padding:20px 0;border-top:1px solid var(--line);}
+  .step::before{
+    counter-increment:st;content:"0" counter(st);
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--lav);padding-top:3px;letter-spacing:.1em;
+  }
+  .step div b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;margin-bottom:5px;letter-spacing:-.01em;}
+  .step div p{font-size:16px;line-height:1.55;margin:0;}
+
+  figure{
+    position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:38px 0;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(143,127,240,.15) 1px, transparent 1.6px),
+      linear-gradient(150deg,#f7f5ff 0%,#efecfc 100%);
+    background-size:11px 11px, cover;
+    padding:40px;display:flex;justify-content:center;align-items:center;gap:28px;
+  }
+  figcaption{
+    position:absolute;left:20px;bottom:14px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
+  }
+
+  /* --- spend/revenue comparison viz (CSS-built) --- */
+  .duel{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .duel .side{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 24px 60px -30px rgba(64,52,150,.22);}
+  .duel h5{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:var(--mut);text-transform:uppercase;margin-bottom:16px;}
+  .duel .b .side-tag{color:var(--lav-deep);}
+  .brow{margin-bottom:14px;}
+  .brow small{display:flex;justify-content:space-between;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--mut);margin-bottom:6px;}
+  .brow .track{height:10px;background:#f0eef9;border-radius:99px;overflow:hidden;}
+  .brow .fill{height:100%;width:0;border-radius:99px;background:#d9d4f5;transition:width 1.25s cubic-bezier(.22,1,.36,1) .4s;}
+  .brow .fill.hot{background:var(--lav);}
+  figure.in .brow .fill{width:var(--w);}
+  .duel .roas{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:22px;letter-spacing:-.02em;margin-top:12px;}
+  .duel .roas small{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.14em;color:var(--mut);display:block;font-weight:400;margin-top:2px;text-transform:uppercase;}
+  .duel .loss{color:#c0574f;}
+  .duel .win{color:#2e9e5b;}
+
+  .impact{
+    border:1px solid var(--line);border-radius:24px;margin:50px 0 20px;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px),
+      linear-gradient(160deg,#faf9ff,#f3f0fd);
+    background-size:11px 11px, cover;
+    padding:54px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px;text-align:center;
+  }
+  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(40px,4.6vw,64px);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;}
+  .impact span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;}
+  .impact i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b7b2cc;margin-top:6px;}
+
+  .case-nav{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:90px 0 0;border-top:1px solid var(--line);padding:34px 0 0;
+  }
+  .case-nav a{
+    text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:24px;
+    transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .3s;
+  }
+  .case-nav a:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .case-nav small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
+  .case-nav .next{text-align:right;}
+  footer{
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--mut);
+    border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;text-transform:uppercase;
+  }
+
+  /* --- annotated phone-scroll showcase --- */
+  .scrolly{position:relative;height:560vh;}
+  .scrolly .stage{
+    position:sticky;top:0;height:100vh;
+    display:grid;grid-template-columns:360px 1fr;gap:64px;align-items:center;
+    max-width:1080px;margin:0 auto;padding:0 44px;
+  }
+  .phone-slot{display:flex;justify-content:center;}
+  .phone{
+    width:300px;flex:none;border-radius:46px;padding:12px;background:#16141f;
+    box-shadow:0 50px 110px -42px rgba(64,52,150,.5), 0 0 0 1px rgba(255,255,255,.08) inset;
+    position:relative;
+  }
+  .phone::after{
+    content:"";position:absolute;top:24px;left:50%;transform:translateX(-50%);
+    width:86px;height:22px;border-radius:99px;background:#16141f;z-index:3;
+  }
+  .screen{
+    position:relative;border-radius:35px;overflow:hidden;
+    height:min(74vh,640px);background:#fff;
+  }
+  .feed{position:absolute;left:0;top:0;width:100%;will-change:transform;}
+  .feed img{display:block;width:100%;}
+  .phone .pbar{
+    position:absolute;right:-14px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;
+  }
+  .phone .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:99px;}
+  .ann-rail .ann-head{
+    font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.24em;color:var(--mut);
+    text-transform:uppercase;margin-bottom:18px;
+  }
+  .ann{
+    position:relative;padding:14px 0 14px 34px;border-left:1px solid var(--line);
+    opacity:.32;transition:opacity .45s ease;
+  }
+  .ann::before{
+    content:"";position:absolute;left:-4.5px;top:22px;width:8px;height:8px;border-radius:99px;
+    background:#d9d4f5;transition:background .3s, box-shadow .3s;
+  }
+  .ann.on{opacity:1;}
+  .ann.on::before{background:var(--lav);box-shadow:0 0 0 5px rgba(143,127,240,.18);}
+  .ann i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;margin-bottom:5px;}
+  .ann b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15.5px;letter-spacing:-.01em;margin-bottom:4px;}
+  .ann p{font-size:13px;line-height:1.6;margin:0;color:var(--mut);max-width:44ch;}
+  .live-links{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;}
+  .live-links a{
+    font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--lav-deep);text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:8px 14px;
+    transition:border-color .3s, transform .3s;
+  }
+  .live-links a:hover{border-color:#d9d2f6;transform:translateY(-2px);}
+  @media (max-width:900px){
+    .scrolly{height:480vh;}
+    .scrolly .stage{grid-template-columns:1fr;gap:18px;align-content:center;padding:0 22px;}
+    .phone{width:230px;padding:9px;border-radius:36px;}
+    .screen{height:48vh;border-radius:28px;}
+    .phone::after{top:16px;height:16px;width:66px;}
+    .ann-rail .ann-head{display:none;}
+    .ann{display:none;padding:10px 0 0 0;border-left:none;}
+    .ann::before{display:none;}
+    .ann.on{display:block;}
+    .live-links{justify-content:center;margin-top:10px;}
+  }
+
+  .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
+      transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
+  .rv.in{opacity:1;transform:translateY(0);filter:blur(0);}
+  .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;filter:none;transition:none;}}
+
+  @media (max-width:900px){
+    .cols{grid-template-columns:1fr;gap:26px;}
+    .facts{grid-template-columns:repeat(2,1fr);}
+    .cards, .cards.four{grid-template-columns:1fr 1fr;}
+    .impact{grid-template-columns:1fr;padding:40px 30px;}
+    .duel{grid-template-columns:1fr;}
+    #orb{opacity:.4;}
+  }
+  @media (max-width:640px){
+    nav{padding:18px 22px}
+    .wrap{padding:0 22px}
+    header{padding:140px 0 60px}
+    .cards, .cards.four{grid-template-columns:1fr;}
+    figure{padding:20px;}
+    .case-nav{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav>
+  <a class="logo" href="ravindra-hero.html">Ravindra&nbsp;Pratap<span style="color:var(--lav)">.</span></a>
+  <div class="back mono">CS/01 — VIEWRYT · THE AYURVEDA EXPERIENCE</div>
+  <div class="links">
+    <a href="ravindra-hero.html#work">Work</a><a href="ravindra-hero.html#about">About</a><a href="ravindra-hero.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header>
+  <canvas id="orb" width="520" height="520"></canvas>
+  <div class="wrap">
+    <div class="kicker rv">Case Study 01 — Conversion Design · CRO</div>
+    <h1 class="rv rv-d1">Same copy. Same product. <em>Different design.</em></h1>
+    <p class="lede rv rv-d2">A landing page redesign for ViewRyt — a macular-health supplement by The Ayurveda Experience — that took paid traffic from a loss to profit without changing a single word of copy.</p>
+    <div class="facts rv rv-d2">
+      <div><small>Role</small><b>Solo Designer</b></div>
+      <div><small>Client</small><b>The Ayurveda Experience — 1.5M customers, 150+ countries</b></div>
+      <div><small>Timeline</small><b>May 2025 → May 2026</b></div>
+      <div><small>Funnel</small><b>Meta ads → Shopify · US market</b></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- PROBLEM -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">01 — The Problem</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>The old page (NLP7) converted at 1.44% — and lost money on every ad dollar.</h2>
+        </div>
+        <div class="rv rv-d1">
+          <p>ViewRyt carries the full <strong>AREDS 2 formula</strong> — the NIH clinical standard shown to reduce advanced AMD risk by 25%. A genuinely strong product. But the page presenting it returned <strong>$0.32 for every $1.00 of ad spend</strong>.</p>
+          <div class="pull">The product wasn't the problem. The page's decision architecture was.
+            <span class="mono">Diagnosis after auditing NLP7</span>
+          </div>
+        </div>
+      </div>
+      <div class="cards four rv">
+        <div class="card"><i>Fault 01</i><b>Trust buried</b><p>Authority signals and credentials sat below the fold, after the claims they were meant to support.</p></div>
+        <div class="card"><i>Fault 02</i><b>Cognitive overload</b><p>Dense information hit visitors before the first CTA — thinking hard before caring at all.</p></div>
+        <div class="card"><i>Fault 03</i><b>Invisible CTA</b><p>The buy button was visually undifferentiated from everything around it.</p></div>
+        <div class="card"><i>Fault 04</i><b>Late social proof</b><p>Reviews appeared long after the decision moment had already passed.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">02 — Principles</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Four rules for the redesign, <em>copy untouched.</em></h2>
+          <p>Keeping the copy identical made the test honest: whatever moved, <strong>design moved it</strong>. NLP8 was built on four principles.</p>
+        </div>
+        <div class="rv rv-d1">
+          <div class="cards" style="grid-template-columns:1fr;">
+            <div class="card"><i>Principle 01</i><b>Trust first</b><p>Establish authority before making a single claim.</p></div>
+            <div class="card"><i>Principle 02</i><b>Earn attention before explaining</b><p>Hook emotionally, then educate — never the reverse.</p></div>
+            <div class="card"><i>Principle 03</i><b>Decision architecture</b><p>Design the moment of choice, not just the layout around it.</p></div>
+            <div class="card"><i>Principle 04</i><b>Progressive disclosure</b><p>Detail arrives exactly when the visitor is ready for it.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY DECISIONS -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">03 — Key Decisions</div>
+      <h2 class="rv">Five moves that did <em>the heavy lifting.</em></h2>
+      <div class="steps rv rv-d1" style="max-width:760px;">
+        <div class="step"><div><b>Authority above the fold</b><p>Johns Hopkins, NIH and Yale credentials moved into the hero — before fear-based framing, not after it.</p></div></div>
+        <div class="step"><div><b>Social proof pulled up the scroll</b><p>Reviews repositioned to arrive at the moment of consideration, not as an afterthought.</p></div></div>
+        <div class="step"><div><b>The CTA became a zone</b><p>Not a button — a destination with micro-trust signals clustered around the click.</p></div></div>
+        <div class="step"><div><b>A comparison table built for scanning</b><p>Designed for how people actually read tables; stacked cards on mobile instead of a squeezed grid.</p></div></div>
+        <div class="step"><div><b>Formula first, ingredients second</b><p>The AREDS 2 story led — 4,203 participants, 10 years, NIH — before any individual ingredient.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE REDESIGN, ANNOTATED -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">04 — The Redesign, Annotated</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Walk the page. <em>Every section has a job.</em></h2>
+        </div>
+        <div class="rv rv-d1">
+          <p>This is the shipped NLP8 page, exactly as it runs in production. Keep scrolling — the phone walks through the full page while the notes explain the intent behind each section.</p>
+        </div>
+      </div>
+    </div>
+    <div class="scrolly" id="scrolly">
+      <div class="stage">
+        <div class="phone-slot">
+          <div class="phone">
+            <div class="screen">
+              <div class="feed" id="feed">
+                <img src="assets/viewryt/redesign-a.jpg" alt="ViewRyt NLP8 redesign — top half of the live landing page">
+                <img src="assets/viewryt/redesign-b.jpg" alt="ViewRyt NLP8 redesign — bottom half of the live landing page">
+              </div>
+            </div>
+            <div class="pbar"><i id="pfill"></i></div>
+          </div>
+        </div>
+        <div class="ann-rail">
+          <div class="ann-head">Design intent · section by section</div>
+          <div class="ann" data-from="0" data-to=".12">
+            <i>01 — Hook</i><b>The lead is a story, not a pitch</b>
+            <p>"5 Silent Signs of Macular Degeneration" opens on the reader's fear of losing independence. Attention is earned before a single claim is made.</p>
+          </div>
+          <div class="ann" data-from=".12" data-to=".26">
+            <i>02 — Educate</i><b>Urgency built on mechanism, not fear</b>
+            <p>Three reasons vision degrades faster after 60 — the reader learns the <em>why</em>, so the solution that follows feels inevitable.</p>
+          </div>
+          <div class="ann" data-from=".26" data-to=".47">
+            <i>03 — Evidence</i><b>The AREDS-2 story leads, ingredients follow</b>
+            <p>NIH, 10 years, 4,203 participants — then each nutrient card answers "why it matters." Authority arrives before any brand talk.</p>
+          </div>
+          <div class="ann" data-from=".47" data-to=".58">
+            <i>04 — Reveal</i><b>The product is the conclusion</b>
+            <p>ViewRyt only appears after the argument is complete — entering as the obvious answer, with expert endorsements beside it.</p>
+          </div>
+          <div class="ann" data-from=".58" data-to=".68">
+            <i>05 — Decision</i><b>The CTA is a zone, not a button</b>
+            <p>Guarantee, bonus gifts, price anchoring and trust badges cluster around the click — the decision moment is designed, not decorated.</p>
+          </div>
+          <div class="ann" data-from=".68" data-to="1.01">
+            <i>06 — Close</i><b>Objections absorbed at the end</b>
+            <p>Reviews, a seven-step quality checklist and the FAQ handle every remaining "but what about…" before checkout.</p>
+          </div>
+          <div class="live-links">
+            <a href="https://theayurvedaexperience.com/pages/ayuttva-viewryt-nlp8" target="_blank" rel="noopener">Live redesign ↗</a>
+            <a href="https://theayurvedaexperience.com/pages/ayuttva-viewryt-nlp7" target="_blank" rel="noopener">Old page ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">05 — Results</div>
+      <h2 class="rv">From losing 68¢ per dollar <em>to profitable.</em></h2>
+      <p class="rv rv-d1">Source: ClickHouse (Meta) + Klaviyo, US market. And the compounding effect: Meta's algorithm rewarded NLP8's performance with <strong>31× more ad spend</strong> than NLP7 ever earned.</p>
+      <figure class="rv">
+        <div class="duel">
+          <div class="side a">
+            <h5>NLP7 — Previous page</h5>
+            <div class="brow"><small><span>CVR</span><span>1.44%</span></small><div class="track"><div class="fill" style="--w:24%"></div></div></div>
+            <div class="brow"><small><span>Earnings / visitor</span><span>$0.36</span></small><div class="track"><div class="fill" style="--w:19%"></div></div></div>
+            <div class="brow"><small><span>Ad spend → revenue</span><span>$309 → $100</span></small><div class="track"><div class="fill" style="--w:12%"></div></div></div>
+            <div class="roas loss">ROAS 0.32<small>Losing money</small></div>
+          </div>
+          <div class="side b">
+            <h5 class="side-tag">NLP8 — My redesign</h5>
+            <div class="brow"><small><span>CVR</span><span>4.65%</span></small><div class="track"><div class="fill hot" style="--w:78%"></div></div></div>
+            <div class="brow"><small><span>Earnings / visitor</span><span>$1.50</span></small><div class="track"><div class="fill hot" style="--w:80%"></div></div></div>
+            <div class="brow"><small><span>Ad spend → revenue</span><span>$9,798 → $10,398</span></small><div class="track"><div class="fill hot" style="--w:88%"></div></div></div>
+            <div class="roas win">ROAS 1.06<small>Profitable — +231%</small></div>
+          </div>
+        </div>
+        <figcaption>Identical copy · identical product · identical traffic source</figcaption>
+      </figure>
+      <div class="impact rv">
+        <div><b data-count="222" data-pre="+" data-suf="%">+0%</b><span>Conversion rate</span><i>1.44% → 4.65%</i></div>
+        <div><b data-count="314" data-pre="+" data-suf="%">+0%</b><span>Earnings / visitor</span><i>$0.36 → $1.50</i></div>
+        <div><b data-count="31" data-suf="×">0</b><span>More ad spend earned</span><i>from Meta's algorithm</i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFLECTION -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">06 — Reflection</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>What I'd push for <em>next time.</em></h2>
+        </div>
+        <div class="rv rv-d1">
+          <p><strong>The honest caveat:</strong> this was a sequential comparison, not a simultaneous A/B split. Next time I'd push for proper A/B infrastructure from day one, plus scroll-depth tracking and heatmaps to see decisions, not just outcomes.</p>
+          <p><strong>Tests already queued:</strong> a video testimonial above the fold, a shorter mobile-first variant, and an earlier price anchor.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="case-nav rv">
+      <a href="case-irbs.html"><small>← Previous case</small><b>IRBS — room booking at IIT Guwahati</b></a>
+      <a class="next" href="case-dentomate.html"><small>Next case →</small><b>Dentomate — killing the WhatsApp tax</b></a>
+    </div>
+    <footer>
+      <span>© 2026 Ravindra Pratap</span>
+      <span><a href="ravindra-hero.html" style="color:inherit;">← Back to portfolio</a></span>
+      <span>ViewRyt · The Ayurveda Experience</span>
+    </footer>
+  </div>
+</main>
+
+<script>
+/* ---- one-shot Bayer-dithered orb ---- */
+(function(){
+  const c = document.getElementById('orb'), x = c.getContext('2d');
+  const W = c.width, H = c.height, cell = 5;
+  const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+  const cols = ['#8f7ff0','#b7aef7','#ded9fa'];
+  for(let py=0; py<H; py+=cell){
+    for(let px=0; px<W; px+=cell){
+      const dx=(px-W*0.48)/(W*0.44), dy=(py-H*0.5)/(H*0.4);
+      let v = 1 - Math.sqrt(dx*dx+dy*dy);
+      v += 0.18*Math.sin(px*0.028+2.0)+0.12*Math.cos(py*0.033-px*0.01);
+      if(v<=0) continue;
+      const t = B[(py/cell)&3][(px/cell)&3]/16;
+      if(v>t){
+        x.fillStyle = v>t+0.45 ? cols[0] : (v>t+0.2 ? cols[1] : cols[2]);
+        x.beginPath();x.arc(px,py,cell*0.34,0,7);x.fill();
+      }
+    }
+  }
+})();
+
+/* ---- annotated phone-scroll sync ---- */
+(function(){
+  const sc = document.getElementById('scrolly');
+  if(!sc) return;
+  const feed = document.getElementById('feed');
+  const screen = feed.parentElement;
+  const pfill = document.getElementById('pfill');
+  const anns = [...sc.querySelectorAll('.ann')];
+  let ticking = false;
+  function update(){
+    ticking = false;
+    const rect = sc.getBoundingClientRect();
+    const span = sc.offsetHeight - innerHeight;
+    const p = Math.min(Math.max(-rect.top / (span || 1), 0), 1);
+    const max = feed.scrollHeight - screen.clientHeight;
+    if(max > 0) feed.style.transform = 'translateY(' + (-p * max) + 'px)';
+    pfill.style.height = (p * 100) + '%';
+    anns.forEach(a => {
+      const f = parseFloat(a.dataset.from), t = parseFloat(a.dataset.to);
+      a.classList.toggle('on', p >= f && p < t);
+    });
+  }
+  addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  addEventListener('resize', update);
+  update();
+})();
+
+const progress = document.getElementById('progress');
+addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  progress.style.width = (max>0 ? (scrollY/max)*100 : 0) + '%';
+}, {passive:true});
+
+function countUp(el){
+  const target = parseFloat(el.dataset.count);
+  const dec = parseInt(el.dataset.dec || 0, 10);
+  const pre = el.dataset.pre || '';
+  const suf = el.dataset.suf || '';
+  const dur = 1500, t0 = performance.now();
+  (function tick(now){
+    const k = Math.min(((now||performance.now()) - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - k, 3);
+    el.textContent = pre + (target * e).toFixed(dec) + suf;
+    if(k < 1) requestAnimationFrame(tick);
+  })();
+}
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(!en.isIntersecting) return;
+    en.target.classList.add('in');
+    en.target.querySelectorAll('b[data-count]').forEach(countUp);
+    io.unobserve(en.target);
+  });
+}, {threshold: 0.15, rootMargin: '0px 0px -6% 0px'});
+document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

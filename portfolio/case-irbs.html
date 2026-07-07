@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IRBS — Case Study · Ravindra Pratap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16141f;
+    --lav:#8f7ff0;
+    --lav-deep:#6a58e0;
+    --mut:#8b87a0;
+    --line:#eceaf6;
+    --paper:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:#e6e1fb;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;}
+
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--lav);z-index:40;width:0;}
+
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:30;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 44px;font-size:13px;
+    background:linear-gradient(rgba(255,255,255,.92),rgba(255,255,255,0));
+  }
+  nav .logo{font-weight:600;text-decoration:none;color:var(--ink);}
+  nav .links{display:flex;gap:26px;}
+  nav a{color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;}
+  nav a:hover{opacity:1;}
+  nav .back{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
+  .wrap-wide{max-width:1240px;margin:0 auto;padding:0 44px;}
+
+  /* ---------------- hero ---------------- */
+  header{position:relative;padding:180px 0 90px;overflow:hidden;}
+  header::before{
+    content:"";position:absolute;inset:0;z-index:-2;
+    background:radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px);
+    background-size:11px 11px;
+    -webkit-mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
+            mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
+  }
+  #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;
+       animation:orbdrift 14s ease-in-out infinite alternate;}
+  @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
+  .kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.28em;color:var(--lav);text-transform:uppercase;margin-bottom:26px;}
+  h1{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:clamp(46px,6.6vw,96px);line-height:1.0;letter-spacing:-0.035em;font-weight:600;
+    max-width:15ch;
+  }
+  h1 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);letter-spacing:-.01em;}
+  .lede{margin-top:30px;font-size:20px;line-height:1.6;color:var(--mut);max-width:48ch;}
+  .facts{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
+    border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
+  }
+  .facts small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .facts b{font-weight:500;font-size:16px;}
+
+  /* ---------------- sections ---------------- */
+  section{padding:84px 0 10px;}
+  .sec-label{
+    display:flex;align-items:center;gap:14px;margin-bottom:30px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.24em;color:var(--lav);text-transform:uppercase;
+  }
+  .sec-label::after{content:"";flex:1;height:1px;background:var(--line);}
+  h2{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:clamp(28px,3.6vw,46px);letter-spacing:-.03em;font-weight:600;line-height:1.1;
+    max-width:22ch;margin-bottom:22px;
+  }
+  h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  p{color:#5d5970;font-size:18px;line-height:1.7;margin-bottom:18px;max-width:62ch;}
+  p strong{color:var(--ink);font-weight:600;}
+
+  .pull{
+    font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
+    font-size:clamp(24px,3vw,38px);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
+    border-left:2px solid var(--lav);padding:6px 0 6px 30px;margin:34px 0;max-width:26ch;
+  }
+  .pull .mono{font-style:normal;display:block;font-size:12px;letter-spacing:.18em;color:var(--mut);margin-top:14px;text-transform:uppercase;}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
+  .cards.four{grid-template-columns:repeat(4,1fr);}
+  .card{
+    border:1px solid var(--line);border-radius:14px;padding:20px;
+    background:linear-gradient(160deg,#fbfaff, #f5f3fd);
+    transition:transform .45s cubic-bezier(.22,1,.36,1), border-color .3s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .card i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--lav);margin-bottom:10px;text-transform:uppercase;}
+  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em;}
+  .card p{font-size:16px;line-height:1.55;margin:0;color:var(--mut);}
+
+  .steps{counter-reset:st;margin:26px 0;}
+  .step{display:flex;gap:22px;padding:20px 0;border-top:1px solid var(--line);}
+  .step::before{
+    counter-increment:st;content:"0" counter(st);
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--lav);padding-top:3px;letter-spacing:.1em;
+  }
+  .step div b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;margin-bottom:5px;letter-spacing:-.01em;}
+  .step div p{font-size:16px;line-height:1.55;margin:0;}
+
+  /* ---------------- figures ---------------- */
+  figure{
+    position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:38px 0;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(143,127,240,.15) 1px, transparent 1.6px),
+      linear-gradient(150deg,#f7f5ff 0%,#efecfc 100%);
+    background-size:11px 11px, cover;
+    padding:40px;display:flex;justify-content:center;align-items:center;gap:28px;
+  }
+  figure.dark{background:
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,.07) 1px, transparent 1.6px),
+      linear-gradient(150deg,#1b1927 0%,#232030 100%);
+    background-size:11px 11px, cover;}
+  figure img{max-width:100%;height:auto;border-radius:12px;display:block;}
+  figure img.ph{max-height:560px;width:auto;box-shadow:0 30px 70px -34px rgba(30,20,90,.45);}
+  figure img.flat{box-shadow:0 24px 60px -30px rgba(64,52,150,.28);}
+  figcaption{
+    position:absolute;left:20px;bottom:14px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
+  }
+  figure.dark figcaption{color:#8f8aa8;}
+  .fig-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:38px 0;}
+  .fig-grid figure{margin:0;}
+
+  /* ---------------- metrics ---------------- */
+  .impact{
+    border:1px solid var(--line);border-radius:24px;margin:50px 0 20px;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px),
+      linear-gradient(160deg,#faf9ff,#f3f0fd);
+    background-size:11px 11px, cover;
+    padding:54px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px;text-align:center;
+  }
+  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(40px,4.6vw,64px);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;}
+  .impact span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;}
+  .impact i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b7b2cc;margin-top:6px;}
+
+  /* ---------------- footer nav ---------------- */
+  .case-nav{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:90px 0 0;border-top:1px solid var(--line);padding:34px 0 0;
+  }
+  .case-nav a{
+    text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:24px;
+    transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .3s;
+  }
+  .case-nav a:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .case-nav small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
+  .case-nav .next{text-align:right;}
+  footer{
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--mut);
+    border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;text-transform:uppercase;
+  }
+
+  /* ---------------- motion ---------------- */
+  .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
+      transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
+  .rv.in{opacity:1;transform:translateY(0);filter:blur(0);}
+  .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;filter:none;transition:none;}}
+
+  @media (max-width:900px){
+    .cols{grid-template-columns:1fr;gap:26px;}
+    .facts{grid-template-columns:repeat(2,1fr);}
+    .cards, .cards.four{grid-template-columns:1fr 1fr;}
+    .fig-grid{grid-template-columns:1fr;}
+    .impact{grid-template-columns:1fr;padding:40px 30px;}
+    #orb{opacity:.4;}
+  }
+  @media (max-width:640px){
+    nav{padding:18px 22px}
+    .wrap,.wrap-wide{padding:0 22px}
+    header{padding:140px 0 60px}
+    .cards, .cards.four{grid-template-columns:1fr;}
+    figure{padding:20px;}
+    .case-nav{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav>
+  <a class="logo" href="ravindra-hero.html">Ravindra&nbsp;Pratap<span style="color:var(--lav)">.</span></a>
+  <div class="back mono">CS/03 — IRBS · IIT GUWAHATI</div>
+  <div class="links">
+    <a href="ravindra-hero.html#work">Work</a><a href="ravindra-hero.html#about">About</a><a href="ravindra-hero.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header>
+  <canvas id="orb" width="520" height="520"></canvas>
+  <div class="wrap">
+    <div class="kicker rv">Case Study 03 — Product Design · Shipped</div>
+    <h1 class="rv rv-d1">Booking a room shouldn't feel like <em>filing a petition.</em></h1>
+    <p class="lede rv rv-d2">IRBS — the Integrated Room Booking System inside IIT Guwahati's OneStop app. Designed for a campus of 7,000+ students where 200+ people run club life out of NEW SAC every single day.</p>
+    <div class="facts rv rv-d2">
+      <div><small>Role</small><b>Design Lead — Students' Web Committee</b></div>
+      <div><small>Team</small><b>1 designer · 3 developers</b></div>
+      <div><small>Timeline</small><b>2022 → April 2023</b></div>
+      <div><small>Status</small><b>Live since Sept 2023</b></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- PROBLEM -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">01 — The Problem</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Campus students don't get proper rooms for meetings &amp; practice sessions.</h2>
+        </div>
+        <div class="rv rv-d1">
+          <p>NEW SAC is the beating heart of extracurriculars at IITG — music, dance, coding, quizzing, robotics. But reserving its club rooms, common rooms and board rooms ran on a legacy web portal almost nobody could find, let alone use.</p>
+          <p><strong>No time restrictions, confusing UI, and near-zero admin control</strong> meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.</p>
+          <div class="pull">"The conference hall was booked for a whole week — without permission."
+            <span class="mono">Incident that kicked off the redesign</span>
+          </div>
+        </div>
+      </div>
+      <figure class="rv">
+        <img class="flat" src="assets/irbs/legacy-portal.jpg" alt="Legacy booking portal — a full week blocked by one event" />
+        <figcaption>Before — legacy portal, one event blocking an entire week</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- CONTEXT -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">02 — Context</div>
+      <h2 class="rv">Four kinds of rooms, <em>one queue of frustrated clubs.</em></h2>
+      <div class="cards four rv rv-d1">
+        <div class="card"><i>Type A</i><b>Club rooms</b><p>Small focused meetings and equipment storage for individual clubs.</p></div>
+        <div class="card"><i>Type B</i><b>Common rooms</b><p>Large gatherings of 25+ people — yoga sessions, events, rehearsals.</p></div>
+        <div class="card"><i>Type C</i><b>Board rooms</b><p>Administrative and high-level meetings with the institute.</p></div>
+        <div class="card"><i>Type D</i><b>Room-less clubs</b><p>Clubs with no room of their own, fully dependent on availability.</p></div>
+      </div>
+      <figure class="rv">
+        <img class="flat" src="assets/irbs/new-sac.jpg" alt="NEW SAC building at IIT Guwahati" style="max-height:440px;object-fit:cover;width:100%;" />
+        <figcaption>NEW SAC — Students' Activity Centre, IIT Guwahati</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">03 — Research</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Eleven interviews, <em>three themes.</em></h2>
+          <p>I interviewed <strong>2 vice presidents, 4 club secretaries and 5 general students</strong> about how they actually got rooms — their current practices, their experience with the old portal, and the workarounds they'd invented.</p>
+        </div>
+        <div class="rv rv-d1">
+          <div class="cards" style="grid-template-columns:1fr;">
+            <div class="card"><i>Theme 01</i><b>Discoverability</b><p>Students relied on word of mouth — most didn't know the portal existed. OneStop, however, was already opened daily by everyone.</p></div>
+            <div class="card"><i>Theme 02</i><b>Functionality</b><p>The old UI caused booking errors, offered no way to reject a request with a reason, and let incomplete forms through.</p></div>
+            <div class="card"><i>Theme 03</i><b>Events &amp; fests</b><p>Peak periods created resource conflicts that needed hierarchical access — some requests simply matter more during a fest.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">04 — The Solution</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Meet students where they already are: <em>inside OneStop.</em></h2>
+          <p>Instead of another portal to forget, IRBS lives inside the app every IITG student already opens daily. Booking takes three steps; approval is transparent; power users stop paying the process tax.</p>
+          <div class="steps">
+            <div class="step"><div><b>Select a room</b><p>Browse club, common and board rooms with live availability.</p></div></div>
+            <div class="step"><div><b>Choose a time slot</b><p>Calendar view shows existing bookings — no more blind requests.</p></div></div>
+            <div class="step"><div><b>State the purpose</b><p>A stated reason travels with every request, so approvers decide fast.</p></div></div>
+          </div>
+        </div>
+        <div class="rv rv-d1">
+          <figure class="dark" style="margin-top:0;">
+            <img class="ph" src="assets/irbs/app-home.png" alt="IRBS home — requests, pinned rooms, common rooms" />
+            <figcaption>Secretary view — requests &amp; pinned rooms</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="cards rv">
+        <div class="card"><i>For approvers</i><b>Accept / reject with a reason</b><p>Secretaries get notified on every request and must state a reason to reject — killing the silent-limbo problem.</p></div>
+        <div class="card"><i>For power users</i><b>Default permissions</b><p>Frequent, trusted users earn automated acceptance; hierarchy handles high-demand fest periods.</p></div>
+      </div>
+      <figure class="dark rv">
+        <img class="flat" src="assets/irbs/phones-duo.png" alt="Room calendar and home screen" style="max-height:560px;width:auto;" />
+        <figcaption>Room detail with slot calendar · home</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- DESIGN & TESTING -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">05 — Design &amp; Testing</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Wireframes, walkthroughs, <em>and a humbling beta.</em></h2>
+        </div>
+        <div class="rv rv-d1">
+          <p>We tested multiple layouts with cognitive walkthroughs before writing code. The beta then did what betas do: it corrected us. We <strong>removed empty booking sections</strong> that confused first-timers, <strong>deferred calendar drag-select</strong> that felt clever but tested poorly, and <strong>fixed navigation behaviour</strong> that trapped users mid-flow.</p>
+        </div>
+      </div>
+      <div class="fig-grid rv">
+        <figure class="dark"><img class="flat" src="assets/irbs/wireframes-1.png" alt="Low-fidelity wireframes" /><figcaption>Low-fi explorations</figcaption></figure>
+        <figure class="dark"><img class="flat" src="assets/irbs/wireframes-2.png" alt="Wireframe iterations" /><figcaption>Layout iterations</figcaption></figure>
+      </div>
+      <figure class="dark rv">
+        <img class="flat" src="assets/irbs/phones-flow.png" alt="Final flow — home, booking history, room list, request form" />
+        <figcaption>The shipped flow — home · history · rooms · request</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">06 — Impact</div>
+      <h2 class="rv">Live since September 2023 — <em>and still how rooms get booked.</em></h2>
+      <div class="impact rv rv-d1">
+        <div><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span><i>NEW SAC facilities</i></div>
+        <div><b data-count="200" data-suf="+">0</b><span>Students served daily</span><i>since Sept 2023</i></div>
+        <div><b data-count="3" data-suf=" steps">0</b><span>To book a room</span><i>room · time · purpose</i></div>
+      </div>
+      <figure class="dark rv">
+        <img class="ph" src="assets/irbs/calendar-live.png" alt="Live bookings in the Yoga Room calendar" />
+        <figcaption>Real usage — a week in the Yoga Room</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="case-nav rv">
+      <a href="case-dentomate.html"><small>← Previous case</small><b>Dentomate — killing the WhatsApp tax</b></a>
+      <a class="next" href="case-viewryt.html"><small>Next case →</small><b>ViewRyt — design's ROI, proven</b></a>
+    </div>
+    <footer>
+      <span>© 2026 Ravindra Pratap</span>
+      <span><a href="ravindra-hero.html" style="color:inherit;">← Back to portfolio</a></span>
+      <span>IRBS · OneStop · IIT Guwahati</span>
+    </footer>
+  </div>
+</main>
+
+<script>
+/* ---- one-shot Bayer-dithered orb (cheap, no WebGL) ---- */
+(function(){
+  const c = document.getElementById('orb'), x = c.getContext('2d');
+  const W = c.width, H = c.height, cell = 5;
+  const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+  const cols = ['#8f7ff0','#b7aef7','#ded9fa'];
+  for(let py=0; py<H; py+=cell){
+    for(let px=0; px<W; px+=cell){
+      const dx=(px-W*0.52)/(W*0.42), dy=(py-H*0.48)/(H*0.42);
+      let v = 1 - Math.sqrt(dx*dx+dy*dy);
+      v += 0.16*Math.sin(px*0.035)+0.13*Math.cos(py*0.03+px*0.012);
+      if(v<=0) continue;
+      const t = B[(py/cell)&3][(px/cell)&3]/16;
+      if(v>t){
+        x.fillStyle = v>t+0.45 ? cols[0] : (v>t+0.2 ? cols[1] : cols[2]);
+        x.beginPath();x.arc(px,py,cell*0.34,0,7);x.fill();
+      }
+    }
+  }
+})();
+
+/* ---- progress bar ---- */
+const progress = document.getElementById('progress');
+addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  progress.style.width = (max>0 ? (scrollY/max)*100 : 0) + '%';
+}, {passive:true});
+
+/* ---- reveals + count-ups (shared language with home) ---- */
+function countUp(el){
+  const target = parseFloat(el.dataset.count);
+  const dec = parseInt(el.dataset.dec || 0, 10);
+  const pre = el.dataset.pre || '';
+  const suf = el.dataset.suf || '';
+  const dur = 1500, t0 = performance.now();
+  (function tick(now){
+    const k = Math.min(((now||performance.now()) - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - k, 3);
+    el.textContent = pre + (target * e).toFixed(dec) + suf;
+    if(k < 1) requestAnimationFrame(tick);
+  })();
+}
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(!en.isIntersecting) return;
+    en.target.classList.add('in');
+    en.target.querySelectorAll('b[data-count]').forEach(countUp);
+    io.unobserve(en.target);
+  });
+}, {threshold: 0.15, rootMargin: '0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

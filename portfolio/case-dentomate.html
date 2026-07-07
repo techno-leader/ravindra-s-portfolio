@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dentomate — Case Study · Ravindra Pratap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16141f;
+    --lav:#8f7ff0;
+    --lav-deep:#6a58e0;
+    --mut:#8b87a0;
+    --line:#eceaf6;
+    --paper:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:#e6e1fb;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+
+  .progress{position:fixed;top:0;left:0;height:2px;background:var(--lav);z-index:40;width:0;}
+
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:30;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 44px;font-size:13px;
+    background:linear-gradient(rgba(255,255,255,.92),rgba(255,255,255,0));
+  }
+  nav .logo{font-weight:600;text-decoration:none;color:var(--ink);}
+  nav .links{display:flex;gap:26px;}
+  nav a{color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;}
+  nav a:hover{opacity:1;}
+  nav .back{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
+
+  header{position:relative;padding:180px 0 90px;overflow:hidden;}
+  header::before{
+    content:"";position:absolute;inset:0;z-index:-2;
+    background:radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px);
+    background-size:11px 11px;
+    -webkit-mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
+            mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
+  }
+  #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;
+       animation:orbdrift 14s ease-in-out infinite alternate;}
+  @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
+  .kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.28em;color:var(--lav);text-transform:uppercase;margin-bottom:26px;}
+  h1{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:clamp(46px,6.6vw,96px);line-height:1.0;letter-spacing:-0.035em;font-weight:600;
+    max-width:15ch;
+  }
+  h1 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);letter-spacing:-.01em;}
+  .lede{margin-top:30px;font-size:20px;line-height:1.6;color:var(--mut);max-width:48ch;}
+  .facts{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
+    border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
+  }
+  .facts small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .facts b{font-weight:500;font-size:16px;}
+
+  section{padding:84px 0 10px;}
+  .sec-label{
+    display:flex;align-items:center;gap:14px;margin-bottom:30px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.24em;color:var(--lav);text-transform:uppercase;
+  }
+  .sec-label::after{content:"";flex:1;height:1px;background:var(--line);}
+  h2{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:clamp(28px,3.6vw,46px);letter-spacing:-.03em;font-weight:600;line-height:1.1;
+    max-width:22ch;margin-bottom:22px;
+  }
+  h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  p{color:#5d5970;font-size:18px;line-height:1.7;margin-bottom:18px;max-width:62ch;}
+  p strong{color:var(--ink);font-weight:600;}
+
+  .pull{
+    font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
+    font-size:clamp(24px,3vw,38px);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
+    border-left:2px solid var(--lav);padding:6px 0 6px 30px;margin:34px 0;max-width:28ch;
+  }
+  .pull .mono{font-style:normal;display:block;font-size:12px;letter-spacing:.18em;color:var(--mut);margin-top:14px;text-transform:uppercase;}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
+  .cards.three{grid-template-columns:repeat(3,1fr);}
+  .card{
+    border:1px solid var(--line);border-radius:14px;padding:20px;
+    background:linear-gradient(160deg,#fbfaff, #f5f3fd);
+    transition:transform .45s cubic-bezier(.22,1,.36,1), border-color .3s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .card i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--lav);margin-bottom:10px;text-transform:uppercase;}
+  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em;}
+  .card p{font-size:16px;line-height:1.55;margin:0;color:var(--mut);}
+  .card .price{font-family:"Space Grotesk",sans-serif;font-size:26px;font-weight:600;letter-spacing:-.02em;display:block;margin-bottom:6px;}
+  .card .price small{font-size:12px;color:var(--mut);font-weight:400;}
+
+  .steps{counter-reset:st;margin:26px 0;}
+  .step{display:flex;gap:22px;padding:20px 0;border-top:1px solid var(--line);}
+  .step::before{
+    counter-increment:st;content:"0" counter(st);
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--lav);padding-top:3px;letter-spacing:.1em;
+  }
+  .step div b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;margin-bottom:5px;letter-spacing:-.01em;}
+  .step div p{font-size:16px;line-height:1.55;margin:0;}
+
+  figure{
+    position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:38px 0;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(143,127,240,.15) 1px, transparent 1.6px),
+      linear-gradient(150deg,#f7f5ff 0%,#efecfc 100%);
+    background-size:11px 11px, cover;
+    padding:40px;display:flex;justify-content:center;align-items:center;gap:28px;
+  }
+  figure img{max-width:100%;height:auto;border-radius:12px;display:block;box-shadow:0 24px 60px -30px rgba(64,52,150,.28);background:#fff;}
+  figcaption{
+    position:absolute;left:20px;bottom:14px;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
+  }
+  .fig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:38px 0;}
+  .fig-grid figure{margin:0;padding:24px;}
+
+  .impact{
+    border:1px solid var(--line);border-radius:24px;margin:50px 0 20px;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px),
+      linear-gradient(160deg,#faf9ff,#f3f0fd);
+    background-size:11px 11px, cover;
+    padding:54px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px;text-align:center;
+  }
+  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(40px,4.6vw,64px);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;}
+  .impact span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;}
+  .impact i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b7b2cc;margin-top:6px;}
+
+  .case-nav{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:90px 0 0;border-top:1px solid var(--line);padding:34px 0 0;
+  }
+  .case-nav a{
+    text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:24px;
+    transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .3s;
+  }
+  .case-nav a:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .case-nav small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
+  .case-nav .next{text-align:right;}
+  footer{
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--mut);
+    border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;text-transform:uppercase;
+  }
+
+  .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
+      transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
+  .rv.in{opacity:1;transform:translateY(0);filter:blur(0);}
+  .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;filter:none;transition:none;}}
+
+  @media (max-width:900px){
+    .cols{grid-template-columns:1fr;gap:26px;}
+    .facts{grid-template-columns:repeat(2,1fr);}
+    .cards, .cards.three{grid-template-columns:1fr 1fr;}
+    .fig-grid{grid-template-columns:1fr;}
+    .impact{grid-template-columns:1fr;padding:40px 30px;}
+    #orb{opacity:.4;}
+  }
+  @media (max-width:640px){
+    nav{padding:18px 22px}
+    .wrap{padding:0 22px}
+    header{padding:140px 0 60px}
+    .cards, .cards.three{grid-template-columns:1fr;}
+    figure{padding:20px;}
+    .case-nav{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav>
+  <a class="logo" href="ravindra-hero.html">Ravindra&nbsp;Pratap<span style="color:var(--lav)">.</span></a>
+  <div class="back mono">CS/02 — DENTOMATE · FOUNDER</div>
+  <div class="links">
+    <a href="ravindra-hero.html#work">Work</a><a href="ravindra-hero.html#about">About</a><a href="ravindra-hero.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header>
+  <canvas id="orb" width="520" height="520"></canvas>
+  <div class="wrap">
+    <div class="kicker rv">Case Study 02 — Founder · 0 → 1 · Design + Build</div>
+    <h1 class="rv rv-d1">Stop paying the <em>WhatsApp tax.</em></h1>
+    <p class="lede rv rv-d2">Dentomate is a practice platform I designed, built and run for Indian dental clinics — automated patient communication, records and revenue analytics, at a price that makes the ₹6,000–15,000/month messaging spend obsolete.</p>
+    <div class="facts rv rv-d2">
+      <div><small>Role</small><b>Founder — design, build, GTM</b></div>
+      <div><small>Status</small><b>Live · 200+ clinics</b></div>
+      <div><small>Pricing</small><b>₹0 / ₹399 / ₹799 per month</b></div>
+      <div><small>Market</small><b>Indian dental practices</b></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- PROBLEM -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">01 — The Problem</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Clinics were renting their own patient relationships back.</h2>
+        </div>
+        <div class="rv rv-d1">
+          <p>To send a simple prescription or recall reminder on WhatsApp, an Indian clinic needs API access plus a developer to maintain it — <strong>₹6,000–15,000 every month</strong>. Most clinics either pay it, or don't message at all.</p>
+          <p>Meanwhile recalls live in spreadsheets, reminders never go out, and <strong>patients quietly never come back</strong>. A filled chair today hides an empty one next quarter.</p>
+          <div class="pull">One prevented no-show pays for 7+ months of Dentomate.
+            <span class="mono">The core economics of the product</span>
+          </div>
+        </div>
+      </div>
+      <div class="cards rv">
+        <div class="card"><i>Segment 01</i><b>Solo &amp; small clinics (1–3 chairs)</b><p>Overspending on WhatsApp infrastructure — or skipping patient communication entirely.</p></div>
+        <div class="card"><i>Segment 02</i><b>Multi-location networks (3–15+ clinics)</b><p>Fragmented communications and inconsistent branding across branches, with no unified view.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">02 — The Solution</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>The practice <em>runs itself.</em></h2>
+          <p>One dashboard for records, messaging, invoicing and analytics — set up in <strong>5 minutes, no developer</strong>. Hindi and English templates, data stored in India, DPDP-compliant.</p>
+          <div class="steps">
+            <div class="step"><div><b>Branded prescriptions, automatically</b><p>As the patient walks out, a clinic-branded WhatsApp prescription goes out — logo, doctor's signature, treatment notes.</p></div></div>
+            <div class="step"><div><b>Recalls at 7 / 90 / 180 days</b><p>Smart follow-up campaigns with the patient's name and a booking link — the moments clinics always miss by hand.</p></div></div>
+            <div class="step"><div><b>Everything else in one place</b><p>Records, X-rays, GST invoicing, UPI payment links, Practo / Razorpay / Google Calendar integrations.</p></div></div>
+          </div>
+        </div>
+        <div class="rv rv-d1">
+          <figure style="margin-top:0;">
+            <img src="assets/dentomate/hero-dashboard.svg" alt="Dentomate dashboard" />
+            <figcaption>The clinic dashboard</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="fig-grid rv">
+        <figure><img src="assets/dentomate/screen-rx.svg" alt="Branded WhatsApp prescription" /><figcaption>Branded Rx</figcaption></figure>
+        <figure><img src="assets/dentomate/screen-followup.svg" alt="Automated follow-up campaigns" /><figcaption>Recall campaigns</figcaption></figure>
+        <figure><img src="assets/dentomate/screen-analytics.svg" alt="Revenue analytics" /><figcaption>Multi-clinic analytics</figcaption></figure>
+      </div>
+      <div class="cards rv">
+        <div class="card"><i>Design decision</i><b>Role-based access</b><p>Receptionists see appointments, doctors see history, owners see everything — one product, three honest views.</p></div>
+        <div class="card"><i>Design decision</i><b>Network-wide analytics</b><p>Revenue by branch, treatment and time period. Managers see their clinic; owners see the network.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUSINESS DESIGN -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">03 — Business Design</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>Pricing designed to make the decision <em>obvious.</em></h2>
+          <p>The product's pitch is arithmetic: comparable functionality to a ₹6,000–15,000/month WhatsApp stack, priced at a twentieth of that. Positioning, pricing and onboarding are design problems too — I treated them that way.</p>
+        </div>
+        <div class="rv rv-d1">
+          <div class="cards three" style="grid-template-columns:1fr;gap:10px;">
+            <div class="card"><i>Free</i><span class="price">₹0</span><p>Basic records, auto post-care messages, up to 20 new patients/month.</p></div>
+            <div class="card"><i>Starter</i><span class="price">₹399<small> /mo</small></span><p>Unlimited patients, reminders, 2 recall campaigns/month, custom letterhead, AI medicine suggestions.</p></div>
+            <div class="card"><i>Pro</i><span class="price">₹799<small> /mo</small></span><p>Unlimited campaigns, 3 clinic branches, priority support.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">04 — Impact</div>
+      <h2 class="rv">200+ clinics, and counting.</h2>
+      <div class="impact rv rv-d1">
+        <div><b data-count="200" data-suf="+">0</b><span>Clinics onboard</span><i>across India</i></div>
+        <div><b data-count="30" data-pre="+" data-suf="%">+0%</b><span>Returning patients</span><i>90-day pilot data</i></div>
+        <div><b data-count="8" data-pre="₹" data-suf="k">₹0</b><span>Saved / clinic / month</span><i>avg. cost reduction</i></div>
+      </div>
+      <figure class="rv">
+        <img src="assets/dentomate/chart-proof.svg" alt="Patient return rate improvement chart" style="max-width:720px;width:100%;" />
+        <figcaption>Pilot data — patient return rates</figcaption>
+      </figure>
+      <div class="pull rv">"Our WhatsApp costs went from ₹12,000 a month to zero — and recall appointments are up 28% in two months."
+        <span class="mono">Dr. Vikram Singh · SmileCraft Dental · 3 clinics, Bengaluru</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="case-nav rv">
+      <a href="case-viewryt.html"><small>← Previous case</small><b>ViewRyt — design's ROI, proven</b></a>
+      <a class="next" href="case-irbs.html"><small>Next case →</small><b>IRBS — room booking at IIT Guwahati</b></a>
+    </div>
+    <footer>
+      <span>© 2026 Ravindra Pratap</span>
+      <span><a href="ravindra-hero.html" style="color:inherit;">← Back to portfolio</a></span>
+      <span>Dentomate · dentomate.in</span>
+    </footer>
+  </div>
+</main>
+
+<script>
+/* ---- one-shot Bayer-dithered orb ---- */
+(function(){
+  const c = document.getElementById('orb'), x = c.getContext('2d');
+  const W = c.width, H = c.height, cell = 5;
+  const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+  const cols = ['#8f7ff0','#b7aef7','#ded9fa'];
+  for(let py=0; py<H; py+=cell){
+    for(let px=0; px<W; px+=cell){
+      const dx=(px-W*0.5)/(W*0.4), dy=(py-H*0.46)/(H*0.44);
+      let v = 1 - Math.sqrt(dx*dx+dy*dy);
+      v += 0.15*Math.sin(px*0.04-1.2)+0.14*Math.cos(py*0.026+px*0.015);
+      if(v<=0) continue;
+      const t = B[(py/cell)&3][(px/cell)&3]/16;
+      if(v>t){
+        x.fillStyle = v>t+0.45 ? cols[0] : (v>t+0.2 ? cols[1] : cols[2]);
+        x.beginPath();x.arc(px,py,cell*0.34,0,7);x.fill();
+      }
+    }
+  }
+})();
+
+const progress = document.getElementById('progress');
+addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  progress.style.width = (max>0 ? (scrollY/max)*100 : 0) + '%';
+}, {passive:true});
+
+function countUp(el){
+  const target = parseFloat(el.dataset.count);
+  const dec = parseInt(el.dataset.dec || 0, 10);
+  const pre = el.dataset.pre || '';
+  const suf = el.dataset.suf || '';
+  const dur = 1500, t0 = performance.now();
+  (function tick(now){
+    const k = Math.min(((now||performance.now()) - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - k, 3);
+    el.textContent = pre + (target * e).toFixed(dec) + suf;
+    if(k < 1) requestAnimationFrame(tick);
+  })();
+}
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if(!en.isIntersecting) return;
+    en.target.classList.add('in');
+    en.target.querySelectorAll('b[data-count]').forEach(countUp);
+    io.unobserve(en.target);
+  });
+}, {threshold: 0.15, rootMargin: '0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
