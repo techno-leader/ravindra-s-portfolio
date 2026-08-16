@@ -105,15 +105,6 @@
   .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em;}
   .card p{font-size:16px;line-height:1.55;margin:0;color:var(--mut);}
 
-  .steps{counter-reset:st;margin:26px 0;}
-  .step{display:flex;gap:22px;padding:20px 0;border-top:1px solid var(--line);}
-  .step::before{
-    counter-increment:st;content:"0" counter(st);
-    font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--lav);padding-top:3px;letter-spacing:.1em;
-  }
-  .step div b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;margin-bottom:5px;letter-spacing:-.01em;}
-  .step div p{font-size:16px;line-height:1.55;margin:0;}
-
   figure{
     position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:38px 0;
     background:
@@ -177,48 +168,47 @@
 
   /* --- annotated phone-scroll showcase --- */
   .scrolly{position:relative;height:560vh;}
+  /* notes sit in a rail to the left of the phone and read into it, so each one
+     lines up with the stretch of page it is talking about */
   .scrolly .stage{
     position:sticky;top:0;height:100vh;
-    display:grid;grid-template-columns:360px 1fr;gap:64px;align-items:center;
-    max-width:1080px;margin:0 auto;padding:0 44px;
+    display:grid;grid-template-columns:minmax(240px,340px) auto;align-items:center;
+    justify-content:center;max-width:1080px;margin:0 auto;padding:0 44px;
   }
-  .phone-slot{display:flex;justify-content:center;}
+  .phone-slot{grid-column:2;grid-row:1;display:flex;justify-content:center;}
+  /* notes are stacked so only the one that owns the current stretch is present;
+     the links sit under the stack rather than in it */
+  .ann-rail{grid-column:1;grid-row:1;padding-right:48px;text-align:right;display:grid;}
+  /* same quiet frame as the evidence reels — no bezel, no shadow */
   .phone{
-    width:300px;flex:none;border-radius:46px;padding:12px;background:#16141f;
-    box-shadow:0 50px 110px -42px rgba(64,52,150,.5), 0 0 0 1px rgba(255,255,255,.08) inset;
-    position:relative;
-  }
-  .phone::after{
-    content:"";position:absolute;top:24px;left:50%;transform:translateX(-50%);
-    width:86px;height:22px;border-radius:99px;background:#16141f;z-index:3;
+    position:relative;width:300px;flex:none;margin:0;padding:0;
+    border:2px solid var(--line);border-radius:34px;background:var(--paper);box-shadow:none;
   }
   .screen{
-    position:relative;border-radius:35px;overflow:hidden;
-    height:min(74vh,640px);background:#fff;
+    position:relative;border-radius:32px;overflow:hidden;
+    height:min(74vh,640px);background:var(--paper);
   }
   .feed{position:absolute;left:0;top:0;width:100%;will-change:transform;}
   .feed img{display:block;width:100%;}
   .phone .pbar{
-    position:absolute;right:-14px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;
+    position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;
   }
   .phone .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:99px;}
   .ann-head{
     font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.24em;color:var(--mut);
     text-transform:uppercase;margin-bottom:18px;
   }
-  .ann{
-    position:relative;padding:14px 0 14px 34px;border-left:1px solid var(--line);
-    opacity:.32;transition:opacity .45s ease;
-  }
-  .ann::before{
-    content:"";position:absolute;left:-4.5px;top:22px;width:8px;height:8px;border-radius:99px;
-    background:#d9d4f5;transition:background .3s, box-shadow .3s;
-  }
+  /* one note at a time: each fades in only while its stretch of the page is in
+     the frame, and hands over to the next as that stretch leaves */
+  .ann{grid-area:1/1;align-self:center;opacity:0;transition:opacity .5s ease;}
   .ann.on{opacity:1;}
-  .ann.on::before{background:var(--lav);box-shadow:0 0 0 5px rgba(143,127,240,.18);}
-  .ann i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;margin-bottom:5px;}
-  .ann b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15.5px;letter-spacing:-.01em;margin-bottom:4px;}
-  .ann p{font-size:13px;line-height:1.6;margin:0;color:var(--mut);max-width:44ch;}
+  .ann i{
+    display:inline-block;font-style:normal;font-family:ui-monospace,Menlo,monospace;
+    font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--lav-deep);
+    background:rgba(143,127,240,.13);border-radius:8px;padding:4px 9px;margin-bottom:9px;
+  }
+  .ann b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15.5px;letter-spacing:-.01em;margin-bottom:5px;}
+  .ann p{font-size:13px;line-height:1.6;margin:0 0 0 auto;color:var(--mut);max-width:34ch;}
   /* --- evidence: one pinned frame, all four faults running through it as a single specimen reel --- */
   .ann-head.ev-head{margin-top:70px;}
   .evidence{display:block;margin-top:30px;}
@@ -239,7 +229,8 @@
   .ev-cap i{font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;}
   .ev-cap b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:27px;line-height:1.14;letter-spacing:-.02em;}
 
-  .ev-shots{grid-column:2;grid-row:1;display:flex;justify-content:center;height:min(88vh,880px);}
+  /* frame stays shorter than a slide so only one specimen is ever on screen */
+  .ev-shots{grid-column:2;grid-row:1;display:flex;justify-content:center;height:min(76vh,880px);}
   .ev-gut{grid-column:1;grid-row:1;}
   .shot{
     position:relative;margin:0;padding:0;height:100%;aspect-ratio:9/19.5;
@@ -247,9 +238,16 @@
     box-shadow:none;
   }
   .ev-screen{position:absolute;inset:0;border-radius:32px;overflow:hidden;background:var(--paper);}
-  /* natural-height strip: specimens butt up one after another, no dead bands */
-  .ev-feed{position:absolute;left:0;top:0;width:100%;display:flex;flex-direction:column;gap:46px;will-change:transform;}
-  .ev-feed img{display:block;width:100%;height:auto;}
+  .ev-feed{position:absolute;left:0;top:0;width:100%;display:flex;flex-direction:column;will-change:transform;}
+  /* one specimen per screen, so every fault gets the same share of attention */
+  .ev-slide{height:80vh;display:flex;flex-direction:column;justify-content:center;gap:14px;overflow:hidden;}
+  .ev-slide img{display:block;width:100%;height:auto;flex:0 0 auto;}
+  /* filler so a short specimen never floats in an empty screen — it reads as the
+     rest of the page continuing, and stays quiet enough to ignore. Collapses to
+     nothing when the image already fills the slide. */
+  .wire{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;
+    gap:14px;padding:0 18px;overflow:hidden;}
+  .wire i{display:block;flex:0 0 auto;height:10px;border-radius:99px;background:hsl(255 40% 96.5%);}
   .shot .pbar{position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;}
   .shot .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:99px;}
 
@@ -259,17 +257,16 @@
     width:auto;max-width:100%;text-align:right;opacity:0;
     will-change:transform,opacity;
   }
-  .co b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14px;letter-spacing:-.01em;margin-bottom:4px;}
-  .co span{display:block;font-size:12.5px;line-height:1.55;color:var(--mut);}
+  .co span{display:block;font-size:15px;line-height:1.55;color:var(--mut);}
   @media (max-width:1180px){
     .ev-stage{grid-template-columns:minmax(200px,265px) auto;padding:56px 24px 0;}
-    .ev-shots{height:min(84vh,820px);}
+    .ev-shots{height:min(76vh,820px);}
     .co{right:26px;}
     .ev-caps{padding-right:26px;}
     .ev-cap b{font-size:22px;}
   }
 
-  .live-links{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;}
+  .live-links{grid-row:2;display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;justify-content:flex-end;}
   .live-links a{
     font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--lav-deep);text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:8px 14px;
@@ -279,13 +276,14 @@
   @media (max-width:900px){
     .scrolly{height:480vh;}
     .scrolly .stage{grid-template-columns:1fr;gap:18px;align-content:center;padding:0 22px;}
-    .phone{width:230px;padding:9px;border-radius:36px;}
+    .phone{width:230px;border-radius:30px;}
     .screen{height:48vh;border-radius:28px;}
-    .phone::after{top:16px;height:16px;width:66px;}
-    .ann-rail .ann-head{display:none;}
-    .ann{display:none;padding:10px 0 0 0;border-left:none;}
-    .ann::before{display:none;}
+    /* stacked: the phone leads and only the active note sits under it */
+    .phone-slot{grid-column:1;grid-row:1;}
+    .ann-rail{grid-column:1;grid-row:2;padding-right:0;text-align:center;}
+    .ann{grid-area:auto;display:none;padding:10px 0 0 0;opacity:1;}
     .ann.on{display:block;}
+    .ann p{margin:0 auto;}
     .live-links{justify-content:center;margin-top:10px;}
     .ev-scrolly{height:700vh;}
     .ev-stage{grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;justify-content:stretch;padding:100px 22px 0;}
@@ -293,6 +291,9 @@
     .ev-cap{flex-direction:row;align-items:baseline;text-align:left;gap:12px;}
     .ev-cap b{font-size:20px;}
     .ev-shots{grid-column:1;grid-row:2;height:52vh;}
+    /* keep the slide just taller than the frame, as on desktop — otherwise most
+       of the scroll is spent looking at filler */
+    .ev-slide{height:56vh;}
     .shot .pbar{right:-10px;}
     .ev-gut{display:contents;}
     .co{
@@ -402,48 +403,23 @@
     </div>
     <div class="evidence">
       <div class="ev-scrolly">
-        <div class="ev-snap" data-shot="0"></div>
-        <div class="ev-snap" data-shot="2"></div>
-        <div class="ev-snap" data-shot="4"></div>
-        <div class="ev-snap" data-shot="6"></div>
-
         <div class="ev-stage">
           <div class="ev-gut l">
+            <!-- data-thru lets one line carry every specimen of a fault -->
             <div class="co" data-shot="0">
-              <b>Five women, five shoots</b>
-              <span>Every symptom gets a different stock model. No continuity of face, wardrobe or light.</span>
+              <span>Nothing in the type scale separates a claim from a caption — the body copy even reads larger than the subhead above it.</span>
             </div>
             <div class="co" data-shot="1">
-              <b>Bought, not lived</b>
-              <span>Imagery is not emotionally connecting and looks synthetic — the audience is represented, never recognised.</span>
+              <span>The heatmap puts 55% of attention on the photo and only 5% on the subhead carrying the promise.</span>
             </div>
-            <div class="co" data-shot="2">
-              <b>Density with no entry point</b>
-              <span>Too much information at once makes skimming the page difficult.</span>
+            <div class="co" data-shot="2" data-thru="3">
+              <span>Copy itself is very dense and technical, which needed simpler illustrations.</span>
             </div>
-            <div class="co" data-shot="3">
-              <b>Unexplained clinical terms</b>
-              <span>Drusen, RPE and lipofuscin arrive with no proper explanation of what they mean.</span>
+            <div class="co" data-shot="4" data-thru="5">
+              <span>Stock models and synthetic imagery represented the audience age group, but didn't feel emotionally connecting.</span>
             </div>
-            <div class="co" data-shot="4" data-at=".3">
-              <b>One heading size</b>
-              <span>Nothing in the type scale separates a claim from a caption.</span>
-            </div>
-            <div class="co" data-shot="4" data-at=".75">
-              <b>Body larger than the subhead</b>
-              <span>The supporting line reads smaller than the copy it is meant to introduce.</span>
-            </div>
-            <div class="co" data-shot="5">
-              <b>55% of attention on one photo</b>
-              <span>The heatmap puts most of the fixation on the model, and only 5% on the subhead that carries the promise.</span>
-            </div>
-            <div class="co" data-shot="6">
-              <b>Unnecessary shadows</b>
-              <span>Cards float on drop shadows with no rule deciding which elements lift and which sit flat.</span>
-            </div>
-            <div class="co" data-shot="7">
-              <b>Photography, then comic</b>
-              <span>Inconsistent image and illustration style — a drawn Sarah lands between photographic sections.</span>
+            <div class="co" data-shot="6" data-thru="7">
+              <span>Unnecessary drop shadows on elements, comic illustrations and a broken colour palette all needed to be fixed.</span>
             </div>
           </div>
 
@@ -451,12 +427,12 @@
             <figure class="shot">
               <div class="ev-screen">
                 <div class="ev-feed">
-                  <img data-fault="0" src="assets/viewryt/f01-collage.jpg" alt="NLP7 symptom strip: five unrelated stock photos of older women placed side by side">
-                  <img data-fault="0" src="assets/viewryt/f01-hero.jpg" alt="NLP7 hero photo: a stock image of an older woman pinching the bridge of her nose">
+                  <img data-fault="0" src="assets/viewryt/f03-hero.jpg" alt="NLP7 hero as shipped: headline, subhead and photo">
+                  <img data-fault="0" src="assets/viewryt/f03-heat.jpg" alt="Attention heatmap of the same hero showing 55% of attention on the photo and 5% on the subhead">
                   <img data-fault="1" src="assets/viewryt/f02-flow.jpg" alt="NLP7 eight-step flow chart explaining how aging leads to early dry AMD">
                   <img data-fault="1" src="assets/viewryt/f02-dense.jpg" alt="NLP7 long-form cards headed Inflammation and Waste Build-up">
-                  <img data-fault="2" src="assets/viewryt/f03-hero.jpg" alt="NLP7 hero as shipped: headline, subhead and photo">
-                  <img data-fault="2" src="assets/viewryt/f03-heat.jpg" alt="Attention heatmap of the same hero showing 55% of attention on the photo and 5% on the subhead">
+                  <img data-fault="2" src="assets/viewryt/f01-collage.jpg" alt="NLP7 symptom strip: five unrelated stock photos of older women placed side by side">
+                  <img data-fault="2" src="assets/viewryt/f01-hero.jpg" alt="NLP7 hero photo: a stock image of an older woman pinching the bridge of her nose">
                   <img data-fault="3" src="assets/viewryt/f04-shadow.jpg" alt="NLP7 benefit card with a circular photo sitting on a heavy drop shadow">
                   <img data-fault="3" src="assets/viewryt/f04-comic.jpg" alt="NLP7 Meet Sarah section rendered as a comic illustration">
                 </div>
@@ -466,9 +442,9 @@
           </div>
 
           <div class="ev-caps">
-            <div class="ev-cap"><i>Fault 01</i><b>Poor targeting</b></div>
+            <div class="ev-cap"><i>Fault 01</i><b>Improper hierarchy</b></div>
             <div class="ev-cap"><i>Fault 02</i><b>Cognitive overload</b></div>
-            <div class="ev-cap"><i>Fault 03</i><b>Improper hierarchy</b></div>
+            <div class="ev-cap"><i>Fault 03</i><b>Poor targeting</b></div>
             <div class="ev-cap"><i>Fault 04</i><b>Style inconsistency</b></div>
           </div>
         </div>
@@ -497,17 +473,69 @@
     </div>
   </section>
 
-  <!-- KEY DECISIONS -->
+  <!-- IMPROVEMENTS -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">03 — Key Decisions</div>
-      <h2 class="rv">Five moves that did <em>the heavy lifting.</em></h2>
-      <div class="steps rv rv-d1" style="max-width:760px;">
-        <div class="step"><div><b>Authority above the fold</b><p>Johns Hopkins, NIH and Yale credentials moved into the hero — before fear-based framing, not after it.</p></div></div>
-        <div class="step"><div><b>Social proof pulled up the scroll</b><p>Reviews repositioned to arrive at the moment of consideration, not as an afterthought.</p></div></div>
-        <div class="step"><div><b>The CTA became a zone</b><p>Not a button — a destination with micro-trust signals clustered around the click.</p></div></div>
-        <div class="step"><div><b>A comparison table built for scanning</b><p>Designed for how people actually read tables; stacked cards on mobile instead of a squeezed grid.</p></div></div>
-        <div class="step"><div><b>Formula first, ingredients second</b><p>The AREDS 2 story led — 4,203 participants, 10 years, NIH — before any individual ingredient.</p></div></div>
+      <div class="sec-label rv">03 — Improvements</div>
+      <h2 class="rv">Four principles that did <em>the heavy lifting.</em></h2>
+
+      <div class="ann-head ev-head rv">Improvements — NLP8, as it shipped</div>
+    </div>
+    <div class="evidence">
+      <div class="ev-scrolly">
+        <div class="ev-stage">
+          <div class="ev-gut l">
+            <div class="co" data-shot="0">
+              <span>Johns Hopkins, the NIH and Yale sit above the first claim, so authority is established before anything is asserted.</span>
+            </div>
+            <div class="co" data-shot="1">
+              <span>The AREDS 2 result is drawn as a chart instead of stated as a number, which makes the evidence legible at a glance.</span>
+            </div>
+            <div class="co" data-shot="2">
+              <span>Normal, early and advanced vision are shown against something worth keeping, so the stake is felt before it is explained.</span>
+            </div>
+            <div class="co" data-shot="3">
+              <span>A clean anatomical illustration carries the clinical terms, which keeps the section skimmable.</span>
+            </div>
+            <div class="co" data-shot="4">
+              <span>Colour leads the eye from the herb through to the hero ingredient, so the comparison resolves into one answer.</span>
+            </div>
+            <div class="co" data-shot="5">
+              <span>Features, trust and the guarantee are framed in a single screen at the point of decision.</span>
+            </div>
+            <div class="co" data-shot="6">
+              <span>A real type scale now separates the claim, the subhead and the supporting line.</span>
+            </div>
+            <div class="co" data-shot="7">
+              <span>The palette was cut back to five deliberate colours, so nothing competes with the call to action.</span>
+            </div>
+          </div>
+
+          <div class="ev-shots">
+            <figure class="shot">
+              <div class="ev-screen">
+                <div class="ev-feed">
+                  <img data-fault="0" src="assets/viewryt/i01a.jpg" alt="Backed by Research block crediting Johns Hopkins, the NIH and Yale, above an NIH confirmation callout">
+                  <img data-fault="0" src="assets/viewryt/i01b.jpg" alt="Bar chart showing AREDS 2 reducing risk of central vision loss by 19% against 11% and 10% comparators">
+                  <img data-fault="1" src="assets/viewryt/i02a.jpg" alt="Three photographs of the same scene simulating normal, early and advanced AMD vision">
+                  <img data-fault="1" src="assets/viewryt/i02b.jpg" alt="Explainer section with an anatomical illustration of the eye labelling the macula">
+                  <img data-fault="2" src="assets/viewryt/i03a.jpg" alt="Lutein comparison table for marigold, kale and spinach above the Lutemax 2020 ingredient panel">
+                  <img data-fault="2" src="assets/viewryt/i03b.jpg" alt="AREDS 2 product card listing capsule benefits above the order button and guarantee">
+                  <img data-fault="3" src="assets/viewryt/i04a.jpg" alt="Revised hero with a clear heading, subhead and supporting line at distinct sizes">
+                  <img data-fault="3" src="assets/viewryt/i04b.jpg" alt="Previous eight-colour palette above the reduced five-colour palette">
+                </div>
+              </div>
+              <div class="pbar"><i></i></div>
+            </figure>
+          </div>
+
+          <div class="ev-caps">
+            <div class="ev-cap"><i>Improvement 01</i><b>Trust first</b></div>
+            <div class="ev-cap"><i>Improvement 02</i><b>Attention before explanation</b></div>
+            <div class="ev-cap"><i>Improvement 03</i><b>Decision architecture</b></div>
+            <div class="ev-cap"><i>Improvement 04</i><b>Progressive disclosure</b></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -524,6 +552,7 @@
           <p>This is the shipped NLP8 page, exactly as it runs in production. Keep scrolling — the phone walks through the full page while the notes explain the intent behind each section.</p>
         </div>
       </div>
+      <div class="ann-head ev-head rv">Design intent · section by section</div>
     </div>
     <div class="scrolly" id="scrolly">
       <div class="stage">
@@ -539,30 +568,22 @@
           </div>
         </div>
         <div class="ann-rail">
-          <div class="ann-head">Design intent · section by section</div>
-          <div class="ann" data-from="0" data-to=".12">
-            <i>01 — Hook</i><b>The lead is a story, not a pitch</b>
-            <p>"5 Silent Signs of Macular Degeneration" opens on the reader's fear of losing independence. Attention is earned before a single claim is made.</p>
+          <!-- four beats, each pinned to the stretch of page it describes -->
+          <div class="ann" data-from="0" data-to=".34">
+            <i>Hook</i><b>The lead is a story, not a pitch</b>
+            <p>"5 Silent Signs of Macular Degeneration" opens on the fear of losing independence, then explains why vision degrades after 40. Attention is earned before a single claim is made.</p>
           </div>
-          <div class="ann" data-from=".12" data-to=".26">
-            <i>02 — Educate</i><b>Urgency built on mechanism, not fear</b>
-            <p>Three reasons vision degrades faster after 60 — the reader learns the <em>why</em>, so the solution that follows feels inevitable.</p>
-          </div>
-          <div class="ann" data-from=".26" data-to=".47">
-            <i>03 — Evidence</i><b>The AREDS-2 story leads, ingredients follow</b>
+          <div class="ann" data-from=".34" data-to=".64">
+            <i>Evidence</i><b>The AREDS-2 study leads, ingredients follow</b>
             <p>NIH, 10 years, 4,203 participants — then each nutrient card answers "why it matters." Authority arrives before any brand talk.</p>
           </div>
-          <div class="ann" data-from=".47" data-to=".58">
-            <i>04 — Reveal</i><b>The product is the conclusion</b>
-            <p>ViewRyt only appears after the argument is complete — entering as the obvious answer, with expert endorsements beside it.</p>
+          <div class="ann" data-from=".64" data-to=".836">
+            <i>Reveal</i><b>The product is the conclusion</b>
+            <p>ViewRyt only appears once the argument is complete — entering as the obvious answer, with expert endorsements beside it.</p>
           </div>
-          <div class="ann" data-from=".58" data-to=".68">
-            <i>05 — Decision</i><b>The CTA is a zone, not a button</b>
-            <p>Guarantee, bonus gifts, price anchoring and trust badges cluster around the click — the decision moment is designed, not decorated.</p>
-          </div>
-          <div class="ann" data-from=".68" data-to="1.01">
-            <i>06 — Close</i><b>Objections absorbed at the end</b>
-            <p>Reviews, a seven-step quality checklist and the FAQ handle every remaining "but what about…" before checkout.</p>
+          <div class="ann" data-from=".836" data-to="1.01">
+            <i>Close</i><b>The CTA is a zone, not a button</b>
+            <p>Verified reviews, a price-anchored comparison and the 90-day guarantee cluster around the click. The decision moment is designed, not decorated.</p>
           </div>
           <div class="live-links">
             <a href="https://theayurvedaexperience.com/pages/ayuttva-viewryt-nlp8" target="_blank" rel="noopener">Live redesign ↗</a>
@@ -714,23 +735,52 @@ const io = new IntersectionObserver((entries) => {
 document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
 
 /* evidence reel: one pinned frame runs the whole strip of specimens.
-   Callouts are anchored to the shot they explain and ride up with it; the fault
-   heading swaps to whichever shot is nearest the middle of the frame. */
-(function(){
-  const sc = document.querySelector('.ev-scrolly');
-  if(!sc) return;
+   Every specimen owns a full screen, so no fault gets more weight than another.
+   Callouts are anchored to the specimen they explain and ride up with it; the
+   fault heading swaps to whichever specimen fills the frame. */
+function evidenceReel(sc){
   const screen = sc.querySelector('.ev-screen');
   const feed   = sc.querySelector('.ev-feed');
   const bar    = sc.querySelector('.pbar i');
   const gut    = sc.querySelector('.ev-gut');
+  const clamp01 = v => Math.min(Math.max(v, 0), 1);
+
+  /* give every specimen its own screen, and pad the leftover space with a few
+     quiet bars so a short image never sits in a blank frame */
+  const imgs = [...feed.querySelectorAll('img')];
+  const WIRE = [[.45,1,.78],[1,.82,.6],[.9,.68,.95],[.5,.88,.7]];  /* bar widths */
+  imgs.forEach((img, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'ev-slide';
+    slide.dataset.fault = img.dataset.fault;
+    feed.insertBefore(slide, img);
+    const wire = at => {
+      const w = document.createElement('div');
+      w.className = 'wire';
+      WIRE[(i + at) % WIRE.length].forEach(width => {
+        const b = document.createElement('i');
+        b.style.width = (width * 100) + '%';
+        w.append(b);
+      });
+      return w;
+    };
+    slide.append(wire(0), img, wire(1));
+  });
+
   const shots  = [...feed.children];
   const cos    = [...sc.querySelectorAll('.co')];
   const capsBox = sc.querySelector('.ev-caps');
   const caps   = [...sc.querySelectorAll('.ev-cap')];
-  const marks  = [...sc.querySelectorAll('.ev-snap')];
+  /* one snap stop per specimen now that each owns a screen */
+  const marks = shots.map((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'ev-snap';
+    d.dataset.shot = i;
+    sc.insertBefore(d, sc.firstChild);
+    return d;
+  });
   let m = null, ticking = false;
 
-  /* the strip runs flush to the top and bottom of the frame — no dead space at either end */
   function measure(){
     const screenH = screen.clientHeight;
     if(!screenH || !shots[0].offsetHeight) return false;
@@ -741,17 +791,16 @@ document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
       screenH, travel, span,
       tops: shots.map(s => s.offsetTop),
       hs:   shots.map(s => s.offsetHeight),
-      shotOf: cos.map(c => +c.dataset.shot),
-      anchors: cos.map(c => {
-        const s = shots[+c.dataset.shot];
-        return s.offsetTop + (c.dataset.at ? parseFloat(c.dataset.at) : 0.5) * s.offsetHeight;
-      })
+      /* a line can cover a run of specimens: [first, last] */
+      range: cos.map(c => [+c.dataset.shot, +(c.dataset.thru ?? c.dataset.shot)]),
+      /* callouts line up with the image itself, not the screen it sits in */
+      mids: imgs.map(img => img.offsetTop + img.offsetHeight / 2)
     };
-    /* park a snap point where each fault's first shot is best framed */
+    /* park a snap point where each specimen is best framed */
     marks.forEach(mk => {
       const i = +mk.dataset.shot;
       const p = (m.tops[i] + m.hs[i] / 2 - screenH / 2) / travel;
-      mk.style.top = Math.min(Math.max(p, 0), 1) * span + 'px';
+      mk.style.top = clamp01(p) * span + 'px';
     });
     return true;
   }
@@ -778,11 +827,30 @@ document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
     const fault = +shots[near].dataset.fault;
     caps.forEach((c, i) => c.classList.toggle('on', i === fault));
 
-    /* stacked layout shows one callout at a time: whichever anchor sits nearest the middle of the frame */
+    /* a line shared by several specimens tracks the one currently filling the
+       frame, weighted by coverage, so it holds steady while the images change */
+    const anchorOf = ([a, b]) => {
+      let num = 0, den = 0;
+      for(let s = a; s <= b; s++){
+        const wgt = Math.max(cover(s), 0.001);
+        num += wgt * m.mids[s];
+        den += wgt;
+      }
+      return num / den;
+    };
+    /* summed, not maxed — across a seam the two specimens each half-fill the
+       frame, and the line they share should not dip as it passes */
+    const covOf = ([a, b]) => { let t = 0; for(let s = a; s <= b; s++) t += cover(s); return Math.min(t, 1); };
+
+    /* stacked layout shows one callout at a time: whichever range sits nearest the playhead */
     if(innerWidth <= 900){
       const fh = m.travel + m.screenH;
       let act = 0, bd = Infinity;
-      m.anchors.forEach((a, i) => { const d = Math.abs(a / fh - p); if(d < bd){ bd = d; act = i; } });
+      m.range.forEach((r, i) => {
+        const a = (m.mids[r[0]] + m.mids[r[1]]) / 2;
+        const d = Math.abs(a / fh - p);
+        if(d < bd){ bd = d; act = i; }
+      });
       cos.forEach((c, i) => { c.style.opacity = ''; c.classList.toggle('on', i === act); });
       return;
     }
@@ -790,14 +858,25 @@ document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
     /* keep the callout track clear of the heading parked at the top of the column */
     const off = screen.getBoundingClientRect().top - gut.getBoundingClientRect().top;
     const floor = capsBox.offsetHeight + 26;
+    const placed = [];
     cos.forEach((c, i) => {
       c.classList.remove('on');
       const half = c.offsetHeight / 2;
-      const y = Math.min(Math.max(m.anchors[i] - shift, floor + half), m.screenH - half - 8);
-      c.style.transform = 'translateY(' + (off + y - half) + 'px)';
-      /* a callout is full strength while its shot holds the frame, and fades as it leaves */
-      c.style.opacity = Math.max(0, Math.min(1, (cover(m.shotOf[i]) - 0.3) / 0.45));
+      const y = Math.min(Math.max(anchorOf(m.range[i]) - shift, floor + half), m.screenH - half - 8);
+      /* a callout is full strength while its specimens hold the frame, and fades as they leave */
+      const o = clamp01((covOf(m.range[i]) - 0.3) / 0.45);
+      c.style.opacity = o;
+      if(o > 0.02) placed.push({c, y, half});
+      else c.style.transform = 'translateY(' + (off + y - half) + 'px)';
     });
+    /* two callouts can be on screen together during a handoff and both hit the
+       same clamp — nudge them apart so they never stack */
+    placed.sort((a, b) => a.y - b.y);
+    for(let i = 1; i < placed.length; i++){
+      const need = placed[i-1].y + placed[i-1].half + 18 + placed[i].half;
+      if(placed[i].y < need) placed[i].y = need;
+    }
+    placed.forEach(q => { q.c.style.transform = 'translateY(' + (off + q.y - q.half) + 'px)'; });
   }
 
   function remeasure(){ m = null; update(); }
@@ -805,9 +884,10 @@ document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
   addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
   addEventListener('resize', remeasure);
   addEventListener('load', remeasure);
-  shots.forEach(s => s.complete || s.addEventListener('load', remeasure, {once:true}));
+  imgs.forEach(s => s.complete || s.addEventListener('load', remeasure, {once:true}));
   update();
-})();
+}
+document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
 </script>
 </body>
 </html>
