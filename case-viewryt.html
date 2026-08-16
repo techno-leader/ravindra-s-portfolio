@@ -17,7 +17,7 @@
     --paper:#ffffff;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth;scroll-snap-type:y proximity;}
   body{
     background:var(--paper);color:var(--ink);
     font-family:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
@@ -202,7 +202,7 @@
     position:absolute;right:-14px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;
   }
   .phone .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:99px;}
-  .ann-rail .ann-head{
+  .ann-head{
     font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.24em;color:var(--mut);
     text-transform:uppercase;margin-bottom:18px;
   }
@@ -219,6 +219,56 @@
   .ann i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;margin-bottom:5px;}
   .ann b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15.5px;letter-spacing:-.01em;margin-bottom:4px;}
   .ann p{font-size:13px;line-height:1.6;margin:0;color:var(--mut);max-width:44ch;}
+  /* --- evidence: one pinned frame, all four faults running through it as a single specimen reel --- */
+  .ann-head.ev-head{margin-top:70px;}
+  .evidence{display:block;margin-top:30px;}
+  .ev-scrolly{position:relative;height:820vh;}
+  /* JS parks one of these at the scroll offset where each fault takes over, so the run still snaps */
+  .ev-snap{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;}
+  /* text column, then the frame — heading and callouts share the left edge */
+  .ev-stage{
+    position:sticky;top:0;height:100vh;
+    display:grid;grid-template-columns:minmax(250px,330px) auto;grid-template-rows:auto;
+    justify-content:center;align-content:center;align-items:center;
+    max-width:1180px;margin:0 auto;padding:56px 44px 0;
+  }
+
+  .ev-caps{grid-column:1;grid-row:1;align-self:start;justify-self:stretch;display:grid;padding-right:44px;}
+  .ev-cap{grid-area:1/1;display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:8px;opacity:0;transition:opacity .5s ease;}
+  .ev-cap.on{opacity:1;}
+  .ev-cap i{font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;}
+  .ev-cap b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:27px;line-height:1.14;letter-spacing:-.02em;}
+
+  .ev-shots{grid-column:2;grid-row:1;display:flex;justify-content:center;height:min(88vh,880px);}
+  .ev-gut{grid-column:1;grid-row:1;}
+  .shot{
+    position:relative;margin:0;padding:0;height:100%;aspect-ratio:9/19.5;
+    border:2px solid var(--line);border-radius:34px;background:var(--paper);
+    box-shadow:none;
+  }
+  .ev-screen{position:absolute;inset:0;border-radius:32px;overflow:hidden;background:var(--paper);}
+  /* natural-height strip: specimens butt up one after another, no dead bands */
+  .ev-feed{position:absolute;left:0;top:0;width:100%;display:flex;flex-direction:column;gap:46px;will-change:transform;}
+  .ev-feed img{display:block;width:100%;height:auto;}
+  .shot .pbar{position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;}
+  .shot .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:99px;}
+
+  .ev-gut{position:relative;align-self:stretch;height:100%;}
+  .co{
+    position:absolute;top:0;left:0;right:44px;margin-left:auto;
+    width:auto;max-width:100%;text-align:right;opacity:0;
+    will-change:transform,opacity;
+  }
+  .co b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14px;letter-spacing:-.01em;margin-bottom:4px;}
+  .co span{display:block;font-size:12.5px;line-height:1.55;color:var(--mut);}
+  @media (max-width:1180px){
+    .ev-stage{grid-template-columns:minmax(200px,265px) auto;padding:56px 24px 0;}
+    .ev-shots{height:min(84vh,820px);}
+    .co{right:26px;}
+    .ev-caps{padding-right:26px;}
+    .ev-cap b{font-size:22px;}
+  }
+
   .live-links{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;}
   .live-links a{
     font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
@@ -237,13 +287,33 @@
     .ann::before{display:none;}
     .ann.on{display:block;}
     .live-links{justify-content:center;margin-top:10px;}
+    .ev-scrolly{height:700vh;}
+    .ev-stage{grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;justify-content:stretch;padding:100px 22px 0;}
+    .ev-caps{grid-column:1;grid-row:1;justify-self:stretch;align-self:auto;padding-right:0;margin-bottom:16px;}
+    .ev-cap{flex-direction:row;align-items:baseline;text-align:left;gap:12px;}
+    .ev-cap b{font-size:20px;}
+    .ev-shots{grid-column:1;grid-row:2;height:52vh;}
+    .shot .pbar{right:-10px;}
+    .ev-gut{display:contents;}
+    .co{
+      position:relative;top:auto;left:auto;right:auto;margin-left:0;max-width:none;text-align:left;
+      grid-column:1;grid-row:3;display:none;opacity:1;transform:none !important;
+      padding-left:18px;border-left:1px solid var(--line);margin-top:18px;
+    }
+    .co.on{display:block;}
   }
 
   .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
       transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
   .rv.in{opacity:1;transform:translateY(0);filter:blur(0);}
   .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}
-  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;filter:none;transition:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .rv{opacity:1;transform:none;filter:none;transition:none;}
+    .co{transition:none;}
+    .ev-cap{transition:none;}
+    html{scroll-snap-type:none;}
+    .ev-snap{scroll-snap-align:none;}
+  }
 
   @media (max-width:900px){
     .cols{grid-template-columns:1fr;gap:26px;}
@@ -322,10 +392,86 @@
         </div>
       </div>
       <div class="cards four rv">
-        <div class="card"><i>Fault 01</i><b>Trust buried</b><p>Authority signals and credentials sat below the fold, after the claims they were meant to support.</p></div>
+        <div class="card"><i>Fault 01</i><b>Poor targeting</b><p>The imagery represented the target audience but never connected emotionally — it read as synthetic stock, not lived experience.</p></div>
         <div class="card"><i>Fault 02</i><b>Cognitive overload</b><p>Dense information hit visitors before the first CTA — thinking hard before caring at all.</p></div>
-        <div class="card"><i>Fault 03</i><b>Invisible CTA</b><p>The buy button was visually undifferentiated from everything around it.</p></div>
-        <div class="card"><i>Fault 04</i><b>Late social proof</b><p>Reviews appeared long after the decision moment had already passed.</p></div>
+        <div class="card"><i>Fault 03</i><b>Improper hierarchy</b><p>A single heading size throughout, body type larger than the subhead, and all attention pulled to one photo.</p></div>
+        <div class="card"><i>Fault 04</i><b>Style inconsistency</b><p>Comic illustration sat beside photography, shadows appeared at random, and the color palette had no through-line.</p></div>
+      </div>
+
+      <div class="ann-head ev-head rv">Evidence — NLP7, as it shipped</div>
+    </div>
+    <div class="evidence">
+      <div class="ev-scrolly">
+        <div class="ev-snap" data-shot="0"></div>
+        <div class="ev-snap" data-shot="2"></div>
+        <div class="ev-snap" data-shot="4"></div>
+        <div class="ev-snap" data-shot="6"></div>
+
+        <div class="ev-stage">
+          <div class="ev-gut l">
+            <div class="co" data-shot="0">
+              <b>Five women, five shoots</b>
+              <span>Every symptom gets a different stock model. No continuity of face, wardrobe or light.</span>
+            </div>
+            <div class="co" data-shot="1">
+              <b>Bought, not lived</b>
+              <span>Imagery is not emotionally connecting and looks synthetic — the audience is represented, never recognised.</span>
+            </div>
+            <div class="co" data-shot="2">
+              <b>Density with no entry point</b>
+              <span>Too much information at once makes skimming the page difficult.</span>
+            </div>
+            <div class="co" data-shot="3">
+              <b>Unexplained clinical terms</b>
+              <span>Drusen, RPE and lipofuscin arrive with no proper explanation of what they mean.</span>
+            </div>
+            <div class="co" data-shot="4" data-at=".3">
+              <b>One heading size</b>
+              <span>Nothing in the type scale separates a claim from a caption.</span>
+            </div>
+            <div class="co" data-shot="4" data-at=".75">
+              <b>Body larger than the subhead</b>
+              <span>The supporting line reads smaller than the copy it is meant to introduce.</span>
+            </div>
+            <div class="co" data-shot="5">
+              <b>55% of attention on one photo</b>
+              <span>The heatmap puts most of the fixation on the model, and only 5% on the subhead that carries the promise.</span>
+            </div>
+            <div class="co" data-shot="6">
+              <b>Unnecessary shadows</b>
+              <span>Cards float on drop shadows with no rule deciding which elements lift and which sit flat.</span>
+            </div>
+            <div class="co" data-shot="7">
+              <b>Photography, then comic</b>
+              <span>Inconsistent image and illustration style — a drawn Sarah lands between photographic sections.</span>
+            </div>
+          </div>
+
+          <div class="ev-shots">
+            <figure class="shot">
+              <div class="ev-screen">
+                <div class="ev-feed">
+                  <img data-fault="0" src="assets/viewryt/f01-collage.jpg" alt="NLP7 symptom strip: five unrelated stock photos of older women placed side by side">
+                  <img data-fault="0" src="assets/viewryt/f01-hero.jpg" alt="NLP7 hero photo: a stock image of an older woman pinching the bridge of her nose">
+                  <img data-fault="1" src="assets/viewryt/f02-flow.jpg" alt="NLP7 eight-step flow chart explaining how aging leads to early dry AMD">
+                  <img data-fault="1" src="assets/viewryt/f02-dense.jpg" alt="NLP7 long-form cards headed Inflammation and Waste Build-up">
+                  <img data-fault="2" src="assets/viewryt/f03-hero.jpg" alt="NLP7 hero as shipped: headline, subhead and photo">
+                  <img data-fault="2" src="assets/viewryt/f03-heat.jpg" alt="Attention heatmap of the same hero showing 55% of attention on the photo and 5% on the subhead">
+                  <img data-fault="3" src="assets/viewryt/f04-shadow.jpg" alt="NLP7 benefit card with a circular photo sitting on a heavy drop shadow">
+                  <img data-fault="3" src="assets/viewryt/f04-comic.jpg" alt="NLP7 Meet Sarah section rendered as a comic illustration">
+                </div>
+              </div>
+              <div class="pbar"><i></i></div>
+            </figure>
+          </div>
+
+          <div class="ev-caps">
+            <div class="ev-cap"><i>Fault 01</i><b>Poor targeting</b></div>
+            <div class="ev-cap"><i>Fault 02</i><b>Cognitive overload</b></div>
+            <div class="ev-cap"><i>Fault 03</i><b>Improper hierarchy</b></div>
+            <div class="ev-cap"><i>Fault 04</i><b>Style inconsistency</b></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -566,6 +712,102 @@ const io = new IntersectionObserver((entries) => {
   });
 }, {threshold: 0.15, rootMargin: '0px 0px -6% 0px'});
 document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
+
+/* evidence reel: one pinned frame runs the whole strip of specimens.
+   Callouts are anchored to the shot they explain and ride up with it; the fault
+   heading swaps to whichever shot is nearest the middle of the frame. */
+(function(){
+  const sc = document.querySelector('.ev-scrolly');
+  if(!sc) return;
+  const screen = sc.querySelector('.ev-screen');
+  const feed   = sc.querySelector('.ev-feed');
+  const bar    = sc.querySelector('.pbar i');
+  const gut    = sc.querySelector('.ev-gut');
+  const shots  = [...feed.children];
+  const cos    = [...sc.querySelectorAll('.co')];
+  const capsBox = sc.querySelector('.ev-caps');
+  const caps   = [...sc.querySelectorAll('.ev-cap')];
+  const marks  = [...sc.querySelectorAll('.ev-snap')];
+  let m = null, ticking = false;
+
+  /* the strip runs flush to the top and bottom of the frame — no dead space at either end */
+  function measure(){
+    const screenH = screen.clientHeight;
+    if(!screenH || !shots[0].offsetHeight) return false;
+    const travel = feed.scrollHeight - screenH;
+    if(travel <= 0) return false;
+    const span = sc.offsetHeight - innerHeight;
+    m = {
+      screenH, travel, span,
+      tops: shots.map(s => s.offsetTop),
+      hs:   shots.map(s => s.offsetHeight),
+      shotOf: cos.map(c => +c.dataset.shot),
+      anchors: cos.map(c => {
+        const s = shots[+c.dataset.shot];
+        return s.offsetTop + (c.dataset.at ? parseFloat(c.dataset.at) : 0.5) * s.offsetHeight;
+      })
+    };
+    /* park a snap point where each fault's first shot is best framed */
+    marks.forEach(mk => {
+      const i = +mk.dataset.shot;
+      const p = (m.tops[i] + m.hs[i] / 2 - screenH / 2) / travel;
+      mk.style.top = Math.min(Math.max(p, 0), 1) * span + 'px';
+    });
+    return true;
+  }
+
+  function update(){
+    ticking = false;
+    if(!m && !measure()) return;
+    const p = Math.min(Math.max(-sc.getBoundingClientRect().top / (m.span || 1), 0), 1);
+    const shift = p * m.travel;
+
+    feed.style.transform = 'translateY(' + -shift + 'px)';
+    bar.style.height = (p * 100) + '%';
+
+    /* how much of shot i is inside the frame right now, 0..1 */
+    const cover = i => {
+      const top = m.tops[i] - shift, bot = top + m.hs[i];
+      const vis = Math.min(bot, m.screenH) - Math.max(top, 0);
+      return Math.max(0, vis) / Math.min(m.hs[i], m.screenH);
+    };
+
+    /* heading follows whichever shot fills the frame most */
+    let near = 0, best = -1;
+    m.tops.forEach((_, i) => { const c = cover(i); if(c > best){ best = c; near = i; } });
+    const fault = +shots[near].dataset.fault;
+    caps.forEach((c, i) => c.classList.toggle('on', i === fault));
+
+    /* stacked layout shows one callout at a time: whichever anchor sits nearest the middle of the frame */
+    if(innerWidth <= 900){
+      const fh = m.travel + m.screenH;
+      let act = 0, bd = Infinity;
+      m.anchors.forEach((a, i) => { const d = Math.abs(a / fh - p); if(d < bd){ bd = d; act = i; } });
+      cos.forEach((c, i) => { c.style.opacity = ''; c.classList.toggle('on', i === act); });
+      return;
+    }
+
+    /* keep the callout track clear of the heading parked at the top of the column */
+    const off = screen.getBoundingClientRect().top - gut.getBoundingClientRect().top;
+    const floor = capsBox.offsetHeight + 26;
+    cos.forEach((c, i) => {
+      c.classList.remove('on');
+      const half = c.offsetHeight / 2;
+      const y = Math.min(Math.max(m.anchors[i] - shift, floor + half), m.screenH - half - 8);
+      c.style.transform = 'translateY(' + (off + y - half) + 'px)';
+      /* a callout is full strength while its shot holds the frame, and fades as it leaves */
+      c.style.opacity = Math.max(0, Math.min(1, (cover(m.shotOf[i]) - 0.3) / 0.45));
+    });
+  }
+
+  function remeasure(){ m = null; update(); }
+
+  addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  addEventListener('resize', remeasure);
+  addEventListener('load', remeasure);
+  shots.forEach(s => s.complete || s.addEventListener('load', remeasure, {once:true}));
+  update();
+})();
 </script>
 </body>
 </html>
