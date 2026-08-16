@@ -62,11 +62,13 @@
   h1 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);letter-spacing:-.01em;}
   .lede{margin-top:30px;font-size:20px;line-height:1.6;color:var(--mut);max-width:48ch;}
   .facts{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
     border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
   }
   .facts small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
   .facts b{font-weight:500;font-size:16px;}
+  .facts a{color:var(--lav-deep);text-decoration:none;border-bottom:1px solid rgba(143,127,240,.4);transition:border-color .25s,color .25s;}
+  .facts a:hover{color:var(--ink);border-bottom-color:var(--lav);}
 
   section{padding:84px 0 10px;}
   .sec-label{
@@ -124,6 +126,9 @@
     position:absolute;left:20px;bottom:14px;
     font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
   }
+
+  figure.product-shot{margin:0;padding:0;border:none;background:none;border-radius:16px;}
+  .product-shot img{width:100%;height:auto;display:block;}
 
   /* --- spend/revenue comparison viz (CSS-built) --- */
   .duel{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
@@ -276,15 +281,31 @@
     <h1 class="rv rv-d1">Same copy. Same product. <em>Different design.</em></h1>
     <p class="lede rv rv-d2">At The Ayurveda Experience (TAE) we run performance marketing driven ads and long form sales pages. This is an example of landing page CRO redesign I did for ViewRyt an eye supplement by TAE.</p>
     <div class="facts rv rv-d2">
-      <div><small>Role</small><b>Solo Designer</b></div>
-      <div><small>Client</small><b>The Ayurveda Experience — 1.5M customers, 150+ countries</b></div>
-      <div><small>Timeline</small><b>May 2025 → May 2026</b></div>
-      <div><small>Funnel</small><b>Meta ads → Shopify · US market</b></div>
+      <div><small>Team</small><b>1 Designer (me) · 1 Copywriter</b></div>
+      <div><small>Brand</small><b><a href="https://theayurvedaexperience.com" target="_blank" rel="noopener noreferrer">The Ayurveda Experience</a> — 2.1M customers, 25+ countries</b></div>
+      <div><small>Product</small><b>ViewRyt — eye supplement</b></div>
     </div>
   </div>
 </header>
 
 <main>
+  <!-- PRODUCT -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">00 — The Product</div>
+      <div class="cols">
+        <figure class="product-shot rv">
+          <img src="assets/viewryt/viewryt-bottle.jpg" alt="ViewRyt eye supplement bottle by The Ayurveda Experience">
+        </figure>
+        <div class="rv rv-d1">
+          <h2>Strong product, <em>right audience.</em></h2>
+          <p>ViewRyt is an eye supplement formulated by TAE scientists, inspired by the industry-standard <strong>AREDS 2</strong> formula for macular health.</p>
+          <p>TAE has strong targeting for <strong>women 50+ in the US</strong> as a natural skincare brand, and the product was deemed a strong fit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- PROBLEM -->
   <section>
     <div class="wrap">
