@@ -48,7 +48,6 @@
   nav .links{display:flex;gap:26px;}
   nav a{color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;}
   nav a:hover{opacity:1;}
-  nav .back{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);}
 
   .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
 
@@ -336,6 +335,8 @@
     nav{padding:18px 22px}
     .wrap{padding:0 22px}
     header{padding:140px 0 60px}
+    /* two columns leaves a ragged orphan and splits short labels across lines */
+    .facts{grid-template-columns:1fr;gap:20px;}
     .cards, .cards.four{grid-template-columns:1fr;}
     figure{padding:20px;}
     .case-nav{grid-template-columns:1fr;}
@@ -347,7 +348,6 @@
 
 <nav>
   <a class="logo" href="ravindra-hero.html">Ravindra&nbsp;Pratap<span style="color:var(--lav)">.</span></a>
-  <div class="back mono">CS/01 — VIEWRYT · THE AYURVEDA EXPERIENCE</div>
   <div class="links">
     <a href="ravindra-hero.html#work">Work</a><a href="ravindra-hero.html#about">About</a><a href="ravindra-hero.html#contact">Contact</a>
   </div>
@@ -525,7 +525,7 @@
                   <img data-fault="2" src="assets/viewryt/i01a.jpg" alt="Backed by Research block crediting Johns Hopkins, the NIH and Yale, above an NIH confirmation callout">
                   <img data-fault="2" src="assets/viewryt/i01b.jpg" alt="Bar chart showing AREDS 2 reducing risk of central vision loss by 19% against 11% and 10% comparators">
                   <img data-fault="3" src="assets/viewryt/i04a.jpg" alt="Revised hero with a clear heading, subhead and supporting line at distinct sizes">
-                  <img data-fault="3" src="assets/viewryt/i04b.jpg" alt="Previous eight-colour palette above the reduced five-colour palette">
+                  <img data-fault="3" src="assets/viewryt/i04b.jpg" alt="Swatch strip of the previous eight-colour palette above a visibly shorter strip of the reduced five-colour palette">
                 </div>
               </div>
               <div class="pbar"><i></i></div>
@@ -536,7 +536,7 @@
             <div class="ev-cap"><i>Improvement 01</i><b>Attention before explanation</b></div>
             <div class="ev-cap"><i>Improvement 02</i><b>Decision architecture</b></div>
             <div class="ev-cap"><i>Improvement 03</i><b>Trust first</b></div>
-            <div class="ev-cap"><i>Improvement 04</i><b>Progressive disclosure</b></div>
+            <div class="ev-cap"><i>Improvement 04</i><b>Hierarchy and consistency</b></div>
           </div>
         </div>
       </div>
