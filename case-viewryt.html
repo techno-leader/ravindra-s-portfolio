@@ -15,6 +15,16 @@
     --mut:#8b87a0;
     --line:#eceaf6;
     --paper:#ffffff;
+
+    /* radius scale — four steps plus one structural value for device frames */
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:20px;
+    --r-pill:99px;
+    --r-device:34px;
+
+    /* the only elevation on the page: things that float above the text */
+    --shadow-pop:0 18px 40px -22px rgba(64,52,150,.34);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;scroll-snap-type:y proximity;}
@@ -50,10 +60,7 @@
     -webkit-mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
             mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
   }
-  #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;
-       animation:orbdrift 14s ease-in-out infinite alternate;}
-  @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
-  .kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.28em;color:var(--lav);text-transform:uppercase;margin-bottom:26px;}
+  #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;}
   h1{
     font-family:"Space Grotesk",Inter,sans-serif;
     font-size:clamp(46px,6.6vw,96px);line-height:1.0;letter-spacing:-0.035em;font-weight:600;
@@ -86,6 +93,31 @@
   p{color:#5d5970;font-size:18px;line-height:1.7;margin-bottom:18px;max-width:62ch;}
   p strong{color:var(--ink);font-weight:600;}
 
+  /* inline glossary: a term the reader may not know, defined in place on click
+     so the sentence stays short and nobody has to leave the page */
+  .define{position:relative;}
+  .define-t{
+    font:inherit;color:inherit;background:none;border:0;cursor:help;
+    padding:2px 4px;margin:-2px -4px;
+    text-decoration:underline dotted;text-underline-offset:3px;
+  }
+  .define-i{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:13px;height:13px;margin-left:5px;vertical-align:.08em;
+    border:1px solid currentColor;border-radius:var(--r-pill);
+    font-family:ui-monospace,Menlo,monospace;font-size:9px;line-height:1;
+    color:var(--lav-deep);text-decoration:none;
+  }
+  .define-t:hover,.define-t[aria-expanded="true"]{color:var(--lav-deep);}
+  .define-box{
+    position:absolute;z-index:20;left:0;top:calc(100% + 10px);
+    width:max-content;max-width:min(320px,72vw);
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);
+    box-shadow:var(--shadow-pop);padding:14px 16px;
+    font-size:14px;line-height:1.55;color:var(--mut);text-align:left;
+  }
+  .define-box[hidden]{display:none;}
+
   .pull{
     font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
     font-size:clamp(24px,3vw,38px);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
@@ -95,68 +127,45 @@
 
   .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
   .cards.four{grid-template-columns:repeat(4,1fr);}
+  /* cards are read, not clicked — flat surface, hairline border, no hover state */
   .card{
-    border:1px solid var(--line);border-radius:14px;padding:20px;
-    background:linear-gradient(160deg,#fbfaff, #f5f3fd);
-    transition:transform .45s cubic-bezier(.22,1,.36,1), border-color .3s;
+    border:1px solid var(--line);border-radius:var(--r-md);padding:20px;
+    background:var(--paper);
   }
-  .card:hover{transform:translateY(-4px);border-color:#d9d2f6;}
   .card i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--lav);margin-bottom:10px;text-transform:uppercase;}
   .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em;}
   .card p{font-size:16px;line-height:1.55;margin:0;color:var(--mut);}
+  /* no subhead, so the sentence itself has to carry the card */
+  .card.plain p{font-size:17px;color:var(--ink);}
 
   figure{
-    position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:38px 0;
-    background:
-      radial-gradient(circle at 1px 1px, rgba(143,127,240,.15) 1px, transparent 1.6px),
-      linear-gradient(150deg,#f7f5ff 0%,#efecfc 100%);
-    background-size:11px 11px, cover;
+    position:relative;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:38px 0;
+    background:#faf9ff;
     padding:40px;display:flex;justify-content:center;align-items:center;gap:28px;
   }
-  figcaption{
-    position:absolute;left:20px;bottom:14px;
-    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
-  }
 
-  figure.product-shot{margin:0;padding:0;border:none;background:none;border-radius:16px;}
+  figure.product-shot{margin:0;padding:0;border:none;background:none;border-radius:var(--r-md);}
   .product-shot img{width:100%;height:auto;display:block;}
 
-  /* --- spend/revenue comparison viz (CSS-built) --- */
-  .duel{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-  .duel .side{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 24px 60px -30px rgba(64,52,150,.22);}
-  .duel h5{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;color:var(--mut);text-transform:uppercase;margin-bottom:16px;}
-  .duel .b .side-tag{color:var(--lav-deep);}
-  .brow{margin-bottom:14px;}
-  .brow small{display:flex;justify-content:space-between;font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--mut);margin-bottom:6px;}
-  .brow .track{height:10px;background:#f0eef9;border-radius:99px;overflow:hidden;}
-  .brow .fill{height:100%;width:0;border-radius:99px;background:#d9d4f5;transition:width 1.25s cubic-bezier(.22,1,.36,1) .4s;}
-  .brow .fill.hot{background:var(--lav);}
-  figure.in .brow .fill{width:var(--w);}
-  .duel .roas{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:22px;letter-spacing:-.02em;margin-top:12px;}
-  .duel .roas small{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.14em;color:var(--mut);display:block;font-weight:400;margin-top:2px;text-transform:uppercase;}
-  .duel .loss{color:#c0574f;}
-  .duel .win{color:#2e9e5b;}
-
+  /* the headline number is the conversion rate — it gets the room and the size,
+     the other two read as supporting figures rather than three equal tiles */
   .impact{
-    border:1px solid var(--line);border-radius:24px;margin:50px 0 20px;
-    background:
-      radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px),
-      linear-gradient(160deg,#faf9ff,#f3f0fd);
-    background-size:11px 11px, cover;
-    padding:54px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px;text-align:center;
+    border-top:1px solid var(--line);margin:50px 0 20px;padding:44px 0 0;
+    display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px;align-items:start;
   }
-  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(40px,4.6vw,64px);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;}
+  .impact > div + div{border-left:1px solid var(--line);padding-left:34px;}
+  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(38px,4vw,54px);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:12px;}
+  .impact .lead b{font-size:clamp(52px,6.4vw,86px);color:var(--lav-deep);}
   .impact span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;}
-  .impact i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b7b2cc;margin-top:6px;}
 
   .case-nav{
     display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:90px 0 0;border-top:1px solid var(--line);padding:34px 0 0;
   }
   .case-nav a{
-    text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:24px;
-    transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .3s;
+    text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;
+    transition:border-color .3s, color .3s;
   }
-  .case-nav a:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .case-nav a:hover{border-color:var(--lav);color:var(--lav-deep);}
   .case-nav small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
   .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
   .case-nav .next{text-align:right;}
@@ -182,22 +191,18 @@
   /* same quiet frame as the evidence reels — no bezel, no shadow */
   .phone{
     position:relative;width:300px;flex:none;margin:0;padding:0;
-    border:2px solid var(--line);border-radius:34px;background:var(--paper);box-shadow:none;
+    border:2px solid var(--line);border-radius:var(--r-device);background:var(--paper);box-shadow:none;
   }
   .screen{
-    position:relative;border-radius:32px;overflow:hidden;
+    position:relative;border-radius:calc(var(--r-device) - 2px);overflow:hidden;
     height:min(74vh,640px);background:var(--paper);
   }
   .feed{position:absolute;left:0;top:0;width:100%;will-change:transform;}
   .feed img{display:block;width:100%;}
   .phone .pbar{
-    position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;
+    position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:var(--r-pill);background:#efedf9;overflow:hidden;
   }
-  .phone .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:99px;}
-  .ann-head{
-    font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.24em;color:var(--mut);
-    text-transform:uppercase;margin-bottom:18px;
-  }
+  .phone .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:var(--r-pill);}
   /* one note at a time: each fades in only while its stretch of the page is in
      the frame, and hands over to the next as that stretch leaves */
   .ann{grid-area:1/1;align-self:center;opacity:0;transition:opacity .5s ease;}
@@ -205,13 +210,13 @@
   .ann i{
     display:inline-block;font-style:normal;font-family:ui-monospace,Menlo,monospace;
     font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--lav-deep);
-    background:rgba(143,127,240,.13);border-radius:8px;padding:4px 9px;margin-bottom:9px;
+    background:rgba(143,127,240,.13);border-radius:var(--r-sm);padding:4px 9px;margin-bottom:9px;
   }
   .ann b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15.5px;letter-spacing:-.01em;margin-bottom:5px;}
   .ann p{font-size:13px;line-height:1.6;margin:0 0 0 auto;color:var(--mut);max-width:34ch;}
   /* --- evidence: one pinned frame, all four faults running through it as a single specimen reel --- */
-  .ann-head.ev-head{margin-top:70px;}
-  .evidence{display:block;margin-top:30px;}
+  /* the reel used to be introduced by a label; that gap is now carried here */
+  .evidence{display:block;margin-top:88px;}
   .ev-scrolly{position:relative;height:820vh;}
   /* JS parks one of these at the scroll offset where each fault takes over, so the run still snaps */
   .ev-snap{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;}
@@ -234,10 +239,10 @@
   .ev-gut{grid-column:1;grid-row:1;}
   .shot{
     position:relative;margin:0;padding:0;height:100%;aspect-ratio:9/19.5;
-    border:2px solid var(--line);border-radius:34px;background:var(--paper);
+    border:2px solid var(--line);border-radius:var(--r-device);background:var(--paper);
     box-shadow:none;
   }
-  .ev-screen{position:absolute;inset:0;border-radius:32px;overflow:hidden;background:var(--paper);}
+  .ev-screen{position:absolute;inset:0;border-radius:calc(var(--r-device) - 2px);overflow:hidden;background:var(--paper);}
   .ev-feed{position:absolute;left:0;top:0;width:100%;display:flex;flex-direction:column;will-change:transform;}
   /* one specimen per screen, so every fault gets the same share of attention */
   .ev-slide{height:80vh;display:flex;flex-direction:column;justify-content:center;gap:14px;overflow:hidden;}
@@ -247,9 +252,9 @@
      nothing when the image already fills the slide. */
   .wire{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;
     gap:14px;padding:0 18px;overflow:hidden;}
-  .wire i{display:block;flex:0 0 auto;height:10px;border-radius:99px;background:hsl(255 40% 96.5%);}
-  .shot .pbar{position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:99px;background:#efedf9;overflow:hidden;}
-  .shot .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:99px;}
+  .wire i{display:block;flex:0 0 auto;height:10px;border-radius:var(--r-pill);background:hsl(255 40% 96.5%);}
+  .shot .pbar{position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:var(--r-pill);background:#efedf9;overflow:hidden;}
+  .shot .pbar i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--lav);border-radius:var(--r-pill);}
 
   .ev-gut{position:relative;align-self:stretch;height:100%;}
   .co{
@@ -269,15 +274,16 @@
   .live-links{grid-row:2;display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;justify-content:flex-end;}
   .live-links a{
     font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--lav-deep);text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:8px 14px;
-    transition:border-color .3s, transform .3s;
+    color:var(--lav-deep);text-decoration:none;border:1px solid var(--line);border-radius:var(--r-pill);padding:8px 14px;
+    transition:border-color .3s, background-color .3s;
   }
-  .live-links a:hover{border-color:#d9d2f6;transform:translateY(-2px);}
+  .live-links a:hover{border-color:var(--lav);background:rgba(143,127,240,.09);}
   @media (max-width:900px){
     .scrolly{height:480vh;}
     .scrolly .stage{grid-template-columns:1fr;gap:18px;align-content:center;padding:0 22px;}
-    .phone{width:230px;border-radius:30px;}
-    .screen{height:48vh;border-radius:28px;}
+    /* one value moves the whole device: the screen radius derives from it */
+    .phone{width:230px;--r-device:30px;}
+    .screen{height:48vh;}
     /* stacked: the phone leads and only the active note sits under it */
     .phone-slot{grid-column:1;grid-row:1;}
     .ann-rail{grid-column:1;grid-row:2;padding-right:0;text-align:center;}
@@ -312,7 +318,9 @@
     .rv{opacity:1;transform:none;filter:none;transition:none;}
     .co{transition:none;}
     .ev-cap{transition:none;}
-    html{scroll-snap-type:none;}
+    .ann{transition:none;}
+    .define-t,.case-nav a,.live-links a,.facts a{transition:none;}
+    html{scroll-behavior:auto;scroll-snap-type:none;}
     .ev-snap{scroll-snap-align:none;}
   }
 
@@ -320,8 +328,8 @@
     .cols{grid-template-columns:1fr;gap:26px;}
     .facts{grid-template-columns:repeat(2,1fr);}
     .cards, .cards.four{grid-template-columns:1fr 1fr;}
-    .impact{grid-template-columns:1fr;padding:40px 30px;}
-    .duel{grid-template-columns:1fr;}
+    .impact{grid-template-columns:1fr;gap:28px;}
+    .impact > div + div{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:28px;}
     #orb{opacity:.4;}
   }
   @media (max-width:640px){
@@ -348,9 +356,8 @@
 <header>
   <canvas id="orb" width="520" height="520"></canvas>
   <div class="wrap">
-    <div class="kicker rv">Case Study 01 — Conversion Design · CRO</div>
-    <h1 class="rv rv-d1">Same copy. Same product. <em>Different design.</em></h1>
-    <p class="lede rv rv-d2">At The Ayurveda Experience (TAE) we run performance marketing driven ads and long form sales pages. This is an example of landing page CRO redesign I did for ViewRyt an eye supplement by TAE.</p>
+    <h1 class="rv">Same copy. Same product. <em>Different design.</em></h1>
+    <p class="lede rv rv-d1">At The Ayurveda Experience (TAE) we run performance marketing driven ads and long form sales pages. This is an example of landing page CRO redesign I did for ViewRyt an eye supplement by TAE.</p>
     <div class="facts rv rv-d2">
       <div><small>Team</small><b>1 Designer (me) · 1 Copywriter</b></div>
       <div><small>Brand</small><b><a href="https://theayurvedaexperience.com" target="_blank" rel="noopener noreferrer">The Ayurveda Experience</a> — 2.1M customers, 25+ countries</b></div>
@@ -363,7 +370,7 @@
   <!-- PRODUCT -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">00 — The Product</div>
+      <div class="sec-label rv">The Product</div>
       <div class="cols">
         <figure class="product-shot rv">
           <img src="assets/viewryt/viewryt-bottle.jpg" alt="ViewRyt eye supplement bottle by The Ayurveda Experience">
@@ -380,26 +387,24 @@
   <!-- PROBLEM -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">01 — The Problem</div>
+      <div class="sec-label rv">The Problem</div>
       <div class="cols">
         <div class="rv">
-          <h2>The old page (NLP7) converted at 1.44% — and lost money on every ad dollar.</h2>
+          <h2>The old pages (NLP7 and earlier) converted below 1.5% — and lost money on every dollar of ad spend.</h2>
         </div>
         <div class="rv rv-d1">
-          <p>ViewRyt carries the full <strong>AREDS 2 formula</strong> — the NIH clinical standard shown to reduce advanced AMD risk by 25%. A genuinely strong product. But the page presenting it returned <strong>$0.32 for every $1.00 of ad spend</strong>.</p>
+          <p>ViewRyt carries the full <strong>AREDS 2 formula</strong> — the NIH clinical standard shown to reduce advanced <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-amd">AMD<span class="define-i" aria-hidden="true">i</span></button><span class="define-box" id="def-amd" role="tooltip" hidden>Age-related Macular Degeneration (AMD) is a common eye disease that damages the macula, the central part of the retina responsible for sharp, straight-ahead vision.</span></span> risk by 25%. A genuinely strong product.</p>
           <div class="pull">The product wasn't the problem. The page's decision architecture was.
-            <span class="mono">Diagnosis after auditing NLP7</span>
+            <span class="mono">Based on data &amp; design audit</span>
           </div>
         </div>
       </div>
       <div class="cards four rv">
-        <div class="card"><i>Fault 01</i><b>Poor targeting</b><p>The imagery represented the target audience but never connected emotionally — it read as synthetic stock, not lived experience.</p></div>
-        <div class="card"><i>Fault 02</i><b>Cognitive overload</b><p>Dense information hit visitors before the first CTA — thinking hard before caring at all.</p></div>
-        <div class="card"><i>Fault 03</i><b>Improper hierarchy</b><p>A single heading size throughout, body type larger than the subhead, and all attention pulled to one photo.</p></div>
-        <div class="card"><i>Fault 04</i><b>Style inconsistency</b><p>Comic illustration sat beside photography, shadows appeared at random, and the color palette had no through-line.</p></div>
+        <div class="card"><i>Finding 01</i><b>Poor targeting</b><p>The imagery represented the target audience but never connected emotionally — it read as synthetic stock, not lived experience.</p></div>
+        <div class="card"><i>Finding 02</i><b>Cognitive overload</b><p>Dense information hit visitors before the first CTA — thinking hard before caring at all.</p></div>
+        <div class="card"><i>Finding 03</i><b>Improper hierarchy</b><p>A single heading size throughout, body type larger than the subhead, and all attention pulled to one photo.</p></div>
+        <div class="card"><i>Finding 04</i><b>Style inconsistency</b><p>Comic illustration sat beside photography, shadows appeared at random, and the color palette had no through-line.</p></div>
       </div>
-
-      <div class="ann-head ev-head rv">Evidence — NLP7, as it shipped</div>
     </div>
     <div class="evidence">
       <div class="ev-scrolly">
@@ -442,10 +447,10 @@
           </div>
 
           <div class="ev-caps">
-            <div class="ev-cap"><i>Fault 01</i><b>Improper hierarchy</b></div>
-            <div class="ev-cap"><i>Fault 02</i><b>Cognitive overload</b></div>
-            <div class="ev-cap"><i>Fault 03</i><b>Poor targeting</b></div>
-            <div class="ev-cap"><i>Fault 04</i><b>Style inconsistency</b></div>
+            <div class="ev-cap"><i>Finding 01</i><b>Improper hierarchy</b></div>
+            <div class="ev-cap"><i>Finding 02</i><b>Cognitive overload</b></div>
+            <div class="ev-cap"><i>Finding 03</i><b>Poor targeting</b></div>
+            <div class="ev-cap"><i>Finding 04</i><b>Style inconsistency</b></div>
           </div>
         </div>
       </div>
@@ -455,7 +460,7 @@
   <!-- PRINCIPLES -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">02 — Principles</div>
+      <div class="sec-label rv">Principles</div>
       <div class="cols">
         <div class="rv">
           <h2>Four rules for the redesign, <em>copy untouched.</em></h2>
@@ -463,10 +468,10 @@
         </div>
         <div class="rv rv-d1">
           <div class="cards" style="grid-template-columns:1fr;">
-            <div class="card"><i>Principle 01</i><b>Trust first</b><p>Establish authority before making a single claim.</p></div>
-            <div class="card"><i>Principle 02</i><b>Earn attention before explaining</b><p>Hook emotionally, then educate — never the reverse.</p></div>
-            <div class="card"><i>Principle 03</i><b>Decision architecture</b><p>Design the moment of choice, not just the layout around it.</p></div>
-            <div class="card"><i>Principle 04</i><b>Progressive disclosure</b><p>Detail arrives exactly when the visitor is ready for it.</p></div>
+            <div class="card plain"><i>Principle 01</i><p>Establish authority before making a single claim.</p></div>
+            <div class="card plain"><i>Principle 02</i><p>Hook emotionally, then educate — never the reverse.</p></div>
+            <div class="card plain"><i>Principle 03</i><p>Design the moment of choice, not just the layout around it.</p></div>
+            <div class="card plain"><i>Principle 04</i><p>Detail arrives exactly when the visitor is ready for it.</p></div>
           </div>
         </div>
       </div>
@@ -476,32 +481,30 @@
   <!-- IMPROVEMENTS -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">03 — Improvements</div>
+      <div class="sec-label rv">Improvements</div>
       <h2 class="rv">Four principles that did <em>the heavy lifting.</em></h2>
-
-      <div class="ann-head ev-head rv">Improvements — NLP8, as it shipped</div>
     </div>
     <div class="evidence">
       <div class="ev-scrolly">
         <div class="ev-stage">
           <div class="ev-gut l">
             <div class="co" data-shot="0">
-              <span>Johns Hopkins, the NIH and Yale sit above the first claim, so authority is established before anything is asserted.</span>
-            </div>
-            <div class="co" data-shot="1">
-              <span>The AREDS 2 result is drawn as a chart instead of stated as a number, which makes the evidence legible at a glance.</span>
-            </div>
-            <div class="co" data-shot="2">
               <span>Normal, early and advanced vision are shown against something worth keeping, so the stake is felt before it is explained.</span>
             </div>
-            <div class="co" data-shot="3">
+            <div class="co" data-shot="1">
               <span>A clean anatomical illustration carries the clinical terms, which keeps the section skimmable.</span>
             </div>
-            <div class="co" data-shot="4">
+            <div class="co" data-shot="2">
               <span>Colour leads the eye from the herb through to the hero ingredient, so the comparison resolves into one answer.</span>
             </div>
-            <div class="co" data-shot="5">
+            <div class="co" data-shot="3">
               <span>Features, trust and the guarantee are framed in a single screen at the point of decision.</span>
+            </div>
+            <div class="co" data-shot="4">
+              <span>Johns Hopkins, the NIH and Yale sit above the first claim, so authority is established before anything is asserted.</span>
+            </div>
+            <div class="co" data-shot="5">
+              <span>The AREDS 2 result is drawn as a chart instead of stated as a number, which makes the evidence legible at a glance.</span>
             </div>
             <div class="co" data-shot="6">
               <span>A real type scale now separates the claim, the subhead and the supporting line.</span>
@@ -515,12 +518,12 @@
             <figure class="shot">
               <div class="ev-screen">
                 <div class="ev-feed">
-                  <img data-fault="0" src="assets/viewryt/i01a.jpg" alt="Backed by Research block crediting Johns Hopkins, the NIH and Yale, above an NIH confirmation callout">
-                  <img data-fault="0" src="assets/viewryt/i01b.jpg" alt="Bar chart showing AREDS 2 reducing risk of central vision loss by 19% against 11% and 10% comparators">
-                  <img data-fault="1" src="assets/viewryt/i02a.jpg" alt="Three photographs of the same scene simulating normal, early and advanced AMD vision">
-                  <img data-fault="1" src="assets/viewryt/i02b.jpg" alt="Explainer section with an anatomical illustration of the eye labelling the macula">
-                  <img data-fault="2" src="assets/viewryt/i03a.jpg" alt="Lutein comparison table for marigold, kale and spinach above the Lutemax 2020 ingredient panel">
-                  <img data-fault="2" src="assets/viewryt/i03b.jpg" alt="AREDS 2 product card listing capsule benefits above the order button and guarantee">
+                  <img data-fault="0" src="assets/viewryt/i02a.jpg" alt="Three photographs of the same scene simulating normal, early and advanced AMD vision">
+                  <img data-fault="0" src="assets/viewryt/i02b.jpg" alt="Explainer section with an anatomical illustration of the eye labelling the macula">
+                  <img data-fault="1" src="assets/viewryt/i03a.jpg" alt="Lutein comparison table for marigold, kale and spinach above the Lutemax 2020 ingredient panel">
+                  <img data-fault="1" src="assets/viewryt/i03b.jpg" alt="AREDS 2 product card listing capsule benefits above the order button and guarantee">
+                  <img data-fault="2" src="assets/viewryt/i01a.jpg" alt="Backed by Research block crediting Johns Hopkins, the NIH and Yale, above an NIH confirmation callout">
+                  <img data-fault="2" src="assets/viewryt/i01b.jpg" alt="Bar chart showing AREDS 2 reducing risk of central vision loss by 19% against 11% and 10% comparators">
                   <img data-fault="3" src="assets/viewryt/i04a.jpg" alt="Revised hero with a clear heading, subhead and supporting line at distinct sizes">
                   <img data-fault="3" src="assets/viewryt/i04b.jpg" alt="Previous eight-colour palette above the reduced five-colour palette">
                 </div>
@@ -530,9 +533,9 @@
           </div>
 
           <div class="ev-caps">
-            <div class="ev-cap"><i>Improvement 01</i><b>Trust first</b></div>
-            <div class="ev-cap"><i>Improvement 02</i><b>Attention before explanation</b></div>
-            <div class="ev-cap"><i>Improvement 03</i><b>Decision architecture</b></div>
+            <div class="ev-cap"><i>Improvement 01</i><b>Attention before explanation</b></div>
+            <div class="ev-cap"><i>Improvement 02</i><b>Decision architecture</b></div>
+            <div class="ev-cap"><i>Improvement 03</i><b>Trust first</b></div>
             <div class="ev-cap"><i>Improvement 04</i><b>Progressive disclosure</b></div>
           </div>
         </div>
@@ -543,7 +546,7 @@
   <!-- THE REDESIGN, ANNOTATED -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">04 — The Redesign, Annotated</div>
+      <div class="sec-label rv">The Redesign, Annotated</div>
       <div class="cols">
         <div class="rv">
           <h2>Walk the page. <em>Every section has a job.</em></h2>
@@ -552,7 +555,6 @@
           <p>This is the shipped NLP8 page, exactly as it runs in production. Keep scrolling — the phone walks through the full page while the notes explain the intent behind each section.</p>
         </div>
       </div>
-      <div class="ann-head ev-head rv">Design intent · section by section</div>
     </div>
     <div class="scrolly" id="scrolly">
       <div class="stage">
@@ -597,47 +599,29 @@
   <!-- RESULTS -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">05 — Results</div>
-      <h2 class="rv">From losing 68¢ per dollar <em>to profitable.</em></h2>
-      <p class="rv rv-d1">Source: ClickHouse (Meta) + Klaviyo, US market. And the compounding effect: Meta's algorithm rewarded NLP8's performance with <strong>31× more ad spend</strong> than NLP7 ever earned.</p>
-      <figure class="rv">
-        <div class="duel">
-          <div class="side a">
-            <h5>NLP7 — Previous page</h5>
-            <div class="brow"><small><span>CVR</span><span>1.44%</span></small><div class="track"><div class="fill" style="--w:24%"></div></div></div>
-            <div class="brow"><small><span>Earnings / visitor</span><span>$0.36</span></small><div class="track"><div class="fill" style="--w:19%"></div></div></div>
-            <div class="brow"><small><span>Ad spend → revenue</span><span>$309 → $100</span></small><div class="track"><div class="fill" style="--w:12%"></div></div></div>
-            <div class="roas loss">ROAS 0.32<small>Losing money</small></div>
-          </div>
-          <div class="side b">
-            <h5 class="side-tag">NLP8 — My redesign</h5>
-            <div class="brow"><small><span>CVR</span><span>4.65%</span></small><div class="track"><div class="fill hot" style="--w:78%"></div></div></div>
-            <div class="brow"><small><span>Earnings / visitor</span><span>$1.50</span></small><div class="track"><div class="fill hot" style="--w:80%"></div></div></div>
-            <div class="brow"><small><span>Ad spend → revenue</span><span>$9,798 → $10,398</span></small><div class="track"><div class="fill hot" style="--w:88%"></div></div></div>
-            <div class="roas win">ROAS 1.06<small>Profitable — +231%</small></div>
-          </div>
-        </div>
-        <figcaption>Identical copy · identical product · identical traffic source</figcaption>
-      </figure>
+      <div class="sec-label rv">Results</div>
+      <h2 class="rv">From losing money on every visit <em>to profitable.</em></h2>
+      <p class="rv rv-d1">Identical copy, identical product, identical traffic source — only the design changed. The page crossed from spending more than it returned to returning more than it spent. And the compounding effect: Meta's algorithm answered that performance by pushing far more budget through the new page than the old one ever earned.</p>
       <div class="impact rv">
-        <div><b data-count="222" data-pre="+" data-suf="%">+0%</b><span>Conversion rate</span><i>1.44% → 4.65%</i></div>
-        <div><b data-count="314" data-pre="+" data-suf="%">+0%</b><span>Earnings / visitor</span><i>$0.36 → $1.50</i></div>
-        <div><b data-count="31" data-suf="×">0</b><span>More ad spend earned</span><i>from Meta's algorithm</i></div>
+        <div class="lead"><b data-count="3.2" data-dec="1" data-suf="×">0.0×</b><span>Conversion rate</span></div>
+        <div><b data-count="4.2" data-dec="1" data-suf="×">0.0×</b><span>Earnings per visitor</span></div>
+        <div><b data-count="31" data-suf="×">0×</b><span>Ad spend earned from Meta</span></div>
       </div>
     </div>
   </section>
 
-  <!-- REFLECTION -->
+  <!-- FURTHER IMPROVEMENTS -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">06 — Reflection</div>
+      <div class="sec-label rv">Further Improvements</div>
       <div class="cols">
         <div class="rv">
-          <h2>What I'd push for <em>next time.</em></h2>
+          <h2>Where this page goes <em>next.</em></h2>
         </div>
         <div class="rv rv-d1">
-          <p><strong>The honest caveat:</strong> this was a sequential comparison, not a simultaneous A/B split. Next time I'd push for proper A/B infrastructure from day one, plus scroll-depth tracking and heatmaps to see decisions, not just outcomes.</p>
-          <p><strong>Tests already queued:</strong> a video testimonial above the fold, a shorter mobile-first variant, and an earlier price anchor.</p>
+          <p><strong>Raise average order value.</strong> The page ran with a single-bottle pack only. The clearest next lift is bundles — and priming for them well before the offer, so the larger pack arrives as the sensible choice rather than the expensive one.</p>
+          <p>That means framing supply duration in the education section, then a price-per-day comparison at the point of decision, so the bundle is read as fewer refills and a lower daily cost, not a bigger bill.</p>
+          <p><strong>Also queued:</strong> proper A/B infrastructure rather than the sequential comparison this test relied on, plus scroll-depth and heatmap tracking to see decisions, not just outcomes.</p>
         </div>
       </div>
     </div>
@@ -711,11 +695,15 @@ addEventListener('scroll', () => {
   progress.style.width = (max>0 ? (scrollY/max)*100 : 0) + '%';
 }, {passive:true});
 
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
+
 function countUp(el){
   const target = parseFloat(el.dataset.count);
   const dec = parseInt(el.dataset.dec || 0, 10);
   const pre = el.dataset.pre || '';
   const suf = el.dataset.suf || '';
+  /* no count animation for readers who asked for less motion — show the figure */
+  if(REDUCED.matches){ el.textContent = pre + target.toFixed(dec) + suf; return; }
   const dur = 1500, t0 = performance.now();
   (function tick(now){
     const k = Math.min(((now||performance.now()) - t0) / dur, 1);
@@ -732,7 +720,7 @@ const io = new IntersectionObserver((entries) => {
     io.unobserve(en.target);
   });
 }, {threshold: 0.15, rootMargin: '0px 0px -6% 0px'});
-document.querySelectorAll('.rv, figure').forEach(el => io.observe(el));
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
 /* evidence reel: one pinned frame runs the whole strip of specimens.
    Every specimen owns a full screen, so no fault gets more weight than another.
@@ -888,6 +876,48 @@ function evidenceReel(sc){
   update();
 }
 document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
+
+/* inline glossary: click the term to open its definition, click away or hit
+   Escape to close. Click rather than hover so it works on touch too. */
+(function(){
+  const close = t => {
+    t.setAttribute('aria-expanded','false');
+    document.getElementById(t.getAttribute('aria-controls')).hidden = true;
+  };
+  const all = () => document.querySelectorAll('.define-t[aria-expanded="true"]');
+
+  /* the term can sit anywhere in a line, so nudge the box back inside the text
+     column once it is measurable rather than guessing an anchor side. Clamped to
+     .wrap rather than the viewport, since that is where all the text lives. */
+  const fit = box => {
+    box.style.left = '0px';
+    const col = box.closest('.wrap');
+    if(!col) return;
+    const c = col.getBoundingClientRect(), r = box.getBoundingClientRect();
+    let dx = 0;
+    if(r.right > c.right) dx = c.right - r.right;
+    if(r.left + dx < c.left) dx = c.left - r.left;
+    box.style.left = dx + 'px';
+  };
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('.define-t');
+    all().forEach(o => { if(o !== t) close(o); });
+    if(!t) return;
+    const box = document.getElementById(t.getAttribute('aria-controls'));
+    const open = t.getAttribute('aria-expanded') === 'true';
+    t.setAttribute('aria-expanded', String(!open));
+    box.hidden = open;
+    if(!open) fit(box);
+  });
+
+  addEventListener('resize', () => all().forEach(t => fit(document.getElementById(t.getAttribute('aria-controls')))));
+
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    all().forEach(t => { close(t); t.focus(); });
+  });
+})();
 </script>
 </body>
 </html>
