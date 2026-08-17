@@ -25,6 +25,15 @@
 
     /* the only elevation on the page: things that float above the text */
     --shadow-pop:0 18px 40px -22px rgba(64,52,150,.34);
+
+    /* type scale — five steps, nothing between them. 18px is the floor for
+       anything the reader is meant to read, annotations and callouts included.
+       Uppercase mono labels sit outside this scale: they are chrome, not copy. */
+    --t-body:18px;
+    --t-sub:24px;
+    --t-sub-lg:40px;
+    --t-head:56px;
+    --t-head-lg:64px;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;scroll-snap-type:y proximity;}
@@ -62,17 +71,19 @@
   #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;}
   h1{
     font-family:"Space Grotesk",Inter,sans-serif;
-    font-size:clamp(46px,6.6vw,96px);line-height:1.0;letter-spacing:-0.035em;font-weight:600;
+    /* stepped, not fluid: a clamp would slide through sizes that are not on the
+       scale (59.4px at 900px wide), which defeats the point of having one */
+    font-size:var(--t-head-lg);line-height:1.05;letter-spacing:-0.035em;font-weight:600;
     max-width:15ch;
   }
   h1 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);letter-spacing:-.01em;}
-  .lede{margin-top:30px;font-size:20px;line-height:1.6;color:var(--mut);max-width:48ch;}
+  .lede{margin-top:30px;font-size:var(--t-sub);line-height:1.55;color:var(--mut);max-width:48ch;}
   .facts{
     display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
     border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
   }
   .facts small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
-  .facts b{font-weight:500;font-size:16px;}
+  .facts b{font-weight:500;font-size:var(--t-body);line-height:1.5;}
   .facts a{color:var(--lav-deep);text-decoration:none;border-bottom:1px solid rgba(143,127,240,.4);transition:border-color .25s,color .25s;}
   .facts a:hover{color:var(--ink);border-bottom-color:var(--lav);}
 
@@ -84,12 +95,12 @@
   .sec-label::after{content:"";flex:1;height:1px;background:var(--line);}
   h2{
     font-family:"Space Grotesk",Inter,sans-serif;
-    font-size:clamp(28px,3.6vw,46px);letter-spacing:-.03em;font-weight:600;line-height:1.1;
+    font-size:var(--t-head);letter-spacing:-.03em;font-weight:600;line-height:1.12;
     max-width:22ch;margin-bottom:22px;
   }
   h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
-  p{color:#5d5970;font-size:18px;line-height:1.7;margin-bottom:18px;max-width:62ch;}
+  p{color:#5d5970;font-size:var(--t-body);line-height:1.7;margin-bottom:18px;max-width:62ch;}
   p strong{color:var(--ink);font-weight:600;}
 
   /* inline glossary: a term the reader may not know, defined in place on click
@@ -110,16 +121,16 @@
   .define-t:hover,.define-t[aria-expanded="true"]{color:var(--lav-deep);}
   .define-box{
     position:absolute;z-index:20;left:0;top:calc(100% + 10px);
-    width:max-content;max-width:min(320px,72vw);
+    width:max-content;max-width:min(400px,78vw);
     background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);
-    box-shadow:var(--shadow-pop);padding:14px 16px;
-    font-size:14px;line-height:1.55;color:var(--mut);text-align:left;
+    box-shadow:var(--shadow-pop);padding:16px 18px;
+    font-size:var(--t-body);line-height:1.55;color:var(--mut);text-align:left;
   }
   .define-box[hidden]{display:none;}
 
   .pull{
     font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
-    font-size:clamp(24px,3vw,38px);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
+    font-size:var(--t-sub-lg);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
     border-left:2px solid var(--lav);padding:6px 0 6px 30px;margin:34px 0;max-width:26ch;
   }
   .pull .mono{font-style:normal;display:block;font-size:12px;letter-spacing:.18em;color:var(--mut);margin-top:14px;text-transform:uppercase;}
@@ -132,10 +143,10 @@
     background:var(--paper);
   }
   .card i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--lav);margin-bottom:10px;text-transform:uppercase;}
-  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em;}
-  .card p{font-size:16px;line-height:1.55;margin:0;color:var(--mut);}
+  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub);font-weight:600;line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
+  .card p{font-size:var(--t-body);line-height:1.6;margin:0;color:var(--mut);}
   /* no subhead, so the sentence itself has to carry the card */
-  .card.plain p{font-size:17px;color:var(--ink);}
+  .card.plain p{color:var(--ink);}
 
   figure{
     position:relative;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:38px 0;
@@ -153,8 +164,8 @@
     display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px;align-items:start;
   }
   .impact > div + div{border-left:1px solid var(--line);padding-left:34px;}
-  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(38px,4vw,54px);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:12px;}
-  .impact .lead b{font-size:clamp(52px,6.4vw,86px);color:var(--lav-deep);}
+  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub-lg);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:12px;}
+  .impact .lead b{font-size:var(--t-head-lg);color:var(--lav-deep);}
   .impact span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;}
 
   .case-nav{
@@ -166,7 +177,7 @@
   }
   .case-nav a:hover{border-color:var(--lav);color:var(--lav-deep);}
   .case-nav small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
-  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
+  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
   .case-nav .next{text-align:right;}
   footer{
     display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
@@ -211,8 +222,8 @@
     font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--lav-deep);
     background:rgba(143,127,240,.13);border-radius:var(--r-sm);padding:4px 9px;margin-bottom:9px;
   }
-  .ann b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15.5px;letter-spacing:-.01em;margin-bottom:5px;}
-  .ann p{font-size:13px;line-height:1.6;margin:0 0 0 auto;color:var(--mut);max-width:34ch;}
+  .ann b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;margin-bottom:8px;}
+  .ann p{font-size:var(--t-body);line-height:1.6;margin:0 0 0 auto;color:var(--mut);max-width:34ch;}
   /* --- evidence: one pinned frame, all four faults running through it as a single specimen reel --- */
   /* the reel used to be introduced by a label; that gap is now carried here */
   .evidence{display:block;margin-top:88px;}
@@ -231,7 +242,7 @@
   .ev-cap{grid-area:1/1;display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:8px;opacity:0;transition:opacity .5s ease;}
   .ev-cap.on{opacity:1;}
   .ev-cap i{font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;}
-  .ev-cap b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:27px;line-height:1.14;letter-spacing:-.02em;}
+  .ev-cap b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--t-sub-lg);line-height:1.14;letter-spacing:-.025em;}
 
   /* frame stays shorter than a slide so only one specimen is ever on screen */
   .ev-shots{grid-column:2;grid-row:1;display:flex;justify-content:center;height:min(76vh,880px);}
@@ -261,13 +272,12 @@
     width:auto;max-width:100%;text-align:right;opacity:0;
     will-change:transform,opacity;
   }
-  .co span{display:block;font-size:15px;line-height:1.55;color:var(--mut);}
+  .co span{display:block;font-size:var(--t-body);line-height:1.55;color:var(--mut);}
   @media (max-width:1180px){
     .ev-stage{grid-template-columns:minmax(200px,265px) auto;padding:56px 24px 0;}
     .ev-shots{height:min(76vh,820px);}
     .co{right:26px;}
     .ev-caps{padding-right:26px;}
-    .ev-cap b{font-size:22px;}
   }
 
   .live-links{grid-row:2;display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;justify-content:flex-end;}
@@ -293,8 +303,10 @@
     .ev-scrolly{height:700vh;}
     .ev-stage{grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;justify-content:stretch;padding:100px 22px 0;}
     .ev-caps{grid-column:1;grid-row:1;justify-self:stretch;align-self:auto;padding-right:0;margin-bottom:16px;}
+    /* the caption sits above the frame here, not beside it, so it steps down a
+       notch on the scale to leave the specimen room */
     .ev-cap{flex-direction:row;align-items:baseline;text-align:left;gap:12px;}
-    .ev-cap b{font-size:20px;}
+    .ev-cap b{font-size:var(--t-sub);}
     .ev-shots{grid-column:1;grid-row:2;height:52vh;}
     /* keep the slide just taller than the frame, as on desktop — otherwise most
        of the scroll is spent looking at filler */
@@ -324,6 +336,12 @@
   }
 
   @media (max-width:900px){
+    /* the display sizes step down the scale rather than sliding between its
+       steps, so no viewport ever renders a size that is not one of the five */
+    h1{font-size:var(--t-head);}
+    h2{font-size:var(--t-sub-lg);}
+    .pull{font-size:var(--t-sub);}
+    .impact .lead b{font-size:var(--t-head);}
     .cols{grid-template-columns:1fr;gap:26px;}
     .facts{grid-template-columns:repeat(2,1fr);}
     .cards, .cards.four{grid-template-columns:1fr 1fr;}
@@ -332,6 +350,8 @@
     #orb{opacity:.4;}
   }
   @media (max-width:640px){
+    h1{font-size:var(--t-sub-lg);}
+    .impact .lead b{font-size:var(--t-sub-lg);}
     nav{padding:18px 22px}
     .wrap{padding:0 22px}
     header{padding:140px 0 60px}
@@ -888,15 +908,20 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
 
   /* the term can sit anywhere in a line, so nudge the box back inside the text
      column once it is measurable rather than guessing an anchor side. Clamped to
-     .wrap rather than the viewport, since that is where all the text lives. */
+     .wrap rather than the viewport, since that is where all the text lives —
+     and to its content box, so the box keeps the same gutter as the prose
+     instead of running flush to the screen edge on narrow viewports. */
   const fit = box => {
     box.style.left = '0px';
     const col = box.closest('.wrap');
     if(!col) return;
+    const cs = getComputedStyle(col);
     const c = col.getBoundingClientRect(), r = box.getBoundingClientRect();
+    const left = c.left + parseFloat(cs.paddingLeft);
+    const right = c.right - parseFloat(cs.paddingRight);
     let dx = 0;
-    if(r.right > c.right) dx = c.right - r.right;
-    if(r.left + dx < c.left) dx = c.left - r.left;
+    if(r.right > right) dx = right - r.right;
+    if(r.left + dx < left) dx = left - r.left;
     box.style.left = dx + 'px';
   };
 
