@@ -31,6 +31,7 @@
        Uppercase mono labels sit outside this scale: they are chrome, not copy. */
     --t-body:18px;
     --t-sub:24px;
+    --t-sub-md:32px;
     --t-sub-lg:40px;
     --t-head:56px;
     --t-head-lg:64px;
@@ -350,7 +351,11 @@
     #orb{opacity:.4;}
   }
   @media (max-width:640px){
+    /* h1 and h2 were both 40px here, which flattened the two. The 32px step
+       separates them from below: h2 steps down, h1 holds, and the lede,
+       pull-quote and card subheads still sit a step under h2 at 24px. */
     h1{font-size:var(--t-sub-lg);}
+    h2{font-size:var(--t-sub-md);}
     .impact .lead b{font-size:var(--t-sub-lg);}
     nav{padding:18px 22px}
     .wrap{padding:0 22px}
@@ -509,7 +514,7 @@
         <div class="ev-stage">
           <div class="ev-gut l">
             <div class="co" data-shot="0">
-              <span>Normal, early and advanced vision are shown against something worth keeping, so the stake is felt before it is explained.</span>
+              <span>Different stages set against something they truly care about, so the stakes feel real and connect emotionally.</span>
             </div>
             <div class="co" data-shot="1">
               <span>A clean anatomical illustration carries the clinical terms, which keeps the section skimmable.</span>
@@ -521,7 +526,7 @@
               <span>Features, trust and the guarantee are framed in a single screen at the point of decision.</span>
             </div>
             <div class="co" data-shot="4">
-              <span>Johns Hopkins, the NIH and Yale sit above the first claim, so authority is established before anything is asserted.</span>
+              <span>Repetition of elements even above the first claim, so authority is established before anything is asserted.</span>
             </div>
             <div class="co" data-shot="5">
               <span>The AREDS 2 result is drawn as a chart instead of stated as a number, which makes the evidence legible at a glance.</span>
@@ -555,7 +560,7 @@
           <div class="ev-caps">
             <div class="ev-cap"><i>Improvement 01</i><b>Attention before explanation</b></div>
             <div class="ev-cap"><i>Improvement 02</i><b>Decision architecture</b></div>
-            <div class="ev-cap"><i>Improvement 03</i><b>Trust first</b></div>
+            <div class="ev-cap"><i>Improvement 03</i><b>Trust &amp; evidence</b></div>
             <div class="ev-cap"><i>Improvement 04</i><b>Hierarchy and consistency</b></div>
           </div>
         </div>
