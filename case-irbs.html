@@ -15,6 +15,24 @@
     --mut:#8b87a0;
     --line:#eceaf6;
     --paper:#ffffff;
+
+    /* radius scale — every corner on the page resolves to one of these */
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:20px;
+    --r-pill:99px;
+    --r-device:34px;
+
+    /* one elevation token, used only by floating UI */
+    --shadow-pop:0 18px 40px -22px rgba(64,52,150,.34);
+
+    /* five-step type scale, 18px body floor */
+    --t-body:18px;
+    --t-sub:24px;
+    --t-sub-md:32px;
+    --t-sub-lg:40px;
+    --t-head:56px;
+    --t-head-lg:64px;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -32,14 +50,17 @@
   nav{
     position:fixed;top:0;left:0;right:0;z-index:30;
     display:flex;justify-content:space-between;align-items:center;
-    padding:24px 44px;font-size:13px;
+    padding:8px 44px;font-size:13px;
     background:linear-gradient(rgba(255,255,255,.92),rgba(255,255,255,0));
   }
   nav .logo{font-weight:600;text-decoration:none;color:var(--ink);}
   nav .links{display:flex;gap:26px;}
-  nav a{color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;}
+  /* 44px minimum touch target — the padding is on the link, not the bar */
+  nav a{
+    color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
+    display:inline-flex;align-items:center;min-height:44px;
+  }
   nav a:hover{opacity:1;}
-  nav .back{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);}
 
   .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
   .wrap-wide{max-width:1240px;margin:0 auto;padding:0 44px;}
@@ -56,20 +77,20 @@
   #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;
        animation:orbdrift 14s ease-in-out infinite alternate;}
   @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
-  .kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.28em;color:var(--lav);text-transform:uppercase;margin-bottom:26px;}
+  /* stepped at 1180/900/640 rather than clamp() — a clamp lands on off-scale sizes */
   h1{
     font-family:"Space Grotesk",Inter,sans-serif;
-    font-size:clamp(46px,6.6vw,96px);line-height:1.0;letter-spacing:-0.035em;font-weight:600;
+    font-size:var(--t-head-lg);line-height:1.05;letter-spacing:-0.035em;font-weight:600;
     max-width:15ch;
   }
   h1 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);letter-spacing:-.01em;}
-  .lede{margin-top:30px;font-size:20px;line-height:1.6;color:var(--mut);max-width:48ch;}
+  .lede{margin-top:30px;font-size:var(--t-sub);line-height:1.55;color:var(--mut);max-width:48ch;}
   .facts{
     display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
     border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
   }
   .facts small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
-  .facts b{font-weight:500;font-size:16px;}
+  .facts b{font-weight:500;font-size:var(--t-body);line-height:1.5;}
 
   /* ---------------- sections ---------------- */
   section{padding:84px 0 10px;}
@@ -80,32 +101,55 @@
   .sec-label::after{content:"";flex:1;height:1px;background:var(--line);}
   h2{
     font-family:"Space Grotesk",Inter,sans-serif;
-    font-size:clamp(28px,3.6vw,46px);letter-spacing:-.03em;font-weight:600;line-height:1.1;
+    font-size:var(--t-head);letter-spacing:-.03em;font-weight:600;line-height:1.12;
     max-width:22ch;margin-bottom:22px;
   }
   h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
-  p{color:#5d5970;font-size:18px;line-height:1.7;margin-bottom:18px;max-width:62ch;}
+  p{color:#5d5970;font-size:var(--t-body);line-height:1.7;margin-bottom:18px;max-width:62ch;}
   p strong{color:var(--ink);font-weight:600;}
+
+  /* --- click-to-define glossary --- */
+  .define{position:relative;}
+  .define-t{
+    font:inherit;color:inherit;background:none;border:0;cursor:help;
+    padding:2px 4px;margin:-2px -4px;
+    text-decoration:underline dotted;text-underline-offset:3px;
+  }
+  .define-i{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:13px;height:13px;margin-left:5px;vertical-align:.08em;
+    border:1px solid currentColor;border-radius:var(--r-pill);
+    font-family:ui-monospace,Menlo,monospace;font-size:9px;line-height:1;
+    color:var(--lav-deep);text-decoration:none;
+  }
+  .define-t:hover,.define-t[aria-expanded="true"]{color:var(--lav-deep);}
+  .define-box{
+    position:absolute;z-index:20;left:0;top:calc(100% + 10px);
+    width:max-content;max-width:min(400px,78vw);
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);
+    box-shadow:var(--shadow-pop);padding:16px 18px;
+    font-size:var(--t-body);line-height:1.55;color:var(--mut);text-align:left;
+  }
+  .define-box[hidden]{display:none;}
 
   .pull{
     font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
-    font-size:clamp(24px,3vw,38px);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
+    font-size:var(--t-sub-lg);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
     border-left:2px solid var(--lav);padding:6px 0 6px 30px;margin:34px 0;max-width:26ch;
   }
   .pull .mono{font-style:normal;display:block;font-size:12px;letter-spacing:.18em;color:var(--mut);margin-top:14px;text-transform:uppercase;}
 
   .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
   .cards.four{grid-template-columns:repeat(4,1fr);}
+  /* cards are read, not clicked — flat surface, hairline border, no hover state */
   .card{
-    border:1px solid var(--line);border-radius:14px;padding:20px;
-    background:linear-gradient(160deg,#fbfaff, #f5f3fd);
-    transition:transform .45s cubic-bezier(.22,1,.36,1), border-color .3s;
+    border:1px solid var(--line);border-radius:var(--r-md);padding:20px;
+    background:var(--paper);
   }
-  .card:hover{transform:translateY(-4px);border-color:#d9d2f6;}
   .card i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--lav);margin-bottom:10px;text-transform:uppercase;}
-  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em;}
-  .card p{font-size:16px;line-height:1.55;margin:0;color:var(--mut);}
+  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub);font-weight:600;line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
+  .card p{font-size:var(--t-body);line-height:1.6;margin:0;color:var(--mut);}
 
   .steps{counter-reset:st;margin:26px 0;}
   .step{display:flex;gap:22px;padding:20px 0;border-top:1px solid var(--line);}
@@ -113,25 +157,19 @@
     counter-increment:st;content:"0" counter(st);
     font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--lav);padding-top:3px;letter-spacing:.1em;
   }
-  .step div b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;margin-bottom:5px;letter-spacing:-.01em;}
-  .step div p{font-size:16px;line-height:1.55;margin:0;}
+  .step div b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--t-sub);line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
+  .step div p{font-size:var(--t-body);line-height:1.6;margin:0;}
 
   /* ---------------- figures ---------------- */
+  /* flat panel fill — the dot grid and gradient were decoration competing with the artwork */
   figure{
-    position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;margin:38px 0;
-    background:
-      radial-gradient(circle at 1px 1px, rgba(143,127,240,.15) 1px, transparent 1.6px),
-      linear-gradient(150deg,#f7f5ff 0%,#efecfc 100%);
-    background-size:11px 11px, cover;
+    position:relative;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:38px 0;
+    background:#faf9ff;
     padding:40px;display:flex;justify-content:center;align-items:center;gap:28px;
   }
-  figure.dark{background:
-      radial-gradient(circle at 1px 1px, rgba(255,255,255,.07) 1px, transparent 1.6px),
-      linear-gradient(150deg,#1b1927 0%,#232030 100%);
-    background-size:11px 11px, cover;}
-  figure img{max-width:100%;height:auto;border-radius:12px;display:block;}
-  figure img.ph{max-height:560px;width:auto;box-shadow:0 30px 70px -34px rgba(30,20,90,.45);}
-  figure img.flat{box-shadow:0 24px 60px -30px rgba(64,52,150,.28);}
+  figure.dark{background:#1b1927;}
+  figure img{max-width:100%;height:auto;border-radius:var(--r-sm);display:block;}
+  figure img.ph{max-height:560px;width:auto;}
   figcaption{
     position:absolute;left:20px;bottom:14px;
     font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
@@ -141,55 +179,70 @@
   .fig-grid figure{margin:0;}
 
   /* ---------------- metrics ---------------- */
+  /* equal columns at one number size — no figure is scaled up to argue for itself */
   .impact{
-    border:1px solid var(--line);border-radius:24px;margin:50px 0 20px;
-    background:
-      radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px),
-      linear-gradient(160deg,#faf9ff,#f3f0fd);
-    background-size:11px 11px, cover;
-    padding:54px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px;text-align:center;
+    border-top:1px solid var(--line);margin:50px 0 20px;padding:44px 0 0;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:34px;align-items:start;
   }
-  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(40px,4.6vw,64px);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;}
-  .impact span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;}
-  .impact i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b7b2cc;margin-top:6px;}
+  .impact > div + div{border-left:1px solid var(--line);padding-left:34px;}
+  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub-lg);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:12px;}
+  .impact .lead b{color:var(--lav-deep);}
+  /* the labels are read, not scanned, so they are body copy rather than chrome */
+  .impact span{font-size:var(--t-body);line-height:1.5;color:var(--mut);}
+  .impact i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);margin-top:8px;text-transform:uppercase;}
 
   /* ---------------- footer nav ---------------- */
   .case-nav{
     display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:90px 0 0;border-top:1px solid var(--line);padding:34px 0 0;
   }
   .case-nav a{
-    text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:24px;
-    transition:transform .4s cubic-bezier(.22,1,.36,1), border-color .3s;
+    text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;
+    transition:border-color .3s, color .3s;
   }
-  .case-nav a:hover{transform:translateY(-4px);border-color:#d9d2f6;}
+  .case-nav a:hover{border-color:var(--lav);color:var(--lav-deep);}
   .case-nav small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
-  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;}
+  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
   .case-nav .next{text-align:right;}
   footer{
-    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
     font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--mut);
     border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;text-transform:uppercase;
   }
+  /* 44px minimum touch target — the only link in the footer is still a way out */
+  footer a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;min-height:44px;transition:color .3s;}
+  footer a:hover{color:var(--lav-deep);}
 
   /* ---------------- motion ---------------- */
   .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
       transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
   .rv.in{opacity:1;transform:translateY(0);filter:blur(0);}
   .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}
-  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;filter:none;transition:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .rv{opacity:1;transform:none;filter:none;transition:none;}
+    .define-t,.case-nav a,nav a,footer a{transition:none;}
+    #orb{animation:none;}
+    html{scroll-behavior:auto;}
+  }
 
   @media (max-width:900px){
+    h1{font-size:var(--t-head);}
+    h2{font-size:var(--t-sub-lg);}
+    .pull{font-size:var(--t-sub);}
     .cols{grid-template-columns:1fr;gap:26px;}
     .facts{grid-template-columns:repeat(2,1fr);}
     .cards, .cards.four{grid-template-columns:1fr 1fr;}
     .fig-grid{grid-template-columns:1fr;}
-    .impact{grid-template-columns:1fr;padding:40px 30px;}
+    .impact{grid-template-columns:1fr;gap:28px;}
+    .impact > div + div{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:28px;}
     #orb{opacity:.4;}
   }
   @media (max-width:640px){
-    nav{padding:18px 22px}
+    h1{font-size:var(--t-sub-lg);}
+    h2{font-size:var(--t-sub-md);}
+    nav{padding:4px 22px}
     .wrap,.wrap-wide{padding:0 22px}
     header{padding:140px 0 60px}
+    .facts{grid-template-columns:1fr;gap:20px;}
     .cards, .cards.four{grid-template-columns:1fr;}
     figure{padding:20px;}
     .case-nav{grid-template-columns:1fr;}
@@ -201,7 +254,6 @@
 
 <nav>
   <a class="logo" href="ravindra-hero.html">Ravindra&nbsp;Pratap<span style="color:var(--lav)">.</span></a>
-  <div class="back mono">CS/03 — IRBS · IIT GUWAHATI</div>
   <div class="links">
     <a href="ravindra-hero.html#work">Work</a><a href="ravindra-hero.html#about">About</a><a href="ravindra-hero.html#contact">Contact</a>
   </div>
@@ -210,9 +262,8 @@
 <header>
   <canvas id="orb" width="520" height="520"></canvas>
   <div class="wrap">
-    <div class="kicker rv">Case Study 03 — Product Design · Shipped</div>
-    <h1 class="rv rv-d1">Booking a room shouldn't feel like <em>filing a petition.</em></h1>
-    <p class="lede rv rv-d2">IRBS — the Integrated Room Booking System inside IIT Guwahati's OneStop app. Designed for a campus of 7,000+ students where 200+ people run club life out of NEW SAC every single day.</p>
+    <h1 class="rv">Booking a room shouldn't feel like <em>filing a petition.</em></h1>
+    <p class="lede rv rv-d1">IRBS — the Integrated Room Booking System inside IIT Guwahati's OneStop app. Designed for a campus of 7,000+ students where 200+ people run club life out of NEW SAC every single day.</p>
     <div class="facts rv rv-d2">
       <div><small>Role</small><b>Design Lead — Students' Web Committee</b></div>
       <div><small>Team</small><b>1 designer · 3 developers</b></div>
@@ -226,13 +277,13 @@
   <!-- PROBLEM -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">01 — The Problem</div>
+      <div class="sec-label rv">The Problem</div>
       <div class="cols">
         <div class="rv">
           <h2>Campus students don't get proper rooms for meetings &amp; practice sessions.</h2>
         </div>
         <div class="rv rv-d1">
-          <p>NEW SAC is the beating heart of extracurriculars at IITG — music, dance, coding, quizzing, robotics. But reserving its club rooms, common rooms and board rooms ran on a legacy web portal almost nobody could find, let alone use.</p>
+          <p><span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-sac">NEW SAC<span class="define-i" aria-hidden="true">i</span></button><span class="define-box" id="def-sac" role="tooltip" hidden>The New Students' Activity Centre at IIT Guwahati — the building that houses the club rooms, common rooms and board rooms that campus extracurriculars run out of.</span></span> is the beating heart of extracurriculars at IITG — music, dance, coding, quizzing, robotics. But reserving its club rooms, common rooms and board rooms ran on a legacy web portal almost nobody could find, let alone use.</p>
           <p><strong>No time restrictions, confusing UI, and near-zero admin control</strong> meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.</p>
           <div class="pull">"The conference hall was booked for a whole week — without permission."
             <span class="mono">Incident that kicked off the redesign</span>
@@ -249,7 +300,7 @@
   <!-- CONTEXT -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">02 — Context</div>
+      <div class="sec-label rv">Context</div>
       <h2 class="rv">Four kinds of rooms, <em>one queue of frustrated clubs.</em></h2>
       <div class="cards four rv rv-d1">
         <div class="card"><i>Type A</i><b>Club rooms</b><p>Small focused meetings and equipment storage for individual clubs.</p></div>
@@ -267,7 +318,7 @@
   <!-- RESEARCH -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">03 — Research</div>
+      <div class="sec-label rv">Research</div>
       <div class="cols">
         <div class="rv">
           <h2>Eleven interviews, <em>three themes.</em></h2>
@@ -287,7 +338,7 @@
   <!-- SOLUTION -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">04 — The Solution</div>
+      <div class="sec-label rv">The Solution</div>
       <div class="cols">
         <div class="rv">
           <h2>Meet students where they already are: <em>inside OneStop.</em></h2>
@@ -319,13 +370,13 @@
   <!-- DESIGN & TESTING -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">05 — Design &amp; Testing</div>
+      <div class="sec-label rv">Design &amp; Testing</div>
       <div class="cols">
         <div class="rv">
           <h2>Wireframes, walkthroughs, <em>and a humbling beta.</em></h2>
         </div>
         <div class="rv rv-d1">
-          <p>We tested multiple layouts with cognitive walkthroughs before writing code. The beta then did what betas do: it corrected us. We <strong>removed empty booking sections</strong> that confused first-timers, <strong>deferred calendar drag-select</strong> that felt clever but tested poorly, and <strong>fixed navigation behaviour</strong> that trapped users mid-flow.</p>
+          <p>We tested multiple layouts with <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-cw">cognitive walkthroughs<span class="define-i" aria-hidden="true">i</span></button><span class="define-box" id="def-cw" role="tooltip" hidden>A usability method where evaluators step through a task exactly as a first-time user would, asking at each step whether the next action is obvious and whether its result is understood.</span></span> before writing code. The beta then did what betas do: it corrected us. We <strong>removed empty booking sections</strong> that confused first-timers, <strong>deferred calendar drag-select</strong> that felt clever but tested poorly, and <strong>fixed navigation behaviour</strong> that trapped users mid-flow.</p>
         </div>
       </div>
       <div class="fig-grid rv">
@@ -342,10 +393,10 @@
   <!-- IMPACT -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">06 — Impact</div>
+      <div class="sec-label rv">Impact</div>
       <h2 class="rv">Live since September 2023 — <em>and still how rooms get booked.</em></h2>
       <div class="impact rv rv-d1">
-        <div><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span><i>NEW SAC facilities</i></div>
+        <div class="lead"><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span><i>NEW SAC facilities</i></div>
         <div><b data-count="200" data-suf="+">0</b><span>Students served daily</span><i>since Sept 2023</i></div>
         <div><b data-count="3" data-suf=" steps">0</b><span>To book a room</span><i>room · time · purpose</i></div>
       </div>
@@ -363,7 +414,7 @@
     </div>
     <footer>
       <span>© 2026 Ravindra Pratap</span>
-      <span><a href="ravindra-hero.html" style="color:inherit;">← Back to portfolio</a></span>
+      <span><a href="ravindra-hero.html">← Back to portfolio</a></span>
       <span>IRBS · OneStop · IIT Guwahati</span>
     </footer>
   </div>
@@ -399,11 +450,13 @@ addEventListener('scroll', () => {
 }, {passive:true});
 
 /* ---- reveals + count-ups (shared language with home) ---- */
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 function countUp(el){
   const target = parseFloat(el.dataset.count);
   const dec = parseInt(el.dataset.dec || 0, 10);
   const pre = el.dataset.pre || '';
   const suf = el.dataset.suf || '';
+  if(REDUCED.matches){ el.textContent = pre + target.toFixed(dec) + suf; return; }
   const dur = 1500, t0 = performance.now();
   (function tick(now){
     const k = Math.min(((now||performance.now()) - t0) / dur, 1);
@@ -421,6 +474,51 @@ const io = new IntersectionObserver((entries) => {
   });
 }, {threshold: 0.15, rootMargin: '0px 0px -6% 0px'});
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* ---- click-to-define glossary ----
+   Escape to close. Click rather than hover so it works on touch too. */
+(function(){
+  const close = t => {
+    t.setAttribute('aria-expanded','false');
+    document.getElementById(t.getAttribute('aria-controls')).hidden = true;
+  };
+  const all = () => document.querySelectorAll('.define-t[aria-expanded="true"]');
+
+  /* the term can sit anywhere in a line, so nudge the box back inside the text
+     column once it is measurable rather than guessing an anchor side. Clamped to
+     .wrap rather than the viewport, since that is where all the text lives. */
+  const fit = box => {
+    box.style.left = '0px';
+    const col = box.closest('.wrap');
+    if(!col) return;
+    const cs = getComputedStyle(col);
+    const c = col.getBoundingClientRect(), r = box.getBoundingClientRect();
+    const left = c.left + parseFloat(cs.paddingLeft);
+    const right = c.right - parseFloat(cs.paddingRight);
+    let dx = 0;
+    if(r.right > right) dx = right - r.right;
+    if(r.left + dx < left) dx = left - r.left;
+    box.style.left = dx + 'px';
+  };
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('.define-t');
+    all().forEach(o => { if(o !== t) close(o); });
+    if(!t) return;
+    const box = document.getElementById(t.getAttribute('aria-controls'));
+    const open = t.getAttribute('aria-expanded') === 'true';
+    t.setAttribute('aria-expanded', String(!open));
+    box.hidden = open;
+    if(!open) fit(box);
+  });
+
+  addEventListener('resize', () => all().forEach(t => fit(document.getElementById(t.getAttribute('aria-controls')))));
+
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    all().forEach(t => { close(t); t.focus(); });
+  });
+})();
 </script>
 </body>
 </html>
