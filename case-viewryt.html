@@ -158,16 +158,17 @@
   figure.product-shot{margin:0;padding:0;border:none;background:none;border-radius:var(--r-md);}
   .product-shot img{width:100%;height:auto;display:block;}
 
-  /* the headline number is the conversion rate — it gets the room and the size,
-     the other two read as supporting figures rather than three equal tiles */
+  /* three figures at one size — the conversion rate leads on colour alone,
+     so no number is scaled up to argue for itself */
   .impact{
     border-top:1px solid var(--line);margin:50px 0 20px;padding:44px 0 0;
-    display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:34px;align-items:start;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:34px;align-items:start;
   }
   .impact > div + div{border-left:1px solid var(--line);padding-left:34px;}
   .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub-lg);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:12px;}
-  .impact .lead b{font-size:var(--t-head-lg);color:var(--lav-deep);}
-  .impact span{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;}
+  .impact .lead b{color:var(--lav-deep);}
+  /* the labels are read, not scanned, so they are body copy rather than chrome */
+  .impact span{font-size:var(--t-body);line-height:1.5;color:var(--mut);}
 
   .case-nav{
     display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:90px 0 0;border-top:1px solid var(--line);padding:34px 0 0;
@@ -229,8 +230,9 @@
   /* the reel used to be introduced by a label; that gap is now carried here */
   .evidence{display:block;margin-top:88px;}
   .ev-scrolly{position:relative;height:820vh;}
-  /* JS parks one of these at the scroll offset where each fault takes over, so the run still snaps */
-  .ev-snap{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;}
+  /* JS parks one of these at the scroll offset where each beat takes over, so a
+     long pinned run still snaps. Shared by the evidence reels and the phone walk-through. */
+  .snap-stop{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;}
   /* text column, then the frame — heading and callouts share the left edge */
   .ev-stage{
     position:sticky;top:0;height:100vh;
@@ -333,7 +335,7 @@
     .ann{transition:none;}
     .define-t,.case-nav a,.live-links a,.facts a{transition:none;}
     html{scroll-behavior:auto;scroll-snap-type:none;}
-    .ev-snap{scroll-snap-align:none;}
+    .snap-stop{scroll-snap-align:none;}
   }
 
   @media (max-width:900px){
@@ -342,7 +344,6 @@
     h1{font-size:var(--t-head);}
     h2{font-size:var(--t-sub-lg);}
     .pull{font-size:var(--t-sub);}
-    .impact .lead b{font-size:var(--t-head);}
     .cols{grid-template-columns:1fr;gap:26px;}
     .facts{grid-template-columns:repeat(2,1fr);}
     .cards, .cards.four{grid-template-columns:1fr 1fr;}
@@ -356,7 +357,6 @@
        pull-quote and card subheads still sit a step under h2 at 24px. */
     h1{font-size:var(--t-sub-lg);}
     h2{font-size:var(--t-sub-md);}
-    .impact .lead b{font-size:var(--t-sub-lg);}
     nav{padding:18px 22px}
     .wrap{padding:0 22px}
     header{padding:140px 0 60px}
@@ -650,7 +650,6 @@
         <div class="rv rv-d1">
           <p><strong>Raise average order value.</strong> The page ran with a single-bottle pack only. The clearest next lift is bundles — and priming for them well before the offer, so the larger pack arrives as the sensible choice rather than the expensive one.</p>
           <p>That means framing supply duration in the education section, then a price-per-day comparison at the point of decision, so the bundle is read as fewer refills and a lower daily cost, not a bigger bill.</p>
-          <p><strong>Also queued:</strong> proper A/B infrastructure rather than the sequential comparison this test relied on, plus scroll-depth and heatmap tracking to see decisions, not just outcomes.</p>
         </div>
       </div>
     </div>
@@ -699,6 +698,23 @@
   const screen = feed.parentElement;
   const pfill = document.getElementById('pfill');
   const anns = [...sc.querySelectorAll('.ann')];
+
+  /* snap the walk-through the way the evidence reels snap: one stop parked at the
+     offset where each note takes over, so a flick settles on a beat instead of
+     halfway between two. The notes already declare those offsets as data-from. */
+  const marks = anns.map(a => {
+    const d = document.createElement('div');
+    d.className = 'snap-stop';
+    d.dataset.at = a.dataset.from;
+    sc.insertBefore(d, sc.firstChild);
+    return d;
+  });
+  function place(span){
+    marks.forEach(mk => {
+      mk.style.top = Math.min(Math.max(parseFloat(mk.dataset.at), 0), 1) * span + 'px';
+    });
+  }
+
   let ticking = false;
   function update(){
     ticking = false;
@@ -713,9 +729,13 @@
       a.classList.toggle('on', p >= f && p < t);
     });
   }
+  /* stops only move when the span does, so they are placed on load and resize
+     rather than on every scroll frame — rewriting a snap target mid-scroll can
+     make the browser re-snap under the reader */
+  function relayout(){ place(sc.offsetHeight - innerHeight); update(); }
   addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
-  addEventListener('resize', update);
-  update();
+  addEventListener('resize', relayout);
+  relayout();
 })();
 
 const progress = document.getElementById('progress');
@@ -791,7 +811,7 @@ function evidenceReel(sc){
   /* one snap stop per specimen now that each owns a screen */
   const marks = shots.map((_, i) => {
     const d = document.createElement('div');
-    d.className = 'ev-snap';
+    d.className = 'snap-stop';
     d.dataset.shot = i;
     sc.insertBefore(d, sc.firstChild);
     return d;
