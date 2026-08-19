@@ -65,7 +65,6 @@
     display:inline-flex;align-items:center;min-height:44px;
   }
   nav a:hover{opacity:1;}
-  nav .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12px;color:var(--mut);}
 
   /* ---------- hero copy ---------- */
   .hero{
@@ -73,11 +72,6 @@
     display:flex;flex-direction:column;justify-content:center;
     padding:0 44px;
     pointer-events:none;
-  }
-  .eyebrow{
-    font-family:ui-monospace,"SF Mono",Menlo,monospace;
-    font-size:12px;letter-spacing:.28em;color:var(--lav);
-    margin-bottom:26px;text-transform:uppercase;
   }
   /* stepped at 1180/900/640 rather than clamp() — a clamp lands on off-scale sizes */
   h1{
@@ -99,27 +93,12 @@
     margin-top:30px;
     font-size:var(--t-body);line-height:1.6;color:var(--mut);max-width:42ch;
   }
-  .meta-row{
-    position:fixed;left:44px;right:44px;bottom:32px;z-index:20;
-    display:flex;justify-content:space-between;align-items:flex-end;
-    font-family:ui-monospace,"SF Mono",Menlo,monospace;
-    font-size:11px;letter-spacing:.14em;color:var(--mut);
-    pointer-events:none;
-  }
-  .scrollhint{display:flex;align-items:center;gap:10px;}
-  .scrollhint .bar{
-    width:1px;height:34px;background:linear-gradient(var(--ink),transparent);
-    animation:drip 1.8s ease-in-out infinite;
-  }
-  @keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-
   /* ---------- end CTA ---------- */
   .cta{
     position:fixed;inset:0;z-index:15;
     display:flex;flex-direction:column;gap:22px;justify-content:center;align-items:center;
     text-align:center;opacity:0;pointer-events:none;
   }
-  .cta .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.28em;color:var(--lav);text-transform:uppercase;}
   .cta h2{font-family:"Space Grotesk","Inter",sans-serif;font-size:var(--t-head);letter-spacing:-0.03em;font-weight:600;max-width:18ch;line-height:1.06;}
   /* no lift — the colour shift carries the affordance */
   .cta a{
@@ -201,7 +180,6 @@
   .metric.lead b{color:var(--lav-deep);}
   /* the labels are read, not scanned, so they are body copy rather than chrome */
   .metric span{font-size:var(--t-body);line-height:1.5;color:var(--mut);}
-  .metric i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);margin-top:8px;text-transform:uppercase;}
 
   /* ---- craft lab ---- */
   .lab{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:32px;padding-bottom:60px;}
@@ -265,7 +243,6 @@
     .rv,.rv-vis{opacity:1;transform:none;filter:none;transition:none;}
     .case-link,.case-link span,.cta a,.contact-actions a,nav a,footer a,.define-t{transition:none;}
     .d-btn,.d-btn i,.d-btn::before,.d-mag,.d-toggle,.d-toggle i,.d-tilt{transition:none;}
-    .scrollhint .bar{animation:none;}
     html{scroll-behavior:auto;}
   }
 
@@ -350,7 +327,6 @@
     .case h3{font-size:var(--t-sub);}
     nav{padding:4px 22px}
     .hero{padding:0 22px}
-    .meta-row{left:22px;right:22px}
     .wrap{padding:0 22px}
     section{padding:80px 0 20px}
     .shot{padding:20px;min-height:340px}
@@ -365,27 +341,19 @@
 
 <nav>
   <div class="logo">Ravindra&nbsp;Pratap<span style="color:var(--lav)">.</span></div>
-  <div class="mono">DESIGN ENGINEER — PORTFOLIO ’26</div>
   <div class="links">
     <a href="#work">Work</a><a href="#craft">Craft</a><a href="#about">About</a><a href="#contact">Contact</a>
   </div>
 </nav>
 
 <div class="hero" id="hero">
-  <div class="eyebrow">Dither · Motion · Conversion</div>
   <h1>Hi, I’m Ravindra.<br/>I make designs that <span class="convert">convert.</span></h1>
   <div class="sub">Design engineer crafting interfaces, motion and landing pages that turn attention into action.</div>
 </div>
 
 <div class="cta" id="cta">
-  <div class="mono">Selected Work</div>
   <h2>Attention is earned in pixels, converted in flows.</h2>
   <a href="#work">View case studies ↓</a>
-</div>
-
-<div class="meta-row">
-  <div class="scrollhint"><span class="bar"></span> SCROLL TO MORPH</div>
-  <div id="coord">θ 0.00 — DITHER/ASCII ENGINE v1</div>
 </div>
 
 <div id="runway"></div>
@@ -433,9 +401,9 @@
           </div>
           <p>A SaaS platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month "WhatsApp tax" Indian dental clinics pay to message patients — and bring them back automatically.</p>
           <div class="metrics">
-            <div class="metric lead"><b data-count="200" data-suf="+">0</b><span>Clinics onboard</span><i>across India</i></div>
-            <div class="metric"><b data-count="30" data-pre="+" data-suf="%">+0%</b><span>Returning patients</span><i>90-day pilot data</i></div>
-            <div class="metric"><b data-count="8" data-pre="₹" data-suf="k">₹0</b><span>Saved / clinic / mo</span><i>avg. cost reduction</i></div>
+            <div class="metric lead"><b data-count="200" data-suf="+">0</b><span>Clinics onboard</span></div>
+            <div class="metric"><b data-count="30" data-pre="+" data-suf="%">+0%</b><span>Returning patients</span></div>
+            <div class="metric"><b data-count="8" data-pre="₹" data-suf="k">₹0</b><span>Saved / clinic / mo</span></div>
           </div>
           <a class="case-link" href="case-dentomate.html">Read the case study <span>→</span></a>
         </div>
@@ -457,9 +425,9 @@
           </div>
           <p>A <strong>three-step room-booking flow</strong> I researched and designed for IIT Guwahati's OneStop app, replacing a broken legacy portal. Live for the campus since September 2023.</p>
           <div class="metrics">
-            <div class="metric lead"><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span><i>NEW SAC facilities</i></div>
-            <div class="metric"><b data-count="200" data-suf="+">0</b><span>Students daily</span><i>since Sept 2023</i></div>
-            <div class="metric"><b data-count="3" data-suf=" steps">0</b><span>To book a room</span><i>room · time · purpose</i></div>
+            <div class="metric lead"><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span></div>
+            <div class="metric"><b data-count="200" data-suf="+">0</b><span>Students daily</span></div>
+            <div class="metric"><b data-count="3" data-suf=" steps">0</b><span>To book a room</span></div>
           </div>
           <a class="case-link" href="case-irbs.html">Read the case study <span>→</span></a>
         </div>
@@ -547,7 +515,6 @@
       <footer>
         <span>© 2026 Ravindra Pratap</span>
         <span>Design Engineer — India · Remote</span>
-        <span>Built with Three.js + GLSL</span>
       </footer>
     </div>
   </section>
@@ -760,7 +727,6 @@ readScroll();
 const hero = document.getElementById('hero');
 const cta = document.getElementById('cta');
 const progress = document.getElementById('progress');
-const coord = document.getElementById('coord');
 
 const clock = new THREE.Clock();
 function frame(){
@@ -783,14 +749,11 @@ function frame(){
   cta.style.opacity = ctaIn;
   cta.style.transform = `translateY(${ (1 - ctaIn) * 60 }px)`;
 
-  document.querySelector('.scrollhint').style.opacity = Math.max(1 - p*1.6, 0);
   progress.style.width = (p * 100) + '%';
-  coord.textContent = 'θ ' + p.toFixed(2) + ' — DITHER/ASCII ENGINE v1';
 
   /* fade the fixed hero chrome once the sections take over */
   const runwayEnd = document.getElementById('runway').offsetHeight - innerHeight;
   const over = Math.min(Math.max((scrollY - runwayEnd + 60) / 220, 0), 1);
-  document.querySelector('.meta-row').style.opacity = (1 - over) * Math.max(1 - p*0.2, 0);
   cta.style.pointerEvents = over > 0.5 ? 'none' : '';
 
   renderer.render(scene, cam);

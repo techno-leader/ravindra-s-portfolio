@@ -44,7 +44,6 @@
     overflow-x:hidden;
   }
   ::selection{background:#e6e1fb;}
-  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
 
   .progress{position:fixed;top:0;left:0;height:2px;background:var(--lav);z-index:40;width:0;}
 
@@ -138,10 +137,8 @@
     font-size:var(--t-sub-lg);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
     border-left:2px solid var(--lav);padding:6px 0 6px 30px;margin:34px 0;max-width:26ch;
   }
-  .pull .mono{font-style:normal;display:block;font-size:12px;letter-spacing:.18em;color:var(--mut);margin-top:14px;text-transform:uppercase;}
 
   .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
-  .cards.four{grid-template-columns:repeat(4,1fr);}
   /* cards are read, not clicked — flat surface, hairline border, no hover state */
   .card{
     border:1px solid var(--line);border-radius:var(--r-md);padding:20px;
@@ -290,15 +287,6 @@
     .ev-caps{padding-right:26px;}
   }
 
-  .live-links{grid-row:2;display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;justify-content:flex-end;}
-  /* 44px minimum touch target — the pill grows to meet the thumb, the label stays chrome-sized */
-  .live-links a{
-    display:inline-flex;align-items:center;min-height:44px;
-    font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--lav-deep);text-decoration:none;border:1px solid var(--line);border-radius:var(--r-pill);padding:0 18px;
-    transition:border-color .3s, background-color .3s;
-  }
-  .live-links a:hover{border-color:var(--lav);background:rgba(143,127,240,.09);}
   @media (max-width:900px){
     .scrolly{height:480vh;}
     .scrolly .stage{grid-template-columns:1fr;gap:18px;align-content:center;padding:0 22px;}
@@ -311,7 +299,6 @@
     .ann{grid-area:auto;display:none;padding:10px 0 0 0;opacity:1;}
     .ann.on{display:block;}
     .ann p{margin:0 auto;}
-    .live-links{justify-content:center;margin-top:10px;}
     .ev-scrolly{height:700vh;}
     .ev-stage{grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;justify-content:stretch;padding:100px 22px 0;}
     .ev-caps{grid-column:1;grid-row:1;justify-self:stretch;align-self:auto;padding-right:0;margin-bottom:16px;}
@@ -342,7 +329,7 @@
     .co{transition:none;}
     .ev-cap{transition:none;}
     .ann{transition:none;}
-    .define-t,.case-nav a,.live-links a,.facts a{transition:none;}
+    .define-t,.case-nav a,.facts a{transition:none;}
     html{scroll-behavior:auto;scroll-snap-type:none;}
     .snap-stop{scroll-snap-align:none;}
   }
@@ -355,7 +342,6 @@
     .pull{font-size:var(--t-sub);}
     .cols{grid-template-columns:1fr;gap:26px;}
     .facts{grid-template-columns:repeat(2,1fr);}
-    .cards, .cards.four{grid-template-columns:1fr 1fr;}
     .impact{grid-template-columns:1fr;gap:28px;}
     .impact > div + div{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:28px;}
     #orb{opacity:.4;}
@@ -371,7 +357,7 @@
     header{padding:140px 0 60px}
     /* two columns leaves a ragged orphan and splits short labels across lines */
     .facts{grid-template-columns:1fr;gap:20px;}
-    .cards, .cards.four{grid-template-columns:1fr;}
+    .cards{grid-template-columns:1fr;}
     figure{padding:20px;}
     .case-nav{grid-template-columns:1fr;}
   }
@@ -428,12 +414,10 @@
         </div>
         <div class="rv rv-d1">
           <p>ViewRyt carries the full <strong>AREDS 2 formula</strong> — the NIH clinical standard shown to reduce advanced <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-amd">AMD<span class="define-i" aria-hidden="true">i</span></button><span class="define-box" id="def-amd" role="tooltip" hidden>Age-related Macular Degeneration (AMD) is a common eye disease that damages the macula, the central part of the retina responsible for sharp, straight-ahead vision.</span></span> risk by 25%. A genuinely strong product.</p>
-          <div class="pull">The product wasn't the problem. The page's decision architecture was.
-            <span class="mono">Based on data &amp; design audit</span>
-          </div>
+          <div class="pull">The product wasn't the problem. The page's decision architecture was.</div>
         </div>
       </div>
-      <div class="cards four rv">
+      <div class="cards rv">
         <!-- order mirrors the reel captions below: the cards name the findings,
              the reel then walks them in the same sequence -->
         <div class="card"><i>Finding 01</i><b>Improper hierarchy</b><p>A single heading size throughout, body type larger than the subhead, and all attention pulled to one photo.</p></div>
@@ -581,10 +565,10 @@
     </div>
   </section>
 
-  <!-- THE REDESIGN, ANNOTATED -->
+  <!-- THE REDESIGN -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">The Redesign, Annotated</div>
+      <div class="sec-label rv">The Redesign</div>
       <div class="cols">
         <div class="rv">
           <h2>Walk the page. <em>Every section has a job.</em></h2>
@@ -624,10 +608,6 @@
           <div class="ann" data-from=".836" data-to="1.01">
             <i>Close</i><b>The CTA is a zone, not a button</b>
             <p>Verified reviews, a price-anchored comparison and the 90-day guarantee cluster around the click. The decision moment is designed, not decorated.</p>
-          </div>
-          <div class="live-links">
-            <a href="https://theayurvedaexperience.com/pages/ayuttva-viewryt-nlp8" target="_blank" rel="noopener">Live redesign ↗</a>
-            <a href="https://theayurvedaexperience.com/pages/ayuttva-viewryt-nlp7" target="_blank" rel="noopener">Old page ↗</a>
           </div>
         </div>
       </div>
