@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" width="720" height="340">
+<style>
+  text{font-family:Inter,-apple-system,sans-serif}
+  @keyframes growBar{from{transform:scaleY(0);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+  .bar{animation:growBar 0.6s ease-out both}
+  .b1{animation-delay:.1s}.b2{animation-delay:.2s}.b3{animation-delay:.3s}.b4{animation-delay:.4s}.b5{animation-delay:.5s}.b6{animation-delay:.6s}
+  @media(prefers-reduced-motion:reduce){.bar{animation:none}}
+</style>
+<rect width="720" height="340" fill="#ffffff" rx="8"/>
+<line x1="0" y1="48" x2="720" y2="48" stroke="#e8e8e8" stroke-width="1"/>
+
+<!-- Header -->
+<text x="16" y="24" font-size="13" font-weight="700" fill="#1a1a1a">Analytics</text>
+<text x="16" y="38" font-size="8.5" fill="#999">Jan – Jun 2026 · SmileCraft Dental</text>
+<rect x="580" y="10" width="50" height="24" rx="5" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="605" y="26" font-size="9" fill="#525252" text-anchor="middle">Monthly</text>
+<rect x="636" y="10" width="68" height="24" rx="5" fill="#EBF3FF"/>
+<text x="670" y="26" font-size="9" font-weight="600" fill="#2170D9" text-anchor="middle">This Year</text>
+
+<!-- KPI cards -->
+<rect x="12" y="58" width="140" height="60" rx="8" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="22" y="76" font-size="8.5" fill="#737373">Total Revenue</text>
+<text x="22" y="99" font-size="20" font-weight="700" fill="#1a1a1a">₹14.4L</text>
+<text x="22" y="111" font-size="7.5" fill="#00C853">↑ 28% vs last year</text>
+
+<rect x="162" y="58" width="140" height="60" rx="8" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="172" y="76" font-size="8.5" fill="#737373">Patients Seen</text>
+<text x="172" y="99" font-size="20" font-weight="700" fill="#1a1a1a">842</text>
+<text x="172" y="111" font-size="7.5" fill="#00C853">↑ 34 new this month</text>
+
+<rect x="312" y="58" width="140" height="60" rx="8" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="322" y="76" font-size="8.5" fill="#737373">Returning Rate</text>
+<text x="322" y="99" font-size="20" font-weight="700" fill="#1a1a1a">68%</text>
+<text x="322" y="111" font-size="7.5" fill="#00C853">↑ 5% vs last month</text>
+
+<rect x="462" y="58" width="246" height="60" rx="8" fill="#EBF3FF" stroke="#2170D9" stroke-width="1"/>
+<text x="472" y="76" font-size="8.5" fill="#2170D9">Rx via WhatsApp</text>
+<text x="472" y="99" font-size="20" font-weight="700" fill="#2170D9">1,204</text>
+<text x="472" y="111" font-size="7.5" fill="#2170D9">94% delivery rate · 0 missed</text>
+
+<!-- Chart area -->
+<rect x="12" y="130" width="460" height="196" rx="8" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="24" y="148" font-size="9" font-weight="600" fill="#1a1a1a">Monthly Revenue (₹)</text>
+
+<!-- Y axis labels -->
+<text x="22" y="308" font-size="7" fill="#999">0</text>
+<text x="22" y="272" font-size="7" fill="#999">1L</text>
+<text x="22" y="236" font-size="7" fill="#999">2L</text>
+<text x="22" y="200" font-size="7" fill="#999">3L</text>
+<text x="22" y="164" font-size="7" fill="#999">4L</text>
+
+<!-- Grid lines -->
+<line x1="42" y1="168" x2="462" y2="168" stroke="#e8e8e8" stroke-width="0.5" stroke-dasharray="4,4"/>
+<line x1="42" y1="204" x2="462" y2="204" stroke="#e8e8e8" stroke-width="0.5" stroke-dasharray="4,4"/>
+<line x1="42" y1="240" x2="462" y2="240" stroke="#e8e8e8" stroke-width="0.5" stroke-dasharray="4,4"/>
+<line x1="42" y1="276" x2="462" y2="276" stroke="#e8e8e8" stroke-width="0.5" stroke-dasharray="4,4"/>
+<line x1="42" y1="312" x2="462" y2="312" stroke="#e8e8e8" stroke-width="1"/>
+
+<!-- Bars: Jan–Jun -->
+<!-- Jan: ₹1.8L → height 64 -->
+<rect x="58" y="248" width="40" height="64" rx="4" fill="#EBF3FF" class="bar b1"/>
+<text x="78" y="322" font-size="7" fill="#999" text-anchor="middle">Jan</text>
+<text x="78" y="244" font-size="7.5" font-weight="600" fill="#2170D9" text-anchor="middle">1.8L</text>
+
+<!-- Feb: ₹2.1L → 76 -->
+<rect x="118" y="236" width="40" height="76" rx="4" fill="#EBF3FF" class="bar b2"/>
+<text x="138" y="322" font-size="7" fill="#999" text-anchor="middle">Feb</text>
+<text x="138" y="232" font-size="7.5" font-weight="600" fill="#2170D9" text-anchor="middle">2.1L</text>
+
+<!-- Mar: ₹2.4L → 86 -->
+<rect x="178" y="226" width="40" height="86" rx="4" fill="#2170D9" class="bar b3"/>
+<text x="198" y="322" font-size="7" fill="#999" text-anchor="middle">Mar</text>
+<text x="198" y="222" font-size="7.5" font-weight="600" fill="#2170D9" text-anchor="middle">2.4L</text>
+
+<!-- Apr: ₹2.2L → 80 -->
+<rect x="238" y="232" width="40" height="80" rx="4" fill="#EBF3FF" class="bar b4"/>
+<text x="258" y="322" font-size="7" fill="#999" text-anchor="middle">Apr</text>
+<text x="258" y="228" font-size="7.5" font-weight="600" fill="#2170D9" text-anchor="middle">2.2L</text>
+
+<!-- May: ₹2.7L → 97 -->
+<rect x="298" y="215" width="40" height="97" rx="4" fill="#2170D9" class="bar b5"/>
+<text x="318" y="322" font-size="7" fill="#999" text-anchor="middle">May</text>
+<text x="318" y="211" font-size="7.5" font-weight="600" fill="#2170D9" text-anchor="middle">2.7L</text>
+
+<!-- Jun: ₹3.2L → 115 -->
+<rect x="358" y="197" width="40" height="115" rx="4" fill="#2170D9" class="bar b6"/>
+<text x="378" y="322" font-size="7" fill="#999" text-anchor="middle">Jun</text>
+<text x="378" y="193" font-size="7.5" font-weight="600" fill="#2170D9" text-anchor="middle">3.2L</text>
+
+<!-- Donut breakdown -->
+<rect x="484" y="130" width="224" height="196" rx="8" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="496" y="148" font-size="9" font-weight="600" fill="#1a1a1a">By Treatment</text>
+
+<!-- Simple donut segments (static arcs) -->
+<circle cx="596" cy="222" r="52" fill="none" stroke="#e8e8e8" stroke-width="1"/>
+<!-- Segments as colored arcs -->
+<circle cx="596" cy="222" r="42" fill="none" stroke="#2170D9" stroke-width="20" stroke-dasharray="82 182" stroke-dashoffset="0" transform="rotate(-90 596 222)"/>
+<circle cx="596" cy="222" r="42" fill="none" stroke="#00C853" stroke-width="20" stroke-dasharray="55 182" stroke-dashoffset="-82" transform="rotate(-90 596 222)"/>
+<circle cx="596" cy="222" r="42" fill="none" stroke="#FEF3C7" stroke-width="20" stroke-dasharray="30 182" stroke-dashoffset="-137" transform="rotate(-90 596 222)"/>
+<circle cx="596" cy="222" r="42" fill="none" stroke="#EBF3FF" stroke-width="20" stroke-dasharray="15 182" stroke-dashoffset="-167" transform="rotate(-90 596 222)"/>
+<circle cx="596" cy="222" r="24" fill="#fafafa"/>
+<text x="596" y="219" font-size="9" font-weight="700" fill="#1a1a1a" text-anchor="middle">₹14.4L</text>
+<text x="596" y="229" font-size="7" fill="#737373" text-anchor="middle">total</text>
+
+<!-- Legend -->
+<rect x="492" y="290" width="8" height="8" rx="2" fill="#2170D9"/>
+<text x="504" y="298" font-size="7.5" fill="#525252">Root Canal (45%)</text>
+<rect x="580" y="290" width="8" height="8" rx="2" fill="#00C853"/>
+<text x="592" y="298" font-size="7.5" fill="#525252">Ortho (30%)</text>
+<rect x="492" y="306" width="8" height="8" rx="2" fill="#FEF3C7"/>
+<text x="504" y="314" font-size="7.5" fill="#525252">Cleaning (17%)</text>
+<rect x="580" y="306" width="8" height="8" rx="2" fill="#EBF3FF"/>
+<text x="592" y="314" font-size="7.5" fill="#525252">Other (8%)</text>
+</svg>

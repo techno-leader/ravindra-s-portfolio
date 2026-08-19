@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" width="720" height="340">
+<style>text{font-family:Inter,-apple-system,sans-serif}</style>
+<rect width="720" height="340" fill="#fafafa" rx="8"/>
+
+<!-- Left panel: prescription form -->
+<rect x="0" y="0" width="400" height="340" fill="#ffffff" rx="8"/>
+<rect x="400" y="0" width="1" height="340" fill="#e8e8e8"/>
+
+<!-- Header -->
+<rect x="0" y="0" width="400" height="44" fill="#ffffff" rx="8"/>
+<rect x="0" y="36" width="400" height="8" fill="#ffffff"/>
+<line x1="0" y1="44" x2="400" y2="44" stroke="#e8e8e8" stroke-width="1"/>
+<text x="16" y="27" font-size="12" font-weight="700" fill="#1a1a1a">New Prescription</text>
+<text x="16" y="39" font-size="8.5" fill="#999">SmileCraft Dental — Official clinic account</text>
+
+<!-- Patient chip -->
+<rect x="12" y="54" width="376" height="36" rx="6" fill="#EBF3FF" stroke="#2170D9" stroke-width="1"/>
+<circle cx="30" cy="72" r="10" fill="#2170D9"/>
+<text x="30" y="76" font-size="7.5" font-weight="700" fill="#fff" text-anchor="middle">RM</text>
+<text x="48" y="68" font-size="10" font-weight="600" fill="#1a1a1a">Rahul Mehta</text>
+<text x="48" y="80" font-size="8" fill="#525252">Root Canal · +91 98765 43210 · Reg# DM-1042</text>
+<rect x="340" y="62" width="44" height="18" rx="4" fill="#25D366"/>
+<text x="362" y="74" font-size="8" font-weight="600" fill="#fff" text-anchor="middle">WhatsApp ✓</text>
+
+<!-- Diagnosis -->
+<text x="12" y="110" font-size="8" font-weight="700" fill="#737373" letter-spacing="0.08em">DIAGNOSIS &amp; CHIEF COMPLAINT</text>
+<rect x="12" y="116" width="376" height="28" rx="5" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="20" y="134" font-size="9" fill="#1a1a1a">Acute pulpitis — mandibular first molar (tooth #36). Root canal therapy initiated.</text>
+
+<!-- Medications -->
+<text x="12" y="160" font-size="8" font-weight="700" fill="#737373" letter-spacing="0.08em">MEDICATIONS</text>
+<rect x="12" y="166" width="376" height="28" rx="5" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<rect x="14" y="168" width="4" height="24" rx="2" fill="#2170D9"/>
+<text x="24" y="179" font-size="9" font-weight="600" fill="#1a1a1a">Amoxicillin 500mg</text>
+<text x="24" y="189" font-size="8" fill="#737373">1 cap × 3/day × 5 days</text>
+<text x="370" y="184" font-size="8" fill="#999" text-anchor="end">After food</text>
+
+<rect x="12" y="200" width="376" height="28" rx="5" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<rect x="14" y="202" width="4" height="24" rx="2" fill="#2170D9"/>
+<text x="24" y="213" font-size="9" font-weight="600" fill="#1a1a1a">Ibuprofen 400mg</text>
+<text x="24" y="223" font-size="8" fill="#737373">1 tab × 3/day × 3 days</text>
+<text x="370" y="218" font-size="8" fill="#999" text-anchor="end">After food</text>
+
+<!-- Follow-up -->
+<text x="12" y="244" font-size="8" font-weight="700" fill="#737373" letter-spacing="0.08em">FOLLOW-UP NOTE</text>
+<rect x="12" y="250" width="376" height="24" rx="5" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+<text x="20" y="265" font-size="9" fill="#1a1a1a">Return in 7 days for second sitting. Avoid hard food. Call if severe pain.</text>
+
+<!-- Send button -->
+<rect x="12" y="296" width="376" height="32" rx="6" fill="#00C853"/>
+<text x="200" y="316" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">✓ Prescription Sent!</text>
+
+<!-- Right panel: WhatsApp preview -->
+<rect x="401" y="0" width="319" height="340" fill="#f0f2f5" rx="8"/>
+<rect x="401" y="0" width="319" height="8" fill="#f0f2f5"/>
+
+<!-- Phone frame -->
+<rect x="460" y="16" width="200" height="310" rx="16" fill="#ffffff" stroke="#e8e8e8" stroke-width="1.5"/>
+
+<!-- WA header -->
+<rect x="460" y="16" width="200" height="44" rx="16" fill="#075E54"/>
+<rect x="460" y="36" width="200" height="24" fill="#075E54"/>
+<circle cx="480" cy="38" r="10" fill="#128C7E"/>
+<text x="480" y="42" font-size="7" font-weight="700" fill="#fff" text-anchor="middle">SC</text>
+<text x="496" y="34" font-size="9" font-weight="700" fill="#fff">SmileCraft Dental</text>
+<text x="496" y="44" font-size="7.5" fill="rgba(255,255,255,0.7)">Official clinic account</text>
+
+<!-- WA message bubble -->
+<rect x="468" y="72" width="168" height="174" rx="8" fill="#ffffff" stroke="#e8e8e8" stroke-width="1"/>
+<rect x="468" y="72" width="168" height="22" rx="8" fill="#EBF3FF"/>
+<rect x="468" y="84" width="168" height="10" fill="#EBF3FF"/>
+<text x="552" y="87" font-size="8.5" font-weight="700" fill="#2170D9" text-anchor="middle">SmileCraft Dental</text>
+
+<text x="476" y="106" font-size="8" font-weight="700" fill="#1a1a1a">Prescription</text>
+<text x="476" y="118" font-size="7.5" fill="#737373">Patient: Rahul Mehta</text>
+<text x="476" y="128" font-size="7.5" fill="#737373">Date: 5 Jun 2026</text>
+<text x="476" y="138" font-size="7.5" fill="#737373">Diagnosis: Acute pulpitis</text>
+
+<line x1="474" y1="144" x2="628" y2="144" stroke="#e8e8e8" stroke-width="1"/>
+<text x="476" y="155" font-size="7" font-weight="700" fill="#737373" letter-spacing="0.06em">MEDICATIONS</text>
+<text x="476" y="166" font-size="7.5" fill="#1a1a1a">• Amoxicillin 500mg — 3×/day, 5 days</text>
+<text x="476" y="176" font-size="7.5" fill="#1a1a1a">• Ibuprofen 400mg — 3×/day, 3 days</text>
+
+<line x1="474" y1="182" x2="628" y2="182" stroke="#e8e8e8" stroke-width="1"/>
+<text x="476" y="194" font-size="7.5" fill="#737373">Follow-up in 7 days</text>
+<text x="476" y="207" font-size="7.5" fill="#999">— Dr. Arjun Mehta</text>
+<text x="476" y="217" font-size="7" fill="#999">SmileCraft Dental</text>
+
+<text x="622" y="238" font-size="7" fill="#999" text-anchor="end">10:34 AM</text>
+<text x="630" y="238" font-size="9" fill="#2170D9">✓✓</text>
+</svg>
