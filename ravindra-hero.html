@@ -103,7 +103,7 @@
   /* no lift — the colour shift carries the affordance */
   .cta a{
     pointer-events:auto;
-    display:inline-flex;align-items:center;min-height:44px;
+    display:inline-flex;align-items:center;gap:10px;min-height:44px;
     font-size:var(--t-body);text-decoration:none;color:var(--paper);background:var(--ink);
     padding:12px 34px;border-radius:var(--r-pill);letter-spacing:.02em;
     transition:background .25s ease;
@@ -135,13 +135,16 @@
     padding:2px 4px;margin:-2px -4px;
     text-decoration:underline dotted;text-underline-offset:3px;
   }
+  /* Phosphor "Info" (regular), inlined — the ring, stem and dot are one glyph,
+     so nothing can sit off-centre the way a bordered span wrapped around a
+     monospace "i" did */
   .define-i{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:13px;height:13px;margin-left:5px;vertical-align:.08em;
-    border:1px solid currentColor;border-radius:var(--r-pill);
-    font-family:ui-monospace,Menlo,monospace;font-size:9px;line-height:1;
-    color:var(--lav-deep);text-decoration:none;
+    display:inline-block;width:16px;height:16px;margin-left:5px;
+    vertical-align:-.12em;color:var(--lav-deep);fill:currentColor;
   }
+  /* Phosphor arrows, inlined and sized in em so each one tracks the type it
+     sits in rather than needing a size per context */
+  .icon{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.125em;}
   .define-t:hover,.define-t[aria-expanded="true"]{color:var(--lav-deep);}
   .define-box{
     position:absolute;z-index:20;left:0;top:calc(100% + 10px);
@@ -195,7 +198,7 @@
   .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
   @media (prefers-reduced-motion:reduce){
     .rv,.rv-vis{opacity:1;transform:none;filter:none;transition:none;}
-    .case-link,.case-link span,.cta a,.contact-actions a,nav a,footer a,.define-t{transition:none;}
+    .case-link,.case-link .icon,.cta a,.contact-actions a,nav a,footer a,.define-t{transition:none;}
     html{scroll-behavior:auto;}
   }
 
@@ -208,9 +211,9 @@
     border-bottom:1px solid var(--lav);padding-bottom:6px;
     transition:color .3s ease,border-color .3s ease;
   }
-  .case-link span{transition:transform .45s cubic-bezier(.22,1,.36,1);}
+  .case-link .icon{transition:transform .45s cubic-bezier(.22,1,.36,1);}
   .case-link:hover{color:var(--lav-deep);border-color:var(--lav-deep);}
-  .case-link:hover span{transform:translateX(6px);}
+  .case-link:hover .icon{transform:translateX(6px);}
 
   /* ---- mockup panels ---- */
   /* flat panel fill and no lift — the mockup is read, not clicked */
@@ -227,7 +230,9 @@
   .fx-wrap canvas{display:block;width:100%;height:100%;}
 
   /* ---- about ---- */
-  .about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:64px;border-top:1px solid var(--line);padding-top:64px;}
+  /* no border-top: the .sec-head rules already draw a hairline through the
+     heading, and a second one 24px below read as a doubled rule */
+  .about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:64px;padding-top:64px;}
   .about-grid p{color:var(--mut);font-size:var(--t-body);line-height:1.72;margin-bottom:18px;}
   .about-grid p strong{color:var(--ink);font-weight:600;}
   .skills h4{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.18em;color:var(--lav);text-transform:uppercase;margin:26px 0 14px;}
@@ -242,7 +247,7 @@
   .contact-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
   /* no lift — the colour shift carries the affordance */
   .contact-actions a{
-    display:inline-flex;align-items:center;min-height:44px;
+    display:inline-flex;align-items:center;gap:10px;min-height:44px;
     text-decoration:none;font-size:var(--t-body);padding:12px 32px;border-radius:var(--r-pill);letter-spacing:.02em;
     transition:background .25s ease, border-color .25s ease, color .25s ease;
   }
@@ -304,7 +309,7 @@
 
 <div class="cta" id="cta">
   <h2>Attention is earned in pixels, converted in flows.</h2>
-  <a href="#work">View case studies ↓</a>
+  <a href="#work">View case studies <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,149.66l-72,72a8,8,0,0,1-11.32,0l-72-72a8,8,0,0,1,11.32-11.32L120,196.69V40a8,8,0,0,1,16,0V196.69l58.34-58.35a8,8,0,0,1,11.32,11.32Z"/></svg></a>
 </div>
 
 <div id="runway"></div>
@@ -324,13 +329,13 @@
           <div class="chips">
             <span class="chip">CRO</span><span class="chip">Landing Page</span><span class="chip">Solo Designer</span><span class="chip">D2C · US Market</span>
           </div>
-          <p>A <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-d2c">D2C<span class="define-i" aria-hidden="true">i</span></button><span class="define-box" id="def-d2c" role="tooltip" hidden>Direct-to-consumer — a brand that sells straight to the buyer through its own site and ads, with no retailer or marketplace in between, so the landing page is the entire storefront.</span></span> supplement landing page for the US market was losing money on ads. I rebuilt it with <strong>identical copy</strong>, so design was the only variable — and turned it profitable.</p>
+          <p>A <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-d2c">D2C<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-d2c" role="tooltip" hidden>Direct-to-consumer — a brand that sells straight to the buyer through its own site and ads, with no retailer or marketplace in between, so the landing page is the entire storefront.</span></span> supplement landing page for the US market was losing money on ads. I rebuilt it with <strong>identical copy</strong>, so design was the only variable — and turned it profitable.</p>
           <div class="metrics">
             <div class="metric lead"><b data-count="3.2" data-dec="1" data-suf="×">0.0×</b><span>Conversion rate</span></div>
             <div class="metric"><b data-count="4.2" data-dec="1" data-suf="×">0.0×</b><span>Earnings per visitor</span></div>
             <div class="metric"><b data-count="31" data-suf="×">0×</b><span>Ad spend earned from Meta</span></div>
           </div>
-          <a class="case-link" href="case-viewryt.html">Read the case study <span>→</span></a>
+          <a class="case-link" href="case-viewryt.html">Read the case study <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
           <div class="shot">
@@ -354,7 +359,7 @@
             <div class="metric"><b data-count="30" data-pre="+" data-suf="%">+0%</b><span>Returning patients</span></div>
             <div class="metric"><b data-count="8" data-pre="₹" data-suf="k">₹0</b><span>Saved / clinic / mo</span></div>
           </div>
-          <a class="case-link" href="case-dentomate.html">Read the case study <span>→</span></a>
+          <a class="case-link" href="case-dentomate.html">Read the case study <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
           <div class="shot">
@@ -372,13 +377,13 @@
           <div class="chips">
             <span class="chip">Design Lead</span><span class="chip">Mobile UX</span><span class="chip">User Research</span><span class="chip">Shipped Live</span>
           </div>
-          <p>A <strong>three-step room-booking flow</strong> I researched and designed for IIT Guwahati's OneStop app, replacing a broken legacy portal. Live for the campus since September 2023.</p>
+          <p>A <strong>three-step room-booking flow</strong> I researched and designed for IIT Guwahati's <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-onestop">OneStop<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-onestop" role="tooltip" hidden>OneStop IITG is a centralized mobile application developed by the Students' Web Committee to assist the IIT Guwahati community with daily campus life. It consolidates essential services into a single platform, offering features like academic timetables, bus and ferry schedules, room bookings and a lost-and-found portal.</span></span> app, replacing a broken legacy portal. Live for the campus since September 2023.</p>
           <div class="metrics">
             <div class="metric lead"><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span></div>
             <div class="metric"><b data-count="200" data-suf="+">0</b><span>Students daily</span></div>
             <div class="metric"><b data-count="3" data-suf=" steps">0</b><span>To book a room</span></div>
           </div>
-          <a class="case-link" href="case-irbs.html">Read the case study <span>→</span></a>
+          <a class="case-link" href="case-irbs.html">Read the case study <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
           <div class="shot">
@@ -421,7 +426,7 @@
       <div class="contact-inner rv">
         <h2>Have a number that needs <em>moving?</em></h2>
         <div class="contact-actions">
-          <a class="primary" href="mailto:singhravindrapratap812@gmail.com">Email me →</a>
+          <a class="primary" href="mailto:singhravindrapratap812@gmail.com">Email me <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
           <a class="ghost" href="https://x.com/RavindraPatap" target="_blank" rel="noopener">X / @RavindraPatap</a>
         </div>
       </div>
