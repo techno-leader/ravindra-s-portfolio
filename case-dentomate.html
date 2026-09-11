@@ -6,15 +6,41 @@
 <title>Dentomate — Case Study · Ravindra Pratap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400..600&display=swap" rel="stylesheet">
 <style>
+  /* Redaction 35 is not on Google Fonts. Fontsource repackages the official
+     OFL-1.1 release and serves it from jsDelivr, so it loads like any other
+     CDN font and no binaries land in the repo. Only the italic is declared:
+     it is the single cut the site uses, on the <em> accents. */
+  @font-face{
+    font-family:"Redaction 35";
+    font-style:italic;
+    font-weight:400;
+    font-display:swap;
+    src:url(https://cdn.jsdelivr.net/fontsource/fonts/redaction-35@latest/latin-400-italic.woff2) format("woff2"),
+        url(https://cdn.jsdelivr.net/fontsource/fonts/redaction-35@latest/latin-400-italic.woff) format("woff");
+  }
   :root{
-    --ink:#16141f;
-    --lav:#8f7ff0;
-    --lav-deep:#6a58e0;
-    --mut:#8b87a0;
-    --line:#eceaf6;
+    /* Monochrome ramp. Every step is a true neutral — colour on this site is
+       spent only where it carries meaning: the aurora hero and the pointer
+       gradient on the case illustrations. Lightness is inherited from the
+       lavender palette this replaced (matched in OKLab), so the page keeps its
+       old weight; only the hue is gone. */
+    --ink:#161616;    /* primary text            18.1:1 */
+    --ink-2:#4a4a4a;  /* emphasis, hover, accent  8.9:1 */
+    --ink-3:#6e6e6e;  /* mono labels, chrome      5.1:1 */
+    --mut:#767676;    /* secondary prose          4.5:1 */
+    --line:#ececec;
     --paper:#ffffff;
+    /* Selection is the third and last place colour is allowed. Not picked by
+       eye and not read off the GLSL constants either — the aurora's CA/CB/CC
+       stops are green/cyan/magenta, but the field as it actually renders is
+       a mint at hue 180 (sampled: 535,647 coloured pixels, mean #b0fded).
+       This is that mean pushed to oklch(0.95 0.07 180), the lightest in-gamut
+       point on the same hue: 16.1:1 behind --ink, up from 14.4:1 on the old
+       neutral. */
+    --sel:#bbfff0;
 
     /* radius scale — every corner on the page resolves to one of these */
     --r-sm:8px;
@@ -24,7 +50,7 @@
     --r-device:34px;
 
     /* one elevation token, used only by floating UI */
-    --shadow-pop:0 18px 40px -22px rgba(64,52,150,.34);
+    --shadow-pop:0 18px 40px -22px rgba(22,22,22,.28);
 
     /* five-step type scale, 18px body floor */
     --t-body:18px;
@@ -33,18 +59,36 @@
     --t-sub-lg:40px;
     --t-head:56px;
     --t-head-lg:64px;
+    --t-label:12px;   /* mono labels — the one size every one of them uses */
+    /* Display weight. Was a literal 600 in ~25 places and shouted next to
+       Onest; 450 is a genuine instance of the 400..600 variable range,
+       not a synthesised in-between. */
+    --w-head:450;
+
+    /* One stack per role. Onest carries display and body alike, so the old
+       Space Grotesk / Inter split is gone; Redaction 35 is italic-only. */
+    --sans:"Onest",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:"Redaction 35",Georgia,serif;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
     background:var(--paper);color:var(--ink);
-    font-family:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-family:var(--sans);
     overflow-x:hidden;
   }
-  ::selection{background:#e6e1fb;}
-  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  ::selection{background:var(--sel);}
+  .mono{font-family:var(--mono);}
 
-  .progress{position:fixed;top:0;left:0;height:2px;background:var(--lav);z-index:40;width:0;}
+  /* "Comet": the tail is the bar's own width, so the fade stretches as you
+     scroll — near the top it is a short dark nib, at the bottom a long sweep.
+     A fixed-length tail (the other candidate) reads as a constant-size object
+     sliding across, which fights the idea that the bar measures the page. */
+  .progress{
+    position:fixed;top:0;left:0;height:2px;z-index:40;width:0;
+    background:linear-gradient(90deg,transparent 0%,var(--ink) 100%);
+  }
 
   nav{
     position:fixed;top:0;left:0;right:0;z-index:30;
@@ -66,7 +110,7 @@
   header{position:relative;padding:180px 0 90px;overflow:hidden;}
   header::before{
     content:"";position:absolute;inset:0;z-index:-2;
-    background:radial-gradient(circle at 1px 1px, rgba(143,127,240,.13) 1px, transparent 1.6px);
+    background:radial-gradient(circle at 1px 1px, rgba(147,147,147,.16) 1px, transparent 1.6px);
     background-size:11px 11px;
     -webkit-mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
             mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
@@ -76,33 +120,33 @@
   @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
   /* stepped at 900/640 rather than clamp() — a clamp lands on off-scale sizes */
   h1{
-    font-family:"Space Grotesk",Inter,sans-serif;
-    font-size:var(--t-head-lg);line-height:1.05;letter-spacing:-0.035em;font-weight:600;
+    font-family:var(--sans);
+    font-size:var(--t-head-lg);line-height:1.05;letter-spacing:-0.035em;font-weight:var(--w-head);
     max-width:15ch;
   }
-  h1 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);letter-spacing:-.01em;}
+  h1 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink-2);letter-spacing:-.01em;}
   .lede{margin-top:30px;font-size:var(--t-sub);line-height:1.55;color:var(--mut);max-width:48ch;}
   .facts{
     display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
     border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
   }
-  .facts small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .facts small{display:block;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
   .facts b{font-weight:500;font-size:var(--t-body);line-height:1.5;}
 
   section{padding:84px 0 10px;}
   .sec-label{
     display:flex;align-items:center;gap:14px;margin-bottom:30px;
-    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.24em;color:var(--lav);text-transform:uppercase;
+    font-family:var(--mono);font-size:var(--t-label);letter-spacing:.24em;color:var(--ink-3);text-transform:uppercase;
   }
   .sec-label::after{content:"";flex:1;height:1px;background:var(--line);}
   h2{
-    font-family:"Space Grotesk",Inter,sans-serif;
-    font-size:var(--t-head);letter-spacing:-.03em;font-weight:600;line-height:1.12;
+    font-family:var(--sans);
+    font-size:var(--t-head);letter-spacing:-.03em;font-weight:var(--w-head);line-height:1.12;
     max-width:22ch;margin-bottom:22px;
   }
-  h2 em{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;color:var(--lav-deep);}
+  h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink-2);}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
-  p{color:#5d5970;font-size:var(--t-body);line-height:1.7;margin-bottom:18px;max-width:62ch;}
+  p{color:#5c5c5c;font-size:var(--t-body);line-height:1.7;margin-bottom:18px;max-width:62ch;}
   p strong{color:var(--ink);font-weight:600;}
 
   /* --- click-to-define glossary --- */
@@ -117,12 +161,12 @@
      monospace "i" did */
   .define-i{
     display:inline-block;width:16px;height:16px;margin-left:5px;
-    vertical-align:-.12em;color:var(--lav-deep);fill:currentColor;
+    vertical-align:-.12em;color:var(--ink-2);fill:currentColor;
   }
   /* Phosphor arrows, inlined and sized in em so each one tracks the type it
      sits in rather than needing a size per context */
   .icon{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.125em;}
-  .define-t:hover,.define-t[aria-expanded="true"]{color:var(--lav-deep);}
+  .define-t:hover,.define-t[aria-expanded="true"]{color:var(--ink-2);}
   .define-box{
     position:absolute;z-index:20;left:0;top:calc(100% + 10px);
     width:max-content;max-width:min(400px,78vw);
@@ -133,9 +177,9 @@
   .define-box[hidden]{display:none;}
 
   .pull{
-    font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
+    font-family:var(--serif);font-style:italic;font-weight:400;
     font-size:var(--t-sub-lg);line-height:1.3;color:var(--ink);letter-spacing:-.01em;
-    border-left:2px solid var(--lav);padding:6px 0 6px 30px;margin:34px 0;max-width:28ch;
+    border-left:2px solid var(--ink-3);padding:6px 0 6px 30px;margin:34px 0;max-width:28ch;
   }
   .pull .mono{font-style:normal;display:block;font-size:12px;letter-spacing:.18em;color:var(--mut);margin-top:14px;text-transform:uppercase;}
 
@@ -146,31 +190,31 @@
     border:1px solid var(--line);border-radius:var(--r-md);padding:20px;
     background:var(--paper);
   }
-  .card i{display:block;font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--lav);margin-bottom:10px;text-transform:uppercase;}
-  .card b{display:block;font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub);font-weight:600;line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
+  .card i{display:block;font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;}
+  .card b{display:block;font-family:var(--sans);font-size:var(--t-sub);font-weight:var(--w-head);line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
   .card p{font-size:var(--t-body);line-height:1.6;margin:0;color:var(--mut);}
-  .card .price{font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub-md);font-weight:600;letter-spacing:-.02em;line-height:1;display:block;margin-bottom:10px;}
-  .card .price small{font-size:12px;color:var(--mut);font-weight:400;font-family:ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;}
+  .card .price{font-family:var(--sans);font-size:var(--t-sub-md);font-weight:var(--w-head);letter-spacing:-.02em;line-height:1;display:block;margin-bottom:10px;}
+  .card .price small{font-size:var(--t-label);color:var(--mut);font-weight:400;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;}
 
   .steps{counter-reset:st;margin:26px 0;}
   .step{display:flex;gap:22px;padding:20px 0;border-top:1px solid var(--line);}
   .step::before{
     counter-increment:st;content:"0" counter(st);
-    font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--lav);padding-top:3px;letter-spacing:.1em;
+    font-family:var(--mono);font-size:var(--t-label);color:var(--ink-3);padding-top:3px;letter-spacing:.1em;
   }
-  .step div b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--t-sub);line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
+  .step div b{display:block;font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
   .step div p{font-size:var(--t-body);line-height:1.6;margin:0;}
 
   /* flat panel fill — the dot grid and gradient were decoration competing with the artwork */
   figure{
     position:relative;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:38px 0;
-    background:#faf9ff;
+    background:#fafafa;
     padding:40px;display:flex;justify-content:center;align-items:center;gap:28px;
   }
   figure img{max-width:100%;height:auto;border-radius:var(--r-sm);display:block;background:var(--paper);}
   figcaption{
     position:absolute;left:20px;bottom:14px;
-    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
+    font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--mut);text-transform:uppercase;
   }
   .fig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:38px 0;}
   .fig-grid figure{margin:0;padding:24px;}
@@ -181,8 +225,8 @@
     display:grid;grid-template-columns:repeat(3,1fr);gap:34px;align-items:start;
   }
   .impact > div + div{border-left:1px solid var(--line);padding-left:34px;}
-  .impact b{display:block;font-family:"Space Grotesk",sans-serif;font-size:var(--t-sub-lg);letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:12px;}
-  .impact .lead b{color:var(--lav-deep);}
+  .impact b{display:block;font-family:var(--sans);font-size:var(--t-sub-lg);letter-spacing:-.03em;font-weight:var(--w-head);font-variant-numeric:tabular-nums;line-height:1;margin-bottom:12px;}
+  .impact .lead b{color:var(--ink-2);}
   /* the labels are read, not scanned, so they are body copy rather than chrome */
   .impact span{font-size:var(--t-body);line-height:1.5;color:var(--mut);}
 
@@ -193,18 +237,18 @@
     text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;
     transition:border-color .3s, color .3s;
   }
-  .case-nav a:hover{border-color:var(--lav);color:var(--lav-deep);}
-  .case-nav small{display:block;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
-  .case-nav b{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
+  .case-nav a:hover{border-color:var(--ink-3);color:var(--ink-2);}
+  .case-nav small{display:block;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
+  .case-nav b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
   .case-nav .next{text-align:right;}
   footer{
     display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
-    font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.1em;color:var(--mut);
+    font-family:var(--mono);font-size:var(--t-label);letter-spacing:.1em;color:var(--mut);
     border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;text-transform:uppercase;
   }
   /* 44px minimum touch target — the only link in the footer is still a way out */
   footer a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;transition:color .3s;}
-  footer a:hover{color:var(--lav-deep);}
+  footer a:hover{color:var(--ink-2);}
 
   .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
       transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
@@ -246,7 +290,7 @@
 <div class="progress" id="progress"></div>
 
 <nav>
-  <a class="logo" href="index.html">Ravindra&nbsp;Pratap<span style="color:var(--lav)">.</span></a>
+  <a class="logo" href="index.html">Ravindra&nbsp;Pratap<span style="color:var(--ink-3)">.</span></a>
   <div class="links">
     <a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
   </div>
@@ -382,7 +426,7 @@
   const c = document.getElementById('orb'), x = c.getContext('2d');
   const W = c.width, H = c.height, cell = 5;
   const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
-  const cols = ['#8f7ff0','#b7aef7','#ded9fa'];
+  const cols = ['#939393','#b9b9b9','#dedede'];
   for(let py=0; py<H; py+=cell){
     for(let px=0; px<W; px+=cell){
       const dx=(px-W*0.5)/(W*0.4), dy=(py-H*0.46)/(H*0.44);
