@@ -108,6 +108,42 @@
     position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;
   }
 
+  /* ---------- the code field ----------
+     Rain that only exists while the word is glitching: it sits above the
+     aurora canvas (z 0) and below the hero copy (z 10), so the heading never
+     has to compete with it and the paper stays white underneath. Grey text on
+     white, no panel, no tint — the field is made of type, not of a colour.
+
+     The glyphs are English letters, digits and operators in mixed case,
+     sampled with two rules (see buildCodeField): never the same glyph twice
+     in a column, and never a glyph adjacent to its predecessor in the source
+     string, so no pair can read as a run of the alphabet. */
+  .codefield{
+    position:fixed;inset:0;z-index:5;
+    display:flex;gap:2px;align-items:flex-start;
+    font-family:var(--mono);font-size:13px;line-height:1.18;
+    color:var(--ink-3);
+    opacity:0;pointer-events:none;user-select:none;white-space:pre;
+    overflow:hidden;
+  }
+  .codefield .col{flex:1 1 0;text-align:center;}
+  .codefield .col span{display:block;}
+
+  /* Coverage, not a cross-fade: the field is either part of the frame or it
+     is not. Easing it in would read as a background image loading. */
+  .codefield.playing{animation:code-in .98s steps(1,end) 1;}
+  @keyframes code-in{
+    0%{opacity:0;} 10%{opacity:.34;} 84%{opacity:.34;} 100%{opacity:0;}
+  }
+  .codefield.playing .col{
+    animation:code-fall .98s linear 1;
+    animation-delay:calc(var(--d) * -1ms);
+  }
+  @keyframes code-fall{
+    from{transform:translateY(var(--y0));}
+    to  {transform:translateY(var(--y1));}
+  }
+
   /* ---------- nav ---------- */
   nav{
     position:fixed;top:0;left:0;right:0;z-index:30;
@@ -352,6 +388,7 @@
     h1 .convert.playing .cur,
     h1 .convert.playing .cur svg{animation:none;}
     h1 .convert .cur{opacity:0;}
+    .codefield,.codefield.playing,.codefield.playing .col{animation:none;opacity:0;}
   }
 
   /* case-study link — arrow in a ring, label underlined beside it */
@@ -460,9 +497,11 @@
   </div>
 </nav>
 
+<div class="codefield" id="codefield" aria-hidden="true"></div>
+
 <div class="hero" id="hero">
   <div class="wrap">
-    <h1>Hi, I’m Ravindra.<br/>I make designs that <button type="button" class="convert" id="trigger"><span class="w" data-word="convert.">convert.</span><i class="cur" aria-hidden="true"><svg viewBox="0 0 14 21" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><g fill="var(--paper)"><rect x="5" y="1" width="2" height="19"/><rect x="8" y="8" width="2" height="12"/><rect x="11" y="10" width="2" height="10"/><rect x="1" y="12" width="4" height="2"/><rect x="7" y="12" width="1" height="8"/><rect x="10" y="12" width="1" height="8"/><rect x="2" y="14" width="3" height="2"/><rect x="3" y="16" width="2" height="2"/><rect x="4" y="18" width="1" height="2"/></g><g fill="currentColor"><rect x="5" y="0" width="2" height="1"/><rect x="4" y="1" width="1" height="11"/><rect x="7" y="1" width="1" height="11"/><rect x="8" y="7" width="2" height="1"/><rect x="10" y="8" width="1" height="4"/><rect x="11" y="9" width="2" height="1"/><rect x="13" y="10" width="1" height="11"/><rect x="1" y="11" width="3" height="1"/><rect x="0" y="12" width="1" height="2"/><rect x="1" y="14" width="1" height="2"/><rect x="2" y="16" width="1" height="2"/><rect x="3" y="18" width="1" height="3"/><rect x="4" y="20" width="9" height="1"/></g></svg></i></button></h1>
+    <h1>Hi, I’m Ravindra.<br/>I make designs that <button type="button" class="convert" id="trigger"><span class="w" data-word="convert.">convert.</span><i class="cur" aria-hidden="true"><svg viewBox="0 0 12 16" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><g fill="var(--paper)"><rect x="4" y="1" width="1" height="14"/><rect x="6" y="3" width="1" height="12"/><rect x="8" y="4" width="1" height="11"/><rect x="10" y="5" width="1" height="10"/><rect x="1" y="6" width="2" height="2"/><rect x="3" y="7" width="1" height="5"/><rect x="5" y="7" width="1" height="8"/><rect x="7" y="7" width="1" height="8"/><rect x="9" y="7" width="1" height="8"/><rect x="2" y="8" width="1" height="2"/><rect x="0" y="9" width="1" height="7"/><rect x="1" y="11" width="1" height="5"/><rect x="2" y="13" width="1" height="3"/></g><g fill="currentColor"><rect x="3" y="0" width="3" height="1"/><rect x="3" y="1" width="1" height="6"/><rect x="5" y="1" width="1" height="6"/><rect x="6" y="2" width="2" height="1"/><rect x="7" y="3" width="3" height="1"/><rect x="7" y="4" width="1" height="3"/><rect x="9" y="4" width="3" height="1"/><rect x="0" y="5" width="3" height="1"/><rect x="9" y="5" width="1" height="2"/><rect x="11" y="5" width="1" height="11"/><rect x="0" y="6" width="1" height="3"/><rect x="1" y="8" width="1" height="3"/><rect x="2" y="10" width="1" height="3"/><rect x="3" y="12" width="1" height="4"/><rect x="4" y="15" width="7" height="1"/></g></svg></i></button></h1>
   </div>
 </div>
 
@@ -885,20 +924,80 @@ trigger.addEventListener('click', () => {
    animationend because three animations finish at different times and the
    longest (.92s) is the one that owns the class. */
 const HINT_EVERY = 5000, HINT_LEN = 980;
+const codefield = document.getElementById('codefield');
+
+/* English letters, digits and operators. The alphabet runs are contiguous on
+   purpose: pickGlyph rejects a character that sits next to its predecessor in
+   this string, and that rule only has teeth if neighbours here are neighbours
+   in the alphabet too. */
+const GLYPHS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+             + '0123456789{}[]()<>/\\*;:=+-_#$%&|!?^~.,';
+const rndInt = n => Math.floor(Math.random() * n);
+
+/* Two rejections, both about the same thing: a column should never contain a
+   pair a reader could finish. Same glyph twice looks like a repeat, and two
+   neighbours in the source string look like a sequence. */
+function pickGlyph(prev){
+  for(let i = 0; i < 12; i++){
+    const j = rndInt(GLYPHS.length), c = GLYPHS[j];
+    if(c === prev) continue;
+    const p = GLYPHS.indexOf(prev);
+    if(p !== -1 && Math.abs(p - j) === 1) continue;
+    return c;
+  }
+  return GLYPHS[rndInt(GLYPHS.length)];
+}
+
+/* Rebuilt per pass rather than once: the field is only ever on screen for
+   980ms, so there is nothing to gain by keeping it in the DOM, and a fresh
+   roll means no two glitches ever show the same rain. */
+function buildCodeField(){
+  const lineH = 13 * 1.18;
+  const rows = Math.ceil(innerHeight / lineH);
+  const cols = Math.max(1, Math.floor(innerWidth / 10));
+  const out = [];
+  for(let c = 0; c < cols; c++){
+    /* Twice the viewport height, so the column still covers the frame at both
+       ends of its travel instead of showing its own edges mid-fall. */
+    const n = rows * 2;
+    const head = rows + rndInt(rows);
+    const y0 = -(rndInt(60) + 20), y1 = y0 + 60 + rndInt(90);
+    let prev = '', spans = '';
+    for(let i = 0; i < n; i++){
+      const d = head - i;
+      const o = d < 0 ? 0 : Math.max(0, 1 - d / (rows * 0.75));
+      prev = pickGlyph(prev);
+      const safe = prev === '&' ? '&amp;' : prev === '<' ? '&lt;' : prev;
+      spans += `<span style="opacity:${o.toFixed(2)}">${safe}</span>`;
+    }
+    out.push(`<div class="col" style="--y0:${y0}%;--y1:${y1}%;--d:${rndInt(980)}">${spans}</div>`);
+  }
+  codefield.innerHTML = out.join('');
+}
+
 let hintTimer = null, hintClear = null;
 function stopHint(){
   clearInterval(hintTimer); clearTimeout(hintClear);
   hintTimer = null;
   trigger.classList.remove('playing');
+  codefield.classList.remove('playing');
+  codefield.innerHTML = '';
 }
 if(!reduceMotion){
   hintTimer = setInterval(() => {
     if(document.hidden) return;
     trigger.classList.remove('playing');
+    codefield.classList.remove('playing');
+    buildCodeField();
     void trigger.offsetWidth;            /* reflow, or the animation won't restart */
     trigger.classList.add('playing');
+    codefield.classList.add('playing');
     clearTimeout(hintClear);
-    hintClear = setTimeout(() => trigger.classList.remove('playing'), HINT_LEN);
+    hintClear = setTimeout(() => {
+      trigger.classList.remove('playing');
+      codefield.classList.remove('playing');
+      codefield.innerHTML = '';          /* nothing left behind between passes */
+    }, HINT_LEN);
   }, HINT_EVERY);
 }
 
