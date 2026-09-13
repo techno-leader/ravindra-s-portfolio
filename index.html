@@ -23,8 +23,9 @@
   }
   :root{
     /* Monochrome ramp. Every step is a true neutral — colour on this site is
-       spent only where it carries meaning: the aurora hero and the pointer
-       gradient on the case illustrations. Lightness is inherited from the
+       spent only where it carries meaning: the aurora hero, the pointer
+       gradient on the case illustrations, selection, and the hero word's
+       glitch. Lightness is inherited from the
        lavender palette this replaced (matched in OKLab), so the page keeps its
        old weight; only the hue is gone. */
     --ink:#161616;    /* primary text            18.1:1 */
@@ -38,14 +39,27 @@
        rather than flattened against paper so it stays a tint over any
        surface. */
     --tint:#939393;
-    /* Selection is the third and last place colour is allowed. Not picked by
-       eye and not read off the GLSL constants either — the aurora's CA/CB/CC
-       stops are green/cyan/magenta, but the field as it actually renders is
-       a mint at hue 180 (sampled: 535,647 coloured pixels, mean #b0fded).
-       This is that mean pushed to oklch(0.95 0.07 180), the lightest in-gamut
-       point on the same hue: 16.1:1 behind --ink, up from 14.4:1 on the old
+    /* Selection is the third place colour is allowed. Not picked by eye and
+       not read off the GLSL constants either — the aurora's CA/CB/CC stops
+       are green/cyan/magenta, but the field as it actually renders is a mint
+       at hue 180 (sampled: 535,647 coloured pixels, mean #b0fded). This is
+       that mean pushed to oklch(0.95 0.07 180), the lightest in-gamut point
+       on the same hue: 16.1:1 behind --ink, up from 14.4:1 on the old
        neutral. */
     --sel:#bbfff0;
+
+    /* The fourth and last: the glitch on the hero word, which runs for 680ms
+       and leaves nothing behind. These are the shader's own stops, hue for
+       hue — CA 150, CB 205, CC 318 — and only L and C have moved. The shader
+       declares all three at L .88, where the cyan and the magenta are outside
+       sRGB: a render of the revealed hero is 80.9% chromatic but covers only
+       hues 135-210, so the magenta is mixed into every frame and has never
+       once reached the screen. L .62 is the same hues at the most chroma sRGB
+       will hold, which is how the tear can show what the hero is made of
+       rather than what it manages to display. */
+    --g-a:oklch(0.62 0.171 150);  /* CA, green   */
+    --g-b:oklch(0.62 0.301 318);  /* CC, magenta */
+    --g-c:oklch(0.62 0.106 205);  /* CB, cyan    */
 
     /* radius scale — every corner on the page resolves to one of these */
     --r-sm:8px;
@@ -149,11 +163,83 @@
     font-size:inherit;line-height:inherit;
     background:none;border:0;padding:0;margin:0;
     pointer-events:auto;cursor:pointer;
+    position:relative;   /* the pointer hangs off this */
   }
   h1 .convert:focus-visible{
     outline:2px solid var(--ink-2);
     outline-offset:4px;
     border-radius:var(--r-sm);
+  }
+
+  /* ---- the hint: a tear, and a pointer that takes the same hits ----
+     Nobody clicks a word in a sentence unless the page tells them to, and a
+     cursor arriving to press it says that faster than any label. It runs
+     every 5s until the first click and then never again — once the field is
+     open the word has explained itself.
+
+     Nothing here paints an opaque box: the two bands are text and the word
+     underneath goes transparent, so the whole effect works over the aurora as
+     readily as over paper. */
+  h1 .convert .w{position:relative;display:inline-block;}
+  h1 .convert.playing .w{color:transparent;}
+  h1 .convert.playing .w::before,
+  h1 .convert.playing .w::after{
+    content:attr(data-word);
+    position:absolute;left:0;top:0;white-space:nowrap;color:var(--ink-2);
+  }
+  h1 .convert.playing .w::before{clip-path:inset(-.3em 0 46% 0);animation:tear-t .34s steps(1,end) 2;}
+  h1 .convert.playing .w::after {clip-path:inset(54% 0 -.4em 0);animation:tear-b .34s steps(1,end) 2;}
+  /* 0% and 100% return to the resting ink rather than to a fringe: the
+     animation is shorter than .playing, so whatever sits at 100% is what the
+     word wears for the last stretch before the class comes off. */
+  @keyframes tear-t{
+    0%,100%{transform:translate(0,0);text-shadow:none;}
+    20%{transform:translate(-.14em,-.012em);text-shadow:.055em 0 var(--g-b), -.032em 0 var(--g-a);}
+    45%{transform:translate(.07em,0);       text-shadow:-.045em 0 var(--g-a), .028em 0 var(--g-c);}
+    70%{transform:translate(-.04em,.012em); text-shadow:.055em 0 var(--g-b), -.032em 0 var(--g-a);}
+  }
+  @keyframes tear-b{
+    0%,100%{transform:translate(0,0);text-shadow:none;}
+    20%{transform:translate(.11em,.012em);  text-shadow:-.05em 0 var(--g-a), .03em 0 var(--g-b);}
+    45%{transform:translate(-.06em,0);      text-shadow:.04em 0 var(--g-b), -.025em 0 var(--g-c);}
+    70%{transform:translate(.035em,-.01em); text-shadow:-.05em 0 var(--g-a), .03em 0 var(--g-b);}
+  }
+
+  /* A 14x21 bitmap sized in em, so it scales with the heading across both
+     breakpoints and stays on a hard pixel grid at every one of them. The
+     fingertip is the top-left pixel, which is why the sprite hangs down-right
+     of the word's corner instead of centring on it. */
+  h1 .convert .cur{
+    position:absolute;right:-.28em;bottom:-.36em;
+    width:.46em;line-height:0;color:var(--ink);
+    opacity:0;pointer-events:none;
+  }
+  h1 .convert .cur svg{display:block;width:100%;height:auto;}
+  /* Two elements, not one: the entrance and the press live on .cur while the
+     glitch lives on the svg inside it. Both animate transform, and two
+     animations on one element do not compose — the later would eat the
+     earlier. */
+  h1 .convert.playing .cur{animation:cur .92s steps(1,end) 1;}
+  h1 .convert.playing .cur svg{animation:cur-jolt .34s steps(1,end) 2;}
+  /* steps(1,end) throughout: a cursor does not ease. It is at one pixel, then
+     it is at another. Anything smooth reads as a floating illustration. */
+  @keyframes cur{
+    0%  {opacity:0;transform:translate(.18em,.18em);}
+    10% {opacity:1;transform:translate(0,0);}
+    46% {opacity:1;transform:translate(0,0);}
+    54% {opacity:1;transform:translate(.03em,.03em) scale(.92);} /* the press */
+    66% {opacity:1;transform:translate(0,0);}
+    88% {opacity:1;transform:translate(0,0);}
+    100%{opacity:0;transform:translate(0,0);}
+  }
+  @keyframes cur-jolt{
+    0%,100%{transform:none;filter:none;}
+    20%{transform:translate(-.11em,.022em);
+        filter:drop-shadow(.045em 0 var(--g-b)) drop-shadow(-.03em 0 var(--g-a));}
+    45%{transform:translate(.06em,-.018em);
+        filter:drop-shadow(-.04em 0 var(--g-a)) drop-shadow(.025em 0 var(--g-c));}
+    70%{transform:translate(-.03em,0);
+        filter:drop-shadow(.03em 0 var(--g-b));}
   }
   /* ---------- end CTA ---------- */
   .cta{
@@ -258,6 +344,14 @@
     .rv,.rv-vis{opacity:1;transform:none;filter:none;transition:none;}
     .case-link .ring,.case-link .icon,.case-link .label,.cta a,.contact-actions a,nav a,footer a,.define-t{transition:none;}
     html{scroll-behavior:auto;}
+    /* the hint is never scheduled under reduce (see the JS), but belt and
+       braces: if .playing ever lands, it must not move or tear. */
+    h1 .convert.playing .w{color:var(--ink);}
+    h1 .convert.playing .w::before,
+    h1 .convert.playing .w::after{content:none;}
+    h1 .convert.playing .cur,
+    h1 .convert.playing .cur svg{animation:none;}
+    h1 .convert .cur{opacity:0;}
   }
 
   /* case-study link — arrow in a ring, label underlined beside it */
@@ -368,7 +462,7 @@
 
 <div class="hero" id="hero">
   <div class="wrap">
-    <h1>Hi, I’m Ravindra.<br/>I make designs that <button type="button" class="convert" id="trigger">convert.</button></h1>
+    <h1>Hi, I’m Ravindra.<br/>I make designs that <button type="button" class="convert" id="trigger"><span class="w" data-word="convert.">convert.</span><i class="cur" aria-hidden="true"><svg viewBox="0 0 14 21" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><g fill="var(--paper)"><rect x="5" y="1" width="2" height="19"/><rect x="8" y="8" width="2" height="12"/><rect x="11" y="10" width="2" height="10"/><rect x="1" y="12" width="4" height="2"/><rect x="7" y="12" width="1" height="8"/><rect x="10" y="12" width="1" height="8"/><rect x="2" y="14" width="3" height="2"/><rect x="3" y="16" width="2" height="2"/><rect x="4" y="18" width="1" height="2"/></g><g fill="currentColor"><rect x="5" y="0" width="2" height="1"/><rect x="4" y="1" width="1" height="11"/><rect x="7" y="1" width="1" height="11"/><rect x="8" y="7" width="2" height="1"/><rect x="10" y="8" width="1" height="4"/><rect x="11" y="9" width="2" height="1"/><rect x="13" y="10" width="1" height="11"/><rect x="1" y="11" width="3" height="1"/><rect x="0" y="12" width="1" height="2"/><rect x="1" y="14" width="1" height="2"/><rect x="2" y="16" width="1" height="2"/><rect x="3" y="18" width="1" height="3"/><rect x="4" y="20" width="9" height="1"/></g></svg></i></button></h1>
   </div>
 </div>
 
@@ -781,7 +875,32 @@ trigger.addEventListener('click', () => {
   /* No travelling wave to watch under reduced motion, so land on the
      target state directly rather than animating the front across. */
   if(reduceMotion) reveal = revealDir === 1 ? 1 : 0;
+  stopHint();
 });
+
+/* The hint, on a 5s interval: the word has to advertise itself, but only
+   until it has been taken up. The first click clears the interval for the
+   rest of the session — a hint that keeps hinting after you have obeyed it
+   is just noise. .playing is removed on a timer rather than on
+   animationend because three animations finish at different times and the
+   longest (.92s) is the one that owns the class. */
+const HINT_EVERY = 5000, HINT_LEN = 980;
+let hintTimer = null, hintClear = null;
+function stopHint(){
+  clearInterval(hintTimer); clearTimeout(hintClear);
+  hintTimer = null;
+  trigger.classList.remove('playing');
+}
+if(!reduceMotion){
+  hintTimer = setInterval(() => {
+    if(document.hidden) return;
+    trigger.classList.remove('playing');
+    void trigger.offsetWidth;            /* reflow, or the animation won't restart */
+    trigger.classList.add('playing');
+    clearTimeout(hintClear);
+    hintClear = setTimeout(() => trigger.classList.remove('playing'), HINT_LEN);
+  }, HINT_EVERY);
+}
 
 /* The hero canvas is fixed and full-screen, so it keeps shading even
    when the sections have scrolled over it. The case illustrations
