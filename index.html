@@ -131,12 +131,12 @@
 
   /* Coverage, not a cross-fade: the field is either part of the frame or it
      is not. Easing it in would read as a background image loading. */
-  .codefield.playing{animation:code-in .98s steps(1,end) 1;}
+  .codefield.playing{animation:code-in 1.96s steps(1,end) 1;}
   @keyframes code-in{
     0%{opacity:0;} 10%{opacity:.34;} 84%{opacity:.34;} 100%{opacity:0;}
   }
   .codefield.playing .col{
-    animation:code-fall .98s linear 1;
+    animation:code-fall 1.96s linear 1;
     animation-delay:calc(var(--d) * -1ms);
   }
   @keyframes code-fall{
@@ -223,8 +223,8 @@
     content:attr(data-word);
     position:absolute;left:0;top:0;white-space:nowrap;color:var(--ink-2);
   }
-  h1 .convert.playing .w::before{clip-path:inset(-.3em 0 46% 0);animation:tear-t .34s steps(1,end) 2;}
-  h1 .convert.playing .w::after {clip-path:inset(54% 0 -.4em 0);animation:tear-b .34s steps(1,end) 2;}
+  h1 .convert.playing .w::before{clip-path:inset(-.3em 0 46% 0);animation:tear-t .68s steps(1,end) 2;}
+  h1 .convert.playing .w::after {clip-path:inset(54% 0 -.4em 0);animation:tear-b .68s steps(1,end) 2;}
   /* 0% and 100% return to the resting ink rather than to a fringe: the
      animation is shorter than .playing, so whatever sits at 100% is what the
      word wears for the last stretch before the class comes off. */
@@ -255,8 +255,8 @@
      glitch lives on the svg inside it. Both animate transform, and two
      animations on one element do not compose — the later would eat the
      earlier. */
-  h1 .convert.playing .cur{animation:cur .92s steps(1,end) 1;}
-  h1 .convert.playing .cur svg{animation:cur-jolt .34s steps(1,end) 2;}
+  h1 .convert.playing .cur{animation:cur 1.84s steps(1,end) 1;}
+  h1 .convert.playing .cur svg{animation:cur-jolt .68s steps(1,end) 2;}
   /* steps(1,end) throughout: a cursor does not ease. It is at one pixel, then
      it is at another. Anything smooth reads as a floating illustration. */
   @keyframes cur{
@@ -922,8 +922,8 @@ trigger.addEventListener('click', () => {
    rest of the session — a hint that keeps hinting after you have obeyed it
    is just noise. .playing is removed on a timer rather than on
    animationend because three animations finish at different times and the
-   longest (.92s) is the one that owns the class. */
-const HINT_EVERY = 5000, HINT_LEN = 980;
+   longest (1.84s) is the one that owns the class. */
+const HINT_EVERY = 5000, HINT_LEN = 1960;
 const codefield = document.getElementById('codefield');
 
 /* English letters, digits and operators. The alphabet runs are contiguous on
@@ -960,8 +960,16 @@ function buildCodeField(){
     /* Twice the viewport height, so the column still covers the frame at both
        ends of its travel instead of showing its own edges mid-fall. */
     const n = rows * 2;
-    const head = rows + rndInt(rows);
-    const y0 = -(rndInt(60) + 20), y1 = y0 + 60 + rndInt(90);
+    /* Scatter the bright head across the whole column rather than the lower
+       half, so the lit bands start spread over the frame instead of arriving
+       as one horizon. */
+    const head = 20 + rndInt(n - 20);
+    /* Travel is a fraction of the column, which is 2x the viewport, so these
+       are large numbers: 25-60% is already 400-1000px. It used to be 60-150%,
+       which drained the lit band out of frame inside the first half of the
+       pass — measured 7.45% ink at 250ms down to 0.70% by the end. The field
+       has to still be raining when the tear finishes. */
+    const y0 = -(rndInt(40) + 15), y1 = y0 + 25 + rndInt(35);
     let prev = '', spans = '';
     for(let i = 0; i < n; i++){
       const d = head - i;
@@ -970,7 +978,7 @@ function buildCodeField(){
       const safe = prev === '&' ? '&amp;' : prev === '<' ? '&lt;' : prev;
       spans += `<span style="opacity:${o.toFixed(2)}">${safe}</span>`;
     }
-    out.push(`<div class="col" style="--y0:${y0}%;--y1:${y1}%;--d:${rndInt(980)}">${spans}</div>`);
+    out.push(`<div class="col" style="--y0:${y0}%;--y1:${y1}%;--d:${rndInt(1960)}">${spans}</div>`);
   }
   codefield.innerHTML = out.join('');
 }
