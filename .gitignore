@@ -2,3 +2,11 @@
 .claude/
 lab-evidence.html
 lab-design-review.html
+
+# review/testing benches, not part of the site
+aurora.html
+bar.html
+particles.html
+redaction.html
+review.html
+tokens.html

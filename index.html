@@ -34,6 +34,10 @@
     --line:#ececec;
     --line-2:#e7e7e7;
     --paper:#ffffff;
+    /* The grey the translucent marks are struck from. Kept as real alpha
+       rather than flattened against paper so it stays a tint over any
+       surface. */
+    --tint:#939393;
     /* Selection is the third and last place colour is allowed. Not picked by
        eye and not read off the GLSL constants either — the aurora's CA/CB/CC
        stops are green/cyan/magenta, but the field as it actually renders is
@@ -295,7 +299,7 @@
   .about-grid p{color:var(--mut);font-size:var(--t-body);line-height:1.72;margin-bottom:18px;}
   .about-grid p strong{color:var(--ink);font-weight:600;}
   /* inline prose link — ported verbatim from .facts a in case-viewryt.html */
-  .about-grid p a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid rgba(147,147,147,.55);transition:border-color .25s,color .25s;}
+  .about-grid p a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--tint) 55%, transparent);transition:border-color .25s,color .25s;}
   .about-grid p a:hover{color:var(--ink);border-bottom-color:var(--ink-3);}
   .skills h4{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase;margin:26px 0 14px;}
   .skills h4:first-child{margin-top:0;}
@@ -317,7 +321,7 @@
   }
   .contact-actions .primary{background:var(--ink);color:var(--paper);}
   .contact-actions .primary:hover{background:var(--ink-3);}
-  .contact-actions .ghost{border:1px solid #dfdfdf;color:var(--ink);}
+  .contact-actions .ghost{border:1px solid var(--line-2);color:var(--ink);}
   .contact-actions .ghost:hover{border-color:var(--ink-3);color:var(--ink-2);}
   footer{
     display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;

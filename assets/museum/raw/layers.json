@@ -1,0 +1,606 @@
+{
+ "palace": {
+  "doc": [
+   3978,
+   1800
+  ],
+  "layers": [
+   {
+    "file": "palace_00_Background.png",
+    "name": "Background",
+    "bbox": [
+     0,
+     0,
+     3978,
+     1800
+    ],
+    "size": [
+     3978,
+     1800
+    ]
+   },
+   {
+    "file": "palace_01_Layer-1.png",
+    "name": "Layer 1",
+    "bbox": [
+     139,
+     0,
+     3645,
+     1800
+    ],
+    "size": [
+     3506,
+     1800
+    ]
+   },
+   {
+    "file": "palace_02_Layer-4.png",
+    "name": "Layer 4",
+    "bbox": [
+     629,
+     287,
+     3509,
+     1800
+    ],
+    "size": [
+     2880,
+     1513
+    ]
+   },
+   {
+    "file": "palace_03_Layer-4-copy-5.png",
+    "name": "Layer 4 copy 5",
+    "bbox": [
+     360,
+     55,
+     3516,
+     1800
+    ],
+    "size": [
+     3156,
+     1745
+    ]
+   },
+   {
+    "file": "palace_04_image-20.png",
+    "name": "image 20",
+    "bbox": [
+     -383,
+     0,
+     4156,
+     1800
+    ],
+    "size": [
+     4539,
+     1800
+    ]
+   },
+   {
+    "file": "palace_05_Layer-3.png",
+    "name": "Layer 3",
+    "bbox": [
+     0,
+     0,
+     3978,
+     1800
+    ],
+    "size": [
+     3978,
+     1800
+    ]
+   },
+   {
+    "file": "palace_06_Layer-6.png",
+    "name": "Layer 6",
+    "bbox": [
+     0,
+     195,
+     3978,
+     1521
+    ],
+    "size": [
+     3978,
+     1326
+    ]
+   },
+   {
+    "file": "palace_07_Layer-5.png",
+    "name": "Layer 5",
+    "bbox": [
+     0,
+     422,
+     3978,
+     1532
+    ],
+    "size": [
+     3978,
+     1110
+    ]
+   }
+  ]
+ },
+ "umbrella": {
+  "doc": [
+   2400,
+   2400
+  ],
+  "layers": [
+   {
+    "file": "umbrella_00_Background.png",
+    "name": "Background",
+    "bbox": [
+     0,
+     0,
+     2400,
+     2400
+    ],
+    "size": [
+     2400,
+     2400
+    ]
+   },
+   {
+    "file": "umbrella_01_Layer-1.png",
+    "name": "Layer 1",
+    "bbox": [
+     -32,
+     0,
+     1213,
+     521
+    ],
+    "size": [
+     1245,
+     521
+    ]
+   },
+   {
+    "file": "umbrella_03_Layer-3.png",
+    "name": "Layer 3",
+    "bbox": [
+     -115,
+     80,
+     2542,
+     2396
+    ],
+    "size": [
+     2657,
+     2316
+    ]
+   },
+   {
+    "file": "umbrella_04_Layer-4.png",
+    "name": "Layer 4",
+    "bbox": [
+     61,
+     137,
+     2328,
+     2360
+    ],
+    "size": [
+     2267,
+     2223
+    ]
+   },
+   {
+    "file": "umbrella_05_Layer-2-copy-2.png",
+    "name": "Layer 2 copy 2",
+    "bbox": [
+     34,
+     80,
+     2400,
+     2377
+    ],
+    "size": [
+     2366,
+     2297
+    ]
+   },
+   {
+    "file": "umbrella_06_Layer-5.png",
+    "name": "Layer 5",
+    "bbox": [
+     476,
+     761,
+     680,
+     995
+    ],
+    "size": [
+     204,
+     234
+    ]
+   },
+   {
+    "file": "umbrella_07-00_Layer-5-copy.png",
+    "name": "Layer 5 copy",
+    "bbox": [
+     383,
+     995,
+     587,
+     1229
+    ],
+    "size": [
+     204,
+     234
+    ]
+   },
+   {
+    "file": "umbrella_07-01_Layer-5-copy-2.png",
+    "name": "Layer 5 copy 2",
+    "bbox": [
+     685,
+     546,
+     899,
+     719
+    ],
+    "size": [
+     214,
+     173
+    ]
+   },
+   {
+    "file": "umbrella_07-02_Layer-5-copy-3.png",
+    "name": "Layer 5 copy 3",
+    "bbox": [
+     899,
+     458,
+     1107,
+     621
+    ],
+    "size": [
+     208,
+     163
+    ]
+   },
+   {
+    "file": "umbrella_07-03_Layer-5-copy-4.png",
+    "name": "Layer 5 copy 4",
+    "bbox": [
+     851,
+     638,
+     1081,
+     855
+    ],
+    "size": [
+     230,
+     217
+    ]
+   },
+   {
+    "file": "umbrella_07-04_Layer-5-copy-5.png",
+    "name": "Layer 5 copy 5",
+    "bbox": [
+     1262,
+     642,
+     1479,
+     838
+    ],
+    "size": [
+     217,
+     196
+    ]
+   },
+   {
+    "file": "umbrella_07-05_Layer-5-copy-8.png",
+    "name": "Layer 5 copy 8",
+    "bbox": [
+     1554,
+     906,
+     1779,
+     1132
+    ],
+    "size": [
+     225,
+     226
+    ]
+   },
+   {
+    "file": "umbrella_07-06_Layer-5-copy-11.png",
+    "name": "Layer 5 copy 11",
+    "bbox": [
+     1604,
+     1273,
+     1827,
+     1540
+    ],
+    "size": [
+     223,
+     267
+    ]
+   },
+   {
+    "file": "umbrella_07-07_Layer-5-copy-14.png",
+    "name": "Layer 5 copy 14",
+    "bbox": [
+     1309,
+     1587,
+     1531,
+     1792
+    ],
+    "size": [
+     222,
+     205
+    ]
+   },
+   {
+    "file": "umbrella_07-08_Layer-5-copy-18.png",
+    "name": "Layer 5 copy 18",
+    "bbox": [
+     917,
+     1619,
+     1146,
+     1821
+    ],
+    "size": [
+     229,
+     202
+    ]
+   },
+   {
+    "file": "umbrella_07-09_Layer-5-copy-21.png",
+    "name": "Layer 5 copy 21",
+    "bbox": [
+     917,
+     1619,
+     1146,
+     1821
+    ],
+    "size": [
+     229,
+     202
+    ]
+   },
+   {
+    "file": "umbrella_07-10_Layer-5-copy-22.png",
+    "name": "Layer 5 copy 22",
+    "bbox": [
+     648,
+     1329,
+     871,
+     1575
+    ],
+    "size": [
+     223,
+     246
+    ]
+   },
+   {
+    "file": "umbrella_07-11_Layer-5-copy-23.png",
+    "name": "Layer 5 copy 23",
+    "bbox": [
+     555,
+     1517,
+     762,
+     1746
+    ],
+    "size": [
+     207,
+     229
+    ]
+   },
+   {
+    "file": "umbrella_07-12_Layer-5-copy-24.png",
+    "name": "Layer 5 copy 24",
+    "bbox": [
+     440,
+     1313,
+     635,
+     1534
+    ],
+    "size": [
+     195,
+     221
+    ]
+   },
+   {
+    "file": "umbrella_07-13_Layer-5-copy-19.png",
+    "name": "Layer 5 copy 19",
+    "bbox": [
+     956,
+     1839,
+     1186,
+     2020
+    ],
+    "size": [
+     230,
+     181
+    ]
+   },
+   {
+    "file": "umbrella_07-14_Layer-5-copy-20.png",
+    "name": "Layer 5 copy 20",
+    "bbox": [
+     736,
+     1755,
+     973,
+     1936
+    ],
+    "size": [
+     237,
+     181
+    ]
+   },
+   {
+    "file": "umbrella_07-15_Layer-5-copy-15.png",
+    "name": "Layer 5 copy 15",
+    "bbox": [
+     1474,
+     1710,
+     1693,
+     1892
+    ],
+    "size": [
+     219,
+     182
+    ]
+   },
+   {
+    "file": "umbrella_07-16_Layer-5-copy-16.png",
+    "name": "Layer 5 copy 16",
+    "bbox": [
+     1474,
+     1710,
+     1693,
+     1892
+    ],
+    "size": [
+     219,
+     182
+    ]
+   },
+   {
+    "file": "umbrella_07-17_Layer-5-copy-17.png",
+    "name": "Layer 5 copy 17",
+    "bbox": [
+     1270,
+     1804,
+     1493,
+     1994
+    ],
+    "size": [
+     223,
+     190
+    ]
+   },
+   {
+    "file": "umbrella_07-18_Layer-5-copy-13.png",
+    "name": "Layer 5 copy 13",
+    "bbox": [
+     1729,
+     1468,
+     1925,
+     1705
+    ],
+    "size": [
+     196,
+     237
+    ]
+   },
+   {
+    "file": "umbrella_07-19_Layer-5-copy-12.png",
+    "name": "Layer 5 copy 12",
+    "bbox": [
+     1808,
+     1230,
+     1990,
+     1488
+    ],
+    "size": [
+     182,
+     258
+    ]
+   },
+   {
+    "file": "umbrella_07-20_Layer-5-copy-9.png",
+    "name": "Layer 5 copy 9",
+    "bbox": [
+     1700,
+     730,
+     1882,
+     931
+    ],
+    "size": [
+     182,
+     201
+    ]
+   },
+   {
+    "file": "umbrella_07-21_Layer-5-copy-10.png",
+    "name": "Layer 5 copy 10",
+    "bbox": [
+     1789,
+     940,
+     1972,
+     1172
+    ],
+    "size": [
+     183,
+     232
+    ]
+   },
+   {
+    "file": "umbrella_07-22_Layer-5-copy-6.png",
+    "name": "Layer 5 copy 6",
+    "bbox": [
+     1216,
+     458,
+     1436,
+     616
+    ],
+    "size": [
+     220,
+     158
+    ]
+   },
+   {
+    "file": "umbrella_07-23_Layer-5-copy-7.png",
+    "name": "Layer 5 copy 7",
+    "bbox": [
+     1440,
+     546,
+     1661,
+     697
+    ],
+    "size": [
+     221,
+     151
+    ]
+   },
+   {
+    "file": "umbrella_08_Layer-6.png",
+    "name": "Layer 6",
+    "bbox": [
+     29,
+     97,
+     2329,
+     2377
+    ],
+    "size": [
+     2300,
+     2280
+    ]
+   },
+   {
+    "file": "umbrella_09_Layer-5-copy-25.png",
+    "name": "Layer 5 copy 25",
+    "bbox": [
+     0,
+     0,
+     2400,
+     2400
+    ],
+    "size": [
+     2400,
+     2400
+    ]
+   },
+   {
+    "file": "umbrella_10_Background-copy.png",
+    "name": "Background copy",
+    "bbox": [
+     0,
+     0,
+     2400,
+     2400
+    ],
+    "size": [
+     2400,
+     2400
+    ]
+   },
+   {
+    "file": "umbrella_11_Layer-7.png",
+    "name": "Layer 7",
+    "bbox": [
+     50,
+     87,
+     2344,
+     2379
+    ],
+    "size": [
+     2294,
+     2292
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Components — one a day · Ravindra Pratap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* monochrome only. colour is an event, not a surface. */
+    --ink:#0d0d10;
+    --ink-2:#3b3b42;
+    --mut:#8c8c96;
+    --line:#e8e8ec;
+    --line-2:#f1f1f4;
+    --sunk:#fafafa;
+    --paper:#ffffff;
+
+    /* the single colour in the system, spent only on live interaction:
+       focus rings, an engaged zoom, a control being held. */
+    --grad:linear-gradient(96deg,
+      oklch(.78 .16 28) 0%,
+      oklch(.83 .15 92) 33%,
+      oklch(.74 .13 202) 67%,
+      oklch(.66 .19 296) 100%);
+
+    --r-sm:8px;
+    --r-md:14px;
+    --r-lg:20px;
+    --r-pill:99px;
+
+    --t-body:18px;
+    --t-sub:24px;
+    --t-head:56px;
+
+    /* one easing for entrances/exits, one for direct manipulation */
+    --ease:cubic-bezier(.32,.72,0,1);
+    --ease-out:cubic-bezier(.22,1,.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scrollbar-gutter:stable;}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  body.lock{overflow:hidden;}
+  ::selection{background:#e9e9ee;}
+
+  .mono{
+    font-family:ui-monospace,Menlo,monospace;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--mut);
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
+
+  /* ---------- page shell ---------- */
+  header.top{padding:132px 0 64px;}
+  h1{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:var(--t-head);line-height:1.06;letter-spacing:-.035em;font-weight:600;
+    max-width:16ch;
+  }
+
+  /* one entry per day. everything below repeats verbatim for day 002. */
+  .entry{border-top:1px solid var(--line);padding:34px 0 120px;}
+  .entry-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:24px;flex-wrap:wrap;margin-bottom:34px;
+  }
+  .entry-head h2{
+    font-family:"Space Grotesk",Inter,sans-serif;
+    font-size:var(--t-sub);font-weight:500;letter-spacing:-.02em;
+  }
+  /* ---------- 001 · image ---------- */
+  /* justified rows: flex-grow is the aspect ratio, so every tile in a row
+     resolves to the same height and no image is ever cropped. that matters
+     because an uncropped tile makes the expand a pure uniform scale. */
+  .gal{display:flex;flex-direction:column;gap:12px;}
+  .gal-row{display:flex;gap:12px;}
+  /* the tile owns the aspect ratio and the frame is absolute inside it, so the
+     morph can animate the frame's box without ever touching page layout. */
+  .tile{
+    position:relative;flex:var(--ar) 1 0;min-width:0;
+    aspect-ratio:var(--ar);z-index:calc(10 - var(--i));
+  }
+
+  .frame{
+    position:absolute;inset:0;display:block;padding:0;border:0;
+    background:var(--sunk);border-radius:var(--r-lg);corner-shape:squircle;
+    overflow:hidden;cursor:zoom-in;
+    -webkit-tap-highlight-color:transparent;
+    outline:none;isolation:isolate;
+  }
+  .frame::before{ /* hairline that survives the scale-up, unlike a border */
+    content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    /* corner-shape does NOT inherit, so `border-radius:inherit` alone left this
+       hairline tracing a *round* 20px arc over a squircle-clipped card — two
+       different curves at every corner, which read as a double outline. */
+    border-radius:inherit;corner-shape:inherit;
+    box-shadow:inset 0 0 0 1px var(--line);
+  }
+  .frame img{
+    width:100%;height:100%;display:block;object-fit:cover;
+    opacity:0;transform:scale(1.04);
+    transition:opacity .6s var(--ease-out),transform .9s var(--ease-out);
+  }
+  .frame.ready img{opacity:1;transform:none;}
+  .frame.ready:hover img{transform:scale(1.028);}
+  .frame:active img{transform:scale(.995);}
+
+  /* skeleton: a monochrome sheen, removed only once the bitmap has decoded */
+  .frame::after{
+    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(100deg,var(--sunk) 30%,#f0f0f3 48%,var(--sunk) 66%);
+    background-size:260% 100%;animation:sheen 1.5s linear infinite;
+    transition:opacity .5s var(--ease-out);
+  }
+  .frame.ready::after{opacity:0;animation:none;}
+  @keyframes sheen{from{background-position:140% 0;}to{background-position:-140% 0;}}
+
+  /* the only place colour appears at rest-adjacent state: a real focus ring,
+     drawn as a masked gradient border so it is a ring and not a glow.
+     it lives on the tile, not inside the frame — the frame clips its own
+     overflow, which would eat an offset ring entirely. */
+  .frame:focus-visible{outline:none;}
+  .tile:has(.frame:focus-visible) .ring{opacity:1;}
+  .ring{
+    position:absolute;inset:-5px;z-index:3;pointer-events:none;opacity:0;
+    border-radius:calc(var(--r-lg) + 5px);corner-shape:squircle;
+    padding:2px;background:var(--grad);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    transition:opacity .18s var(--ease-out);
+  }
+
+  .cap{
+    position:absolute;left:12px;bottom:12px;z-index:2;
+    display:flex;align-items:center;gap:8px;
+    padding:7px 12px;border-radius:var(--r-pill);
+    background:rgba(255,255,255,.86);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    box-shadow:inset 0 0 0 1px var(--line);
+    opacity:0;transform:translateY(6px);
+    transition:opacity .28s var(--ease-out),transform .38s var(--ease-out);
+  }
+  .frame.ready:hover .cap,.frame:focus-visible .cap{opacity:1;transform:none;}
+  .cap b{font-weight:500;font-size:12px;letter-spacing:.02em;color:var(--ink);text-transform:none;}
+
+  /* ---------- stage one: the deck ---------- */
+  /* the bar keeps a constant 44px so the back button appearing never shifts
+     the deck below it. it sits absolutely inside. */
+  .stage-bar{position:relative;height:44px;margin-bottom:22px;}
+  .stage-bar .back{
+    position:absolute;left:0;top:0;
+    /* visibility is animatable but discrete: it flips to hidden only at the
+       END of the fade out, and back to visible at the START of the fade in.
+       that is what takes the faded-out control out of the tab order and the
+       a11y tree — opacity:0 alone leaves it focusable, so a keyboard user
+       lands on an invisible button. */
+    transition:opacity .26s var(--ease-out),transform .38s var(--ease-out),
+               visibility 0s linear .26s;
+  }
+  [data-stage="gallery"] .back{visibility:visible;transition-delay:0s,0s,0s;}
+  [data-stage="stack"] .back{opacity:0;transform:translateX(-8px);pointer-events:none;visibility:hidden;}
+
+  /* round controls. the pill is deliberately a true circle/pill — only the
+     image surfaces are squircles. */
+  .back{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;padding:0;border:0;border-radius:var(--r-pill);
+    background:var(--paper);box-shadow:inset 0 0 0 1px var(--line);
+    color:var(--ink-2);cursor:pointer;
+    -webkit-tap-highlight-color:transparent;outline:none;
+  }
+  .back:hover{background:var(--line-2);color:var(--ink);}
+  .back:active{scale:.94;}
+  .back svg{width:18px;height:18px;fill:currentColor;flex:none;}
+
+  .cta-row{
+    display:flex;justify-content:center;height:52px;overflow:visible;
+    transition:height .5s var(--ease),opacity .3s var(--ease-out);
+  }
+  [data-stage="gallery"] .cta-row{height:0;opacity:0;pointer-events:none;}
+  .cta{
+    position:relative;display:inline-flex;align-items:center;gap:12px;
+    height:52px;padding:0 6px 0 22px;border:0;border-radius:var(--r-pill);
+    background:var(--ink);color:#fff;cursor:pointer;
+    font-family:inherit;font-size:15px;font-weight:500;letter-spacing:-.005em;
+    box-shadow:0 12px 26px -16px rgba(13,13,16,.8);
+    -webkit-tap-highlight-color:transparent;outline:none;
+    transition:box-shadow .24s var(--ease-out),translate .24s var(--ease-out),scale .18s var(--ease-out);
+  }
+  .cta:hover{translate:0 -2px;box-shadow:0 20px 34px -16px rgba(13,13,16,.85);}
+  .cta:active{scale:.98;translate:0 0;}
+  .cta .chev{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:40px;height:40px;border-radius:var(--r-pill);background:rgba(255,255,255,.15);
+    transition:translate .34s var(--ease-out);
+  }
+  .cta:hover .chev{translate:3px 0;}
+  .cta svg{width:16px;height:16px;fill:currentColor;flex:none;}
+
+  /* same gradient ring as the tiles. these buttons do not clip their overflow,
+     so it can sit on the element itself rather than on a wrapper. */
+  .back:focus-visible,.cta:focus-visible{outline:none;}
+  .back::after,.cta::after{
+    content:"";position:absolute;inset:-5px;z-index:1;pointer-events:none;opacity:0;
+    border-radius:var(--r-pill);padding:2px;background:var(--grad);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    transition:opacity .18s var(--ease-out);
+  }
+  .back:focus-visible::after,.cta:focus-visible::after{opacity:1;}
+
+  /* the deck: one square footprint, cards stacked sideways. each card behind
+     steps right and shrinks, so only its right edge reads — the toast-stack
+     falloff, laid on its side. */
+  [data-stage="stack"] .gal{
+    position:relative;display:block;
+    width:min(400px,100%);margin:0 auto 56px;aspect-ratio:1;
+    /* visible sliver = gap − (width/2)×step. scaling about the centre takes
+       half the width loss off each side, so only half works against the gap.
+       solve for the sliver, never nudge the gap: gap 16 / step .05 netted 6px
+       and the deck read as a single card.
+       200×.05 = 10 → gap 46 gives a 36px collapsed sliver. */
+    --gap:46px;--step:.05;
+  }
+  /* 200×.04 = 8 → gap 62 gives a 54px sliver */
+  [data-stage="stack"] .gal:hover,[data-stage="stack"] .gal:focus-within{
+    --gap:62px;--step:.04;
+  }
+  /* the cards sit to the RIGHT of the deck box, so the stack is wider than
+     .gal by 2 slivers. once the deck stops being 400px and starts filling the
+     screen, that surplus runs off the viewport and scrolls the page — so below
+     this breakpoint the deck gives the spread its room back. */
+  @media (max-width:760px){
+    [data-stage="stack"] .gal{width:min(400px,calc(100% - 88px));--gap:30px;}
+    [data-stage="stack"] .gal:hover,[data-stage="stack"] .gal:focus-within{--gap:42px;}
+  }
+  [data-stage="stack"] .gal-row{display:contents;}
+  [data-stage="stack"] .tile{
+    position:absolute;left:0;top:0;width:100%;height:auto;flex:none;
+    aspect-ratio:1;
+    /* translate + scale, never rotate: an axis-aligned box means the measured
+       rect IS the visual box, which is what keeps the morph exact. scaling
+       about the centre insets top and bottom equally, so the depth reads as
+       size rather than as a lean. */
+    transform-origin:50% 50%;
+    transform:translateX(calc(var(--i) * var(--gap))) scale(calc(1 - var(--i) * var(--step)));
+    transition:transform .55s var(--ease-out),opacity .45s var(--ease-out);
+  }
+  /* three cards read at a time. the fourth stays mounted rather than removed
+     so it still has a box to fly from when the deck deals out — but it is
+     parked directly behind card 2, not one step further out: opacity:0 still
+     takes part in layout, so at its own index it silently widened the page's
+     scrollWidth past the viewport on small screens. */
+  [data-stage="stack"] .tile[data-buried]{
+    opacity:0;
+    transform:translateX(calc(2 * var(--gap))) scale(calc(1 - 2 * var(--step)));
+  }
+  [data-stage="stack"] .frame{
+    cursor:pointer;
+    box-shadow:0 1px 2px rgba(13,13,16,.05),0 6px 16px -4px rgba(13,13,16,.10);
+  }
+  /* the cards behind are blank stock — only the top one carries a drawing.
+     dropping the image rather than the card keeps the hairline edge, and the
+     fade back in rides the morph as the deck deals out. */
+  [data-stage="stack"] .tile:not([data-lead]) .frame{background:var(--paper);}
+  [data-stage="stack"] .tile:not([data-lead]) .frame.ready img{opacity:0;}
+  [data-stage="stack"] .tile:not([data-lead]) .cap{display:none;}
+
+  /* flight: for the duration of the morph the tiles leave flow entirely and
+     are driven by inline left/top/width/height, so neither layout mode can
+     fight the animation. object-fit re-crops each frame on every frame. */
+  .stage.morphing .gal{position:relative;}
+  .stage.morphing .tile{
+    position:absolute;flex:none;transform:none;transition:none;aspect-ratio:auto;
+  }
+  .stage.morphing .frame{pointer-events:none;}
+
+  /* ---------- expanded ---------- */
+  .lb{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;}
+  .lb[hidden]{display:none;}
+  .scrim{
+    position:absolute;inset:0;background:rgba(252,252,253,.86);
+    -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  }
+  .lb-fig{position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .lb-view{
+    position:relative;overflow:hidden;background:var(--paper);
+    aspect-ratio:var(--ar);
+    width:min(calc(100vw - 88px),calc((100vh - 208px) * var(--ar)));
+    border-radius:var(--r-lg);corner-shape:squircle;
+    box-shadow:inset 0 0 0 1px var(--line),0 40px 80px -40px rgba(13,13,16,.28);
+    touch-action:none;cursor:grab;
+  }
+  .lb-view.grabbing{cursor:grabbing;}
+  .lb-view.zoomable{cursor:zoom-in;}
+  .lb-img{
+    width:100%;height:100%;display:block;object-fit:cover;
+    transform-origin:50% 50%;will-change:transform;
+    -webkit-user-drag:none;user-select:none;
+  }
+  .lb-cap{display:flex;align-items:center;gap:14px;}
+  .lb-cap b{font-weight:500;font-size:14px;color:var(--ink);}
+
+  /* controls */
+  .lb-bar{
+    position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+    display:flex;align-items:center;gap:4px;padding:4px;
+    border-radius:var(--r-pill);background:rgba(255,255,255,.9);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    box-shadow:inset 0 0 0 1px var(--line),0 12px 30px -18px rgba(13,13,16,.4);
+  }
+  .ctl{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:44px;min-height:44px;padding:0 12px;
+    border:0;background:none;border-radius:var(--r-pill);
+    color:var(--ink-2);cursor:pointer;
+    transition:background .18s var(--ease-out),color .18s var(--ease-out);
+  }
+  .ctl:hover{background:var(--line-2);color:var(--ink);}
+  .ctl:disabled{opacity:.32;cursor:default;background:none;}
+  .ctl:focus-visible{outline:2px solid var(--ink);outline-offset:-4px;}
+  .ctl svg{width:18px;height:18px;fill:currentColor;flex:none;}
+  .lb-close{position:absolute;top:22px;right:22px;background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px var(--line);}
+
+  /* zoom readout — the track only takes colour while the image is engaged */
+  .zoom{
+    display:flex;align-items:center;gap:10px;padding:0 14px 0 12px;
+    min-height:44px;font-family:ui-monospace,Menlo,monospace;
+    font-size:12px;letter-spacing:.06em;color:var(--mut);
+  }
+  .zoom-track{
+    position:relative;width:56px;height:3px;border-radius:2px;background:var(--line);overflow:hidden;
+  }
+  .zoom-fill{
+    position:absolute;inset:0;width:56px;transform-origin:0 50%;
+    transform:scaleX(var(--z,0));background:var(--grad);
+    transition:transform .18s var(--ease-out);
+  }
+  .zoom b{font-weight:400;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:34px;}
+
+  @media (max-width:900px){
+    :root{--t-head:40px;--t-sub:20px;--t-body:17px;}
+    .wrap{padding:0 24px;}
+    header.top{padding:96px 0 48px;}
+    /* stacked rows put flex on the block axis, where flex-basis:0 would win
+       over aspect-ratio and collapse every tile to zero height. */
+    .gal-row{flex-direction:column;}
+    [data-stage="gallery"] .gal-row .tile{flex:none;width:100%;}
+    .lb-view{width:calc(100vw - 32px);}
+    .lb-bar{bottom:16px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      /* delay must go too, not just duration: the stage controls hand off
+         visibility on a delay timed to the fade, and with no fade left to
+         cover it that delay strands a focusable invisible button. */
+      transition-delay:0s !important;animation-delay:0s !important;
+    }
+    .frame img{transform:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <h1>A component every day, built to the last pixel.</h1>
+  </header>
+
+  <!-- ======================= 001 ======================= -->
+  <section class="entry" id="c001">
+    <div class="entry-head">
+      <h2>Image</h2>
+    </div>
+
+    <div class="stage" id="stage" data-stage="stack">
+      <div class="stage-bar">
+        <button class="back" id="back" aria-label="Back to the deck">
+          <svg viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path></svg>
+        </button>
+      </div>
+
+      <div class="gal" id="gal">
+        <div class="gal-row">
+          <div class="tile" data-lead style="--ar:1.001;--i:0">
+            <button class="frame" data-src="assets/lab/001/umbrella.png" data-title="Parasol, eight panels" data-ar="1.001">
+              <img src="assets/lab/001/umbrella.png" alt="Ink drawing of an eight-panelled Rajasthani parasol with medallion details" decoding="async">
+              <span class="cap"><b>Parasol, eight panels</b></span>
+            </button>
+            <span class="ring"></span>
+          </div>
+          <div class="tile" style="--ar:1.808;--i:1">
+            <button class="frame" data-src="assets/lab/001/haveli.png" data-title="Haveli facade, two storeys" data-ar="1.808">
+              <img src="assets/lab/001/haveli.png" alt="Line drawing of a haveli facade with two storeys of arched windows and a central jharokha" decoding="async">
+              <span class="cap"><b>Haveli facade, two storeys</b></span>
+            </button>
+            <span class="ring"></span>
+          </div>
+        </div>
+        <div class="gal-row">
+          <div class="tile" style="--ar:2.21;--i:2">
+            <button class="frame" data-src="assets/lab/001/palace.png" data-title="City Palace, panorama" data-ar="2.21">
+              <img src="assets/lab/001/palace.png" alt="Wide line drawing of the Udaipur City Palace facade" decoding="async">
+              <span class="cap"><b>City Palace, panorama</b></span>
+            </button>
+            <span class="ring"></span>
+          </div>
+          <div class="tile" data-buried style="--ar:2.299;--i:3">
+            <button class="frame" data-src="assets/lab/001/gate.png" data-title="Triple-arched gateway" data-ar="2.299">
+              <img src="assets/lab/001/gate.png" alt="Line drawing of a symmetrical triple-arched gateway" decoding="async">
+              <span class="cap"><b>Triple-arched gateway</b></span>
+            </button>
+            <span class="ring"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="cta" id="cta">View gallery
+          <span class="chev"><svg viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></span>
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<!-- expanded view -->
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Expanded image">
+  <div class="scrim" data-close></div>
+  <figure class="lb-fig">
+    <div class="lb-view" id="lbView"><img class="lb-img" id="lbImg" alt=""></div>
+    <figcaption class="lb-cap">
+      <span class="mono" id="lbIdx">01 / 04</span>
+      <b id="lbTitle"></b>
+    </figcaption>
+  </figure>
+
+  <button class="ctl lb-close" id="lbClose" aria-label="Close">
+    <svg viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
+  </button>
+
+  <div class="lb-bar">
+    <button class="ctl" id="lbPrev" aria-label="Previous image">
+      <svg viewBox="0 0 256 256"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path></svg>
+    </button>
+    <button class="ctl" id="lbOut" aria-label="Zoom out">
+      <svg viewBox="0 0 256 256"><path d="M232,128a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16H224A8,8,0,0,1,232,128Z"></path></svg>
+    </button>
+    <div class="zoom" aria-live="polite"><span class="zoom-track"><span class="zoom-fill" id="zFill"></span></span><b id="zVal">1.0×</b></div>
+    <button class="ctl" id="lbIn" aria-label="Zoom in">
+      <svg viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+    </button>
+    <button class="ctl" id="lbNext" aria-label="Next image">
+      <svg viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  var EASE = 'cubic-bezier(.32,.72,0,1)';
+
+  /* ---- skeleton removal: wait for the decode, not the load event, or the
+     first paint of a 2000px bitmap lands after the fade has already run ---- */
+  var frames = [].slice.call(document.querySelectorAll('.frame'));
+  frames.forEach(function (f) {
+    var img = f.querySelector('img');
+    var ready = function () { f.classList.add('ready'); };   // idempotent
+
+    function settle() {
+      if (!img.decode) return ready();
+      img.decode().then(ready, ready);
+      // chrome defers decode() indefinitely while the document is not being
+      // rendered (background tab, prerender), so it can never be the only way
+      // out of the skeleton — the image is already loaded by this point.
+      setTimeout(ready, 500);
+    }
+
+    if (img.complete) {
+      settle();
+    } else {
+      img.addEventListener('load', settle);
+      img.addEventListener('error', ready);
+    }
+  });
+
+  /* ---- stage one → stage two ----------------------------------------------
+     the deck and the gallery are two different layout modes (absolute square
+     footprint vs justified flex rows), so neither can animate into the other
+     in place. instead: measure, switch the mode, measure again, then lift the
+     tiles out of flow onto inline left/top/width/height and animate the two
+     sets of rects into each other. baking the scale into width/height rather
+     than into a transform matters — a square becoming a 2.3:1 panorama under
+     a non-uniform scale would visibly squash the drawing, whereas resizing the
+     box lets object-fit re-crop it correctly on every frame. */
+  var stage = document.getElementById('stage'),
+      gal = document.getElementById('gal'),
+      tiles = [].slice.call(document.querySelectorAll('.tile')),
+      cta = document.getElementById('cta'),
+      back = document.getElementById('back');
+
+  var busy = false;
+
+  function syncStage() {
+    var stacked = stage.dataset.stage === 'stack';
+    // in the deck the cards are one decorative object; the button underneath
+    // is the only control, so nothing in the deck takes focus or a name.
+    tiles.forEach(function (t, i) {
+      t.setAttribute('aria-hidden', stacked ? 'true' : 'false');
+      frames[i].tabIndex = stacked ? -1 : 0;
+    });
+  }
+  syncStage();
+
+  /* the deck is translate + scale only, so it stays axis-aligned and a measured
+     rect is exactly the visual box in both stages — no correction needed. */
+  function geom() {
+    return tiles.map(function (t) { return t.getBoundingClientRect(); });
+  }
+
+  function morph(next, done) {
+    if (busy || stage.dataset.stage === next) return;
+    busy = true;
+
+    var first = geom();
+    var fh = gal.getBoundingClientRect().height;
+    var fm = parseFloat(getComputedStyle(gal).marginBottom) || 0;
+
+    stage.dataset.stage = next;
+    syncStage();
+
+    var last = geom();
+    var g = gal.getBoundingClientRect();
+    var lh = g.height;
+    var lm = parseFloat(getComputedStyle(gal).marginBottom) || 0;
+
+    // lift into flight, seeded at the from-rects so there is no flash
+    stage.classList.add('morphing');
+    gal.style.height = fh + 'px';
+    gal.style.marginBottom = fm + 'px';
+    tiles.forEach(function (t, i) {
+      var a = first[i];
+      t.style.left = (a.left - g.left) + 'px';
+      t.style.top = (a.top - g.top) + 'px';
+      t.style.width = a.width + 'px';
+      t.style.height = a.height + 'px';
+    });
+
+    var d = reduce.matches ? 1 : 560;
+    // deal out from the top of the deck, gather back in from the bottom
+    var order = next === 'gallery' ? [0, 1, 2, 3] : [3, 2, 1, 0];
+
+    var runs = [gal.animate(
+      [{ height: fh + 'px', marginBottom: fm + 'px' },
+       { height: lh + 'px', marginBottom: lm + 'px' }],
+      { duration: d, easing: EASE, fill: 'both' }
+    )];
+
+    var pending = tiles.length;
+    tiles.forEach(function (t, i) {
+      var a = first[i], b = last[i];
+      var an = t.animate(
+        [{ left: (a.left - g.left) + 'px', top: (a.top - g.top) + 'px', width: a.width + 'px', height: a.height + 'px' },
+         { left: (b.left - g.left) + 'px', top: (b.top - g.top) + 'px', width: b.width + 'px', height: b.height + 'px' }],
+        { duration: d, delay: reduce.matches ? 0 : order.indexOf(i) * 50, easing: EASE, fill: 'both' }
+      );
+      runs.push(an);
+      an.onfinish = function () {
+        if (--pending) return;
+        // cancel before clearing: fill:'both' would otherwise pin the last
+        // keyframe over the stylesheet forever.
+        runs.forEach(function (r) { r.cancel(); });
+        gal.style.height = '';
+        gal.style.marginBottom = '';
+        tiles.forEach(function (x) {
+          // never removeAttribute('style') — --ar/--i/--sgn live there too
+          x.style.left = x.style.top = x.style.width = x.style.height = '';
+        });
+        stage.classList.remove('morphing');
+        busy = false;
+        if (done) done();
+      };
+    });
+  }
+
+  cta.addEventListener('click', function () {
+    morph('gallery', function () { frames[0].focus({ preventScroll: true }); });
+  });
+  back.addEventListener('click', function () {
+    morph('stack', function () { cta.focus({ preventScroll: true }); });
+  });
+
+  /* ---- expanded view ---- */
+  var lb = document.getElementById('lb'),
+      view = document.getElementById('lbView'),
+      lbImg = document.getElementById('lbImg'),
+      lbIdx = document.getElementById('lbIdx'),
+      lbTitle = document.getElementById('lbTitle'),
+      zFill = document.getElementById('zFill'),
+      zVal = document.getElementById('zVal'),
+      btnPrev = document.getElementById('lbPrev'),
+      btnNext = document.getElementById('lbNext'),
+      btnIn = document.getElementById('lbIn'),
+      btnOut = document.getElementById('lbOut'),
+      btnClose = document.getElementById('lbClose');
+
+  var MAX = 5, index = -1, origin = null, anim = null;
+  var s = 1, tx = 0, ty = 0;
+
+  function apply(animate) {
+    lbImg.style.transition = animate ? 'transform .34s ' + EASE : 'none';
+    lbImg.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+    zVal.textContent = s.toFixed(1) + '\u00d7';
+    // fill maps 1× → empty, MAX → full
+    zFill.style.setProperty('--z', ((s - 1) / (MAX - 1)).toFixed(3));
+    view.classList.toggle('zoomable', s === 1);
+    btnOut.disabled = s <= 1.001;
+    btnIn.disabled = s >= MAX - 0.001;
+  }
+
+  // pan is clamped to the image's own edges: at 1× there is nothing to pan.
+  function clamp() {
+    var r = view.getBoundingClientRect();
+    var mx = Math.max(0, (r.width * s - r.width) / 2);
+    var my = Math.max(0, (r.height * s - r.height) / 2);
+    tx = Math.min(mx, Math.max(-mx, tx));
+    ty = Math.min(my, Math.max(-my, ty));
+  }
+
+  // zoom about a point: keep the content coordinate under the cursor fixed.
+  function zoomAt(next, px, py, animate) {
+    next = Math.min(MAX, Math.max(1, next));
+    var r = view.getBoundingClientRect();
+    var ox = (px === undefined ? r.left + r.width / 2 : px) - (r.left + r.width / 2);
+    var oy = (py === undefined ? r.top + r.height / 2 : py) - (r.top + r.height / 2);
+    tx = ox - (ox - tx) * (next / s);
+    ty = oy - (oy - ty) * (next / s);
+    s = next;
+    clamp();
+    apply(animate);
+  }
+
+  function load(i, dir) {
+    var f = frames[i];
+    index = i;
+    lbTitle.textContent = f.dataset.title;
+    lbIdx.textContent = ('0' + (i + 1)).slice(-2) + ' / ' + ('0' + frames.length).slice(-2);
+    lbImg.alt = f.querySelector('img').alt;
+    view.style.setProperty('--ar', f.dataset.ar);
+    s = 1; tx = 0; ty = 0; apply(false);
+
+    if (dir && !reduce.matches) {
+      lbImg.animate(
+        [{ opacity: 0, transform: 'translateX(' + (dir * 18) + 'px)' }, { opacity: 1, transform: 'none' }],
+        { duration: 340, easing: EASE }
+      );
+    }
+    lbImg.src = f.dataset.src;
+  }
+
+  function step(d) {
+    if (index < 0) return;
+    load((index + d + frames.length) % frames.length, d);
+  }
+
+  /* FLIP: measure the tile, measure the laid-out expanded box, animate the
+     difference away. the radius is divided by the scale at every keyframe so
+     the corner never looks fat at the small end. */
+  function flip(from, to, done) {
+    var dx = from.left + from.width / 2 - (to.left + to.width / 2);
+    var dy = from.top + from.height / 2 - (to.top + to.height / 2);
+    var k = from.width / to.width;
+    if (anim) anim.cancel();
+    anim = view.animate(
+      [
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')', borderRadius: (20 / k) + 'px' },
+        { transform: 'none', borderRadius: '20px' }
+      ],
+      { duration: reduce.matches ? 1 : 460, easing: EASE }
+    );
+    anim.onfinish = done || null;
+  }
+
+  function open(i) {
+    origin = frames[i];
+    // lock first: hiding the scrollbar shifts the page, and a rect measured
+    // before that shift lands the flip a few pixels off centre.
+    lb.hidden = false;
+    document.body.classList.add('lock');
+    var from = origin.getBoundingClientRect();
+    load(i, 0);
+
+    var to = view.getBoundingClientRect();
+    flip(from, to);
+    lb.animate([{ opacity: 0 }, { opacity: 1 }], { duration: reduce.matches ? 1 : 260, easing: 'linear' });
+    document.querySelector('.lb-fig').querySelector('figcaption')
+      .animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+               { duration: reduce.matches ? 1 : 420, delay: 120, easing: EASE, fill: 'backwards' });
+    btnClose.focus({ preventScroll: true });
+  }
+
+  function close() {
+    if (lb.hidden) return;
+    var target = frames[index];
+    var to = view.getBoundingClientRect();
+    var from = target.getBoundingClientRect();
+
+    // reset the zoom first so the tile it flies back into matches the tile it came from
+    s = 1; tx = 0; ty = 0; apply(false);
+
+    var dx = from.left + from.width / 2 - (to.left + to.width / 2);
+    var dy = from.top + from.height / 2 - (to.top + to.height / 2);
+    var k = from.width / to.width;
+    if (anim) anim.cancel();
+    anim = view.animate(
+      [
+        { transform: 'none', borderRadius: '20px' },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')', borderRadius: (20 / k) + 'px' }
+      ],
+      { duration: reduce.matches ? 1 : 380, easing: EASE }
+    );
+    lb.animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduce.matches ? 1 : 380, easing: 'linear' });
+    anim.onfinish = function () {
+      lb.hidden = true;
+      document.body.classList.remove('lock');
+      target.focus({ preventScroll: true });
+      index = -1;
+    };
+  }
+
+  // in the deck a card is not an image yet, it is the way into the gallery
+  frames.forEach(function (f, i) {
+    f.addEventListener('click', function () {
+      if (stage.dataset.stage === 'stack') { cta.click(); return; }
+      open(i);
+    });
+  });
+
+  btnClose.addEventListener('click', close);
+  lb.addEventListener('click', function (e) { if (e.target.hasAttribute('data-close')) close(); });
+  btnPrev.addEventListener('click', function () { step(-1); });
+  btnNext.addEventListener('click', function () { step(1); });
+  btnIn.addEventListener('click', function () { zoomAt(s * 1.6, undefined, undefined, true); });
+  btnOut.addEventListener('click', function () { zoomAt(s / 1.6, undefined, undefined, true); });
+
+  view.addEventListener('dblclick', function (e) {
+    zoomAt(s > 1.05 ? 1 : 2.6, e.clientX, e.clientY, true);
+  });
+
+  view.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    zoomAt(s * Math.exp(-e.deltaY * 0.0016), e.clientX, e.clientY, false);
+  }, { passive: false });
+
+  /* drag to pan, and two-pointer pinch, off the same pointer events */
+  var pts = new Map(), last = null, pinch = 0;
+  view.addEventListener('pointerdown', function (e) {
+    view.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    last = { x: e.clientX, y: e.clientY };
+    if (pts.size === 2) pinch = spread();
+    if (s > 1) view.classList.add('grabbing');
+  });
+  view.addEventListener('pointermove', function (e) {
+    if (!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (pts.size === 2) {
+      var d = spread(), c = centre();
+      if (pinch) zoomAt(s * (d / pinch), c.x, c.y, false);
+      pinch = d;
+      return;
+    }
+    if (s <= 1) return;
+    tx += e.clientX - last.x;
+    ty += e.clientY - last.y;
+    last = { x: e.clientX, y: e.clientY };
+    clamp(); apply(false);
+  });
+  ['pointerup', 'pointercancel'].forEach(function (t) {
+    view.addEventListener(t, function (e) {
+      pts.delete(e.pointerId);
+      if (pts.size < 2) pinch = 0;
+      if (!pts.size) view.classList.remove('grabbing');
+    });
+  });
+  function spread() {
+    var v = Array.from(pts.values());
+    return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
+  }
+  function centre() {
+    var v = Array.from(pts.values());
+    return { x: (v[0].x + v[1].x) / 2, y: (v[0].y + v[1].y) / 2 };
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (lb.hidden) {
+      // escape unwinds one level at a time: gallery → deck
+      if (e.key === 'Escape' && stage.dataset.stage === 'gallery') {
+        morph('stack', function () { cta.focus({ preventScroll: true }); });
+        e.preventDefault();
+      }
+      return;
+    }
+    if (e.key === 'Escape') { close(); }
+    else if (e.key === 'ArrowRight') { step(1); }
+    else if (e.key === 'ArrowLeft') { step(-1); }
+    else if (e.key === '+' || e.key === '=') { zoomAt(s * 1.6, undefined, undefined, true); }
+    else if (e.key === '-') { zoomAt(s / 1.6, undefined, undefined, true); }
+    else if (e.key === '0') { zoomAt(1, undefined, undefined, true); }
+    else return;
+    e.preventDefault();
+  });
+
+  // the expanded box is sized off the viewport, so a resize invalidates the pan
+  addEventListener('resize', function () { if (!lb.hidden) { clamp(); apply(false); } });
+})();
+</script>
+</body>
+</html>

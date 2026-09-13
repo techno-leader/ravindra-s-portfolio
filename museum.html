@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Museum — Ravindra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16141f;
+    --lav:#8f7ff0;
+    --lav-deep:#6a58e0;
+    --mut:#8b87a0;
+    --line:#eceaf6;
+    --paper:#ffffff;
+
+    /* museum runs inverted — dark room, lit drawings */
+    --room:#0f0e15;
+    --room-2:#17161f;
+    --chalk:#f4f2ff;
+
+    --r-sm:8px;
+    --r-md:14px;
+    --r-pill:99px;
+
+    --t-body:18px;
+    --t-sub:24px;
+    --t-sub-md:32px;
+    --t-head:56px;
+    --t-head-lg:64px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--room);
+    color:var(--chalk);
+    font-family:"Space Grotesk",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:var(--t-body);
+    overflow-x:hidden;
+  }
+
+  #runway{height:600vh;position:relative;}
+
+  canvas#gl{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;}
+
+  /* ---------- chrome ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:30;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 32px;
+    mix-blend-mode:difference;
+  }
+  nav .logo{font-size:var(--t-body);font-weight:600;letter-spacing:.01em;}
+  nav a{
+    color:inherit;text-decoration:none;font-size:15px;font-weight:500;
+    min-height:44px;display:inline-flex;align-items:center;gap:8px;
+  }
+  nav a:hover{opacity:.65;}
+
+  /* ---------- scroll-keyed captions ---------- */
+  .stage{position:fixed;inset:0;z-index:20;pointer-events:none;}
+  .card{
+    position:absolute;left:50%;transform:translate(-50%,-50%);
+    text-align:center;width:min(720px,88vw);
+    opacity:0;transition:opacity .5s ease;
+  }
+  .card.on{opacity:1;}
+  .card h1{
+    font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
+    font-size:var(--t-head-lg);line-height:1.02;letter-spacing:-.01em;
+  }
+  .card h2{
+    font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
+    font-size:var(--t-sub-md);line-height:1.1;
+  }
+  .card p{
+    margin-top:14px;color:#b9b4d4;line-height:1.5;
+    font-size:var(--t-body);max-width:44ch;margin-left:auto;margin-right:auto;
+  }
+  .card .place{
+    margin-top:10px;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#8b87a0;
+  }
+
+  #c-title{top:44%;}
+  #c-canopy{top:50%;}
+  #c-palace{top:22%;}
+  #c-haveli{top:22%;}
+  #c-gate{top:20%;}
+  #c-end{top:50%;pointer-events:auto;}
+
+  .hint{
+    position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:20;
+    font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#7d7a95;
+    transition:opacity .4s ease;
+  }
+  .hint.off{opacity:0;}
+
+  .back{
+    display:inline-flex;align-items:center;gap:10px;min-height:44px;
+    padding:0 22px;margin-top:22px;border-radius:var(--r-pill);
+    background:var(--chalk);color:var(--room);
+    text-decoration:none;font-weight:600;font-size:15px;
+  }
+  .back:hover{background:#fff;}
+
+  #fallback{display:none;padding:80px 24px;text-align:center;}
+  #fallback img{max-width:min(560px,86vw);width:100%;filter:invert(1);}
+
+  @media (max-width:640px){
+    :root{--t-head-lg:40px;--t-sub-md:24px;--t-body:16px;}
+    nav{padding:16px 20px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .card{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<nav>
+  <div class="logo">Museum</div>
+  <a href="index.html">Back to work</a>
+</nav>
+
+<div class="stage" aria-hidden="true">
+  <div class="card on" id="c-title">
+    <h1>Museum</h1>
+    <p>Drawings I made of Udaipur, rebuilt as a room you can move through.</p>
+  </div>
+  <div class="card" id="c-canopy">
+    <h2>The canopy</h2>
+    <div class="place">Chhatri parasol · ink on paper</div>
+  </div>
+  <div class="card" id="c-palace">
+    <h2>The far shore</h2>
+    <div class="place">City Palace, from Gangaur Ghat</div>
+  </div>
+  <div class="card" id="c-haveli">
+    <h2>Through a window</h2>
+    <div class="place">Facade and jharokhas</div>
+  </div>
+  <div class="card" id="c-gate">
+    <h2>And through the gate</h2>
+    <div class="place">Triple arch, Gangaur Ghat</div>
+  </div>
+  <div class="card" id="c-end">
+    <h2>End of the room</h2>
+    <a class="back" href="index.html">Back to work</a>
+  </div>
+</div>
+
+<div class="hint" id="hint">Scroll</div>
+
+<div id="runway"></div>
+
+<div id="fallback">
+  <h1 style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:40px;">Museum</h1>
+  <p style="color:#b9b4d4;margin:16px 0 32px;">Your browser can’t render the room. Here are the drawings.</p>
+  <img src="assets/museum/umbrella/full.png" alt="Line drawing of an ornate chhatri parasol seen from above" />
+  <img src="assets/museum/palace/near.png" alt="Line drawing of the City Palace, Udaipur, seen from Gangaur Ghat" />
+  <img src="assets/museum/haveli/lines.png" alt="Line drawing of a palace facade with two storeys of arched windows and a central jharokha" />
+  <img src="assets/museum/gate/lines.png" alt="Line drawing of a triple-arched ceremonial gateway at Gangaur Ghat" />
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const canvas = document.getElementById('gl');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let renderer;
+  try{
+    renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  }catch(e){
+    canvas.style.display='none';
+    document.getElementById('runway').style.display='none';
+    document.querySelector('.stage').style.display='none';
+    document.getElementById('hint').style.display='none';
+    document.getElementById('fallback').style.display='block';
+    return;
+  }
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.1, 120);
+
+  const isGL2 = renderer.capabilities.isWebGL2;
+  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+  const loader = new THREE.TextureLoader();
+  function tex(url){
+    const t = loader.load(url);
+    t.anisotropy = maxAniso;
+    if(isGL2){ t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true; }
+    else { t.minFilter = THREE.LinearFilter; t.generateMipmaps = false; }
+    t.magFilter = THREE.LinearFilter;
+    return t;
+  }
+
+  /* Line art is dark-on-transparent. The room is dark, so luminance is
+     inverted in the shader: paper falls away, ink lights up. */
+  const VERT = `
+    varying vec2 vUv; varying float vDepth;
+    void main(){
+      vUv = uv;
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      vDepth = -mv.z;
+      gl_Position = projectionMatrix * mv;
+    }`;
+  /* uKey remaps each drawing's own ink range onto 0..1. The scans are not
+     consistent — the gate's linework sits at ink 0.23 while the medallions'
+     paper fill sits at 0.30 — so one global threshold would either erase the
+     gate or keep the fill. Per-drawing keying does both jobs at once: it
+     drops paper to fully transparent and lifts linework to full chalk. */
+  const FRAG = `
+    uniform sampler2D uMap; uniform float uOpacity; uniform vec3 uTint;
+    uniform float uNear; uniform float uFar; uniform vec2 uKey;
+    varying vec2 vUv; varying float vDepth;
+    void main(){
+      vec4 t = texture2D(uMap, vUv);
+      float ink = smoothstep(uKey.x, uKey.y, 1.0 - t.r);
+      float enter = smoothstep(0.0, uNear, vDepth);
+      float exit  = 1.0 - smoothstep(uFar * 0.72, uFar, vDepth);
+      float a = t.a * ink * uOpacity * enter * exit;
+      if(a < 0.004) discard;
+      gl_FragColor = vec4(uTint, a);
+    }`;
+
+  /* The canopy is a filled shape, not line work — it must occlude what is
+     behind it. Its fill is near-white, which the ink flip above would erase,
+     so it gets its own opaque material keyed off alpha alone. */
+  const SOLID_FRAG = `
+    uniform sampler2D uMap; uniform vec3 uFill;
+    varying vec2 vUv; varying float vDepth;
+    void main(){
+      // drop away just before the camera reaches it, so passing through the
+      // parasol doesn't flash a full screen of flat fill
+      if(vDepth < 1.3) discard;
+      if(texture2D(uMap, vUv).a < 0.5) discard;
+      gl_FragColor = vec4(uFill, 1.0);
+    }`;
+
+  function plane(url, w, h, x, y, z, o){
+    o = o || {};
+    const mat = new THREE.ShaderMaterial({
+      vertexShader:VERT, fragmentShader:FRAG, transparent:true, depthWrite:false,
+      uniforms:{
+        uMap:{value:tex(url)},
+        uOpacity:{value:o.opacity === undefined ? 1 : o.opacity},
+        uTint:{value:new THREE.Color(o.tint || 0xf4f2ff)},
+        uNear:{value:1.6},
+        uFar:{value:o.far || 46.0},
+        uKey:{value:new THREE.Vector2(o.key[0], o.key[1])}
+      }
+    });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w,h), mat);
+    m.position.set(x,y,z);
+    scene.add(m);
+    return m;
+  }
+
+  function solid(url, w, h, x, y, z, fill){
+    const mat = new THREE.ShaderMaterial({
+      vertexShader:VERT, fragmentShader:SOLID_FRAG,
+      transparent:false, depthWrite:true, side:THREE.DoubleSide,
+      uniforms:{ uMap:{value:tex(url)}, uFill:{value:new THREE.Color(fill)} }
+    });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w,h), mat);
+    m.position.set(x,y,z);
+    scene.add(m);
+    return m;
+  }
+
+  /* ---------- the four drawings, as stations along one axis ----------
+
+     The camera flies straight down the z axis. Rather than steer it toward
+     each opening, every drawing is shifted so that the opening the camera is
+     meant to pass through lands exactly on that axis. Flying forward then
+     threads each window without any aiming at all.
+
+     Given a plane of size (w,h) and an opening at normalised (u,v) in its
+     texture, the offset that puts the opening on the axis is:
+         x = -(u - 0.5) * w        y = (v - 0.5) * h                        */
+  function onAxis(w, h, u, v){ return { x:-(u - 0.5) * w, y:(v - 0.5) * h }; }
+
+  /* Spacing is set from the distance at which each drawing just fills the
+     frame (d = size / (1.04 * aspect) at this 55deg fov), so every station
+     gets a real approach before the camera reaches it. */
+  const Z_CANOPY = -4, Z_PANO = -22, Z_HAVELI = -40, Z_GATE = -56;
+
+  /* The line art has transparent paper, so without this every drawing in the
+     room shows through every other one. REACH is a shade over the 16-18 unit
+     gap between stations: a drawing stays invisible until the camera has
+     passed the one in front of it, then fades up. Only one reads at a time,
+     except for the moment of passing through an opening, where the next one
+     is meant to be glimpsed. */
+  const REACH = 22;
+
+  /* -- 1. the parasol -- */
+  const U = 8.4;                       // umbrella plane size, world units
+  const canopyGroup = new THREE.Group();
+  canopyGroup.position.z = Z_CANOPY;
+  scene.add(canopyGroup);
+
+  function inGroup(m){ scene.remove(m); canopyGroup.add(m); return m; }
+
+  // filled canopy first, as an opaque surface — this is what stops the
+  // palace showing straight through the parasol
+  inGroup(solid('assets/museum/umbrella/canopy.png', U, U, 0, 0, -1.10, 0x2a2440));
+  inGroup(plane('assets/museum/umbrella/stripes.png', U, U, 0, 0, -0.55,
+                {opacity:0.75, key:[0.06, 0.20]}));
+  inGroup(plane('assets/museum/umbrella/ribs.png',    U, U, 0, 0,  0.00,
+                {opacity:0.95, key:[0.10, 0.80]}));
+
+  // medallions, lifted off the canopy so the camera passes between them
+  fetch('assets/museum/umbrella/med/layout.json')
+    .then(r => r.json())
+    .then(items => {
+      const seen = {};
+      items
+        .filter(it => {                         // two are exact duplicates
+          const k = it.cx.toFixed(4) + ',' + it.cy.toFixed(4);
+          return seen[k] ? false : (seen[k] = true);
+        })
+        .forEach((it, i) => {
+          const w = it.w * U, h = it.h * U;
+          const x = (it.cx - 0.5) * U;
+          const y = (0.5 - it.cy) * U;
+          // deterministic spread so reloads look identical
+          const z = 0.35 + (Math.sin(i * 12.9898) * 0.5 + 0.5) * 1.15;
+          // these carry an opaque paper fill at ink .30 — keyed out above it
+          inGroup(plane('assets/museum/umbrella/med/' + it.f, w, h, x, y, z,
+                        {opacity:0.95, tint:0xffffff, key:[0.50, 0.80]}));
+        });
+    });
+
+  /* -- 2. City Palace panorama. Camera exits through a window in the
+        left-hand block, which is where the next drawing is waiting. -- */
+  const pw = 26, ph = 26 * 905/2000;
+  const pa = onAxis(pw, ph, 0.27, 0.60);
+  plane('assets/museum/palace/near.png', pw, ph, pa.x, pa.y, Z_PANO,
+        {far:REACH, key:[0.10, 0.66]});
+
+  /* -- 3. the haveli facade, entered through that window. Its own central
+        arch (measured off the pane mask) becomes the next opening. -- */
+  const hw = 22, hh = 22 * 1106/2000;
+  const ha = onAxis(hw, hh, 0.504, 0.661);
+  plane('assets/museum/haveli/panes.png', hw, hh, ha.x, ha.y, Z_HAVELI + 0.15,
+        {opacity:0.16, tint:0x8f7ff0, far:REACH, key:[0.08, 0.23]});
+  plane('assets/museum/haveli/lines.png', hw, hh, ha.x, ha.y, Z_HAVELI,
+        {far:REACH, key:[0.12, 0.90]});
+
+  /* -- 4. the gate. Sized so the walk ends full-bleed on its centre arch,
+        on the threshold of it rather than through it. -- */
+  const gw = 20, gh = 20 * 870/2000;
+  const ga = onAxis(gw, gh, 0.50, 0.60);
+  plane('assets/museum/gate/lines.png', gw, gh, ga.x, ga.y, Z_GATE,
+        {far:REACH, key:[0.06, 0.23]});
+
+  /* ---------- scroll → camera ---------- */
+  const Z_START = 10, Z_END = -48;
+  const STATIONS = [Z_PANO, Z_HAVELI];   // planes the camera threads
+  let target = 0, smooth = 0;
+
+  function progress(){
+    const max = document.documentElement.scrollHeight - innerHeight;
+    return max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+  }
+
+  const cards = {
+    title:  document.getElementById('c-title'),
+    canopy: document.getElementById('c-canopy'),
+    palace: document.getElementById('c-palace'),
+    haveli: document.getElementById('c-haveli'),
+    gate:   document.getElementById('c-gate'),
+    end:    document.getElementById('c-end')
+  };
+  const hint = document.getElementById('hint');
+  function band(p, a, b){ return p >= a && p < b; }
+
+  let pointerX = 0, pointerY = 0;
+  if(!reduce){
+    addEventListener('pointermove', e => {
+      pointerX = (e.clientX / innerWidth  - 0.5);
+      pointerY = (e.clientY / innerHeight - 0.5);
+    }, {passive:true});
+  }
+
+  const clock = new THREE.Clock();
+
+  function frame(){
+    target = progress();
+    smooth = reduce ? target : smooth + (target - smooth) * 0.075;
+
+    const t = clock.getElapsedTime();
+    const z = Z_START + (Z_END - Z_START) * smooth;
+
+    /* Drift and pointer-look are only allowed in open space. Approaching a
+       plane they fall to zero, so the camera is dead on axis — and therefore
+       dead centre in the opening — at the moment it passes through. */
+    let gap = Infinity;
+    for(let i = 0; i < STATIONS.length; i++){
+      gap = Math.min(gap, Math.abs(z - STATIONS[i]));
+    }
+    const free = Math.min(1, gap / 7);
+
+    camera.position.z = z;
+    camera.position.x = ((reduce ? 0 : pointerX * 0.5) + Math.sin(smooth * 3.1) * 0.35) * free;
+    camera.position.y = (reduce ? 0 : -pointerY * 0.4) * free;
+    camera.lookAt(0, 0, z - 6);
+
+    if(!reduce){
+      canopyGroup.rotation.z = t * 0.018 + smooth * 0.5;
+    }
+
+    /* each band sits on the stretch where its drawing fills the frame,
+       and closes before the camera passes through it */
+    cards.title.classList.toggle('on',  band(smooth, 0,    0.05));
+    cards.canopy.classList.toggle('on', band(smooth, 0.10, 0.185));
+    cards.palace.classList.toggle('on', band(smooth, 0.33, 0.43));
+    cards.haveli.classList.toggle('on', band(smooth, 0.64, 0.74));
+    cards.gate.classList.toggle('on',   band(smooth, 0.90, 0.965));
+    cards.end.classList.toggle('on',    smooth >= 0.975);
+    hint.classList.toggle('off', smooth > 0.03);
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  frame();
+
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+})();
+</script>
+</body>
+</html>
