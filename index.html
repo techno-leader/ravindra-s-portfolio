@@ -131,8 +131,16 @@
     opacity:0;pointer-events:none;user-select:none;white-space:pre;
     overflow:hidden;
   }
-  .codefield .col{flex:1 1 0;text-align:center;}
-  .codefield .col span{display:block;}
+  /* The trail is a gradient mask, not one opacity per glyph. A span per glyph
+     is 17,000 flex-nested block boxes: measured 1.3s of layout and 2.4-4.8s to
+     the first painted frame, so the 1.96s animation was over before anything
+     reached the screen. The ramp is a pure function of row, which is exactly
+     what a linear-gradient is — one text node per column instead. */
+  .codefield .col{
+    flex:1 1 0;text-align:center;
+    -webkit-mask-image:linear-gradient(to bottom,transparent var(--t0),#000 var(--t1),transparent var(--t1));
+            mask-image:linear-gradient(to bottom,transparent var(--t0),#000 var(--t1),transparent var(--t1));
+  }
 
   /* Coverage, not a cross-fade: the field is either part of the frame or it
      is not. Easing it in would read as a background image loading. */
@@ -1038,8 +1046,12 @@ trigger.addEventListener('click', () => {
    rest of the session — a hint that keeps hinting after you have obeyed it
    is just noise. .playing is removed on a timer rather than on
    animationend because three animations finish at different times and the
-   longest (1.84s) is the one that owns the class. */
-const HINT_EVERY = 5000, HINT_LEN = 1960;
+   longest (1.84s) is the one that owns the class.
+
+   HINT_LEAD exists because setInterval has no leading call: on a bare interval
+   the first hint was 5s after the script ran, nearer 7s after navigation, by
+   which point the visitor has usually scrolled. The word has to ask early. */
+const HINT_LEAD = 1200, HINT_EVERY = 5000, HINT_LEN = 1960;
 const codefield = document.getElementById('codefield');
 
 /* English letters, digits and operators. The alphabet runs are contiguous on
@@ -1086,43 +1098,70 @@ function buildCodeField(){
        pass — measured 7.45% ink at 250ms down to 0.70% by the end. The field
        has to still be raining when the tear finishes. */
     const y0 = -(rndInt(40) + 15), y1 = y0 + 25 + rndInt(35);
-    let prev = '', spans = '';
-    for(let i = 0; i < n; i++){
-      const d = head - i;
-      const o = d < 0 ? 0 : Math.max(0, 1 - d / (rows * 0.75));
-      prev = pickGlyph(prev);
-      const safe = prev === '&' ? '&amp;' : prev === '<' ? '&lt;' : prev;
-      spans += `<span style="opacity:${o.toFixed(2)}">${safe}</span>`;
-    }
-    out.push(`<div class="col" style="--y0:${y0}%;--y1:${y1}%;--d:${rndInt(1960)}">${spans}</div>`);
+    let prev = '';
+    const glyphs = new Array(n);
+    for(let i = 0; i < n; i++) glyphs[i] = prev = pickGlyph(prev);
+    /* The head is opaque and cuts to nothing below it; above, it fades out
+       over rows*0.75 lines. Stated as two stops on the column's own height. */
+    const t1 = (head + 1) / n * 100;
+    const t0 = (head + 1 - rows * 0.75) / n * 100;
+    const col = document.createElement('div');
+    col.className = 'col';
+    col.style.cssText = `--y0:${y0}%;--y1:${y1}%;--d:${rndInt(1960)};`
+                      + `--t0:${t0.toFixed(2)}%;--t1:${t1.toFixed(2)}%`;
+    /* white-space:pre, so newlines are the line breaks and textContent needs
+       no escaping — the glyph set contains & and < */
+    col.textContent = glyphs.join('\n');
+    out.push(col);
   }
-  codefield.innerHTML = out.join('');
+  codefield.replaceChildren(...out);
 }
 
-let hintTimer = null, hintClear = null;
+let hintTimer = null, hintClear = null, hintPre = null, hintLead = null;
+const idle = window.requestIdleCallback || (f => setTimeout(f, 1));
+
+/* The next pass is rolled and laid out in the gap, never inside the tick.
+   34,000 glyphs is ~400ms of text layout, and paying that at the moment
+   .playing goes on drops the opening frames of a 1.96s animation — which is
+   the whole hint, since the tear is only the first 1.36s of it. */
+function primeCodeField(){
+  /* with a deadline: the hero's rAF loop never leaves the browser genuinely
+     idle, so a bare requestIdleCallback can be starved past the next tick and
+     the glitch would play over an empty field. */
+  hintPre = idle(() => { buildCodeField(); void codefield.offsetHeight; }, { timeout: 900 });
+}
+
 function stopHint(){
-  clearInterval(hintTimer); clearTimeout(hintClear);
+  clearInterval(hintTimer); clearTimeout(hintClear); clearTimeout(hintLead);
+  if(window.cancelIdleCallback) cancelIdleCallback(hintPre); else clearTimeout(hintPre);
   hintTimer = null;
   trigger.classList.remove('playing');
   codefield.classList.remove('playing');
-  codefield.innerHTML = '';
+  codefield.replaceChildren();
 }
-if(!reduceMotion){
-  hintTimer = setInterval(() => {
-    if(document.hidden) return;
+
+function playHint(){
+  if(document.hidden) return;
+  if(!codefield.firstChild) buildCodeField();   /* the idle prime was starved */
+  trigger.classList.remove('playing');
+  codefield.classList.remove('playing');
+  void trigger.offsetWidth;              /* reflow, or the animation won't restart */
+  trigger.classList.add('playing');
+  codefield.classList.add('playing');
+  clearTimeout(hintClear);
+  hintClear = setTimeout(() => {
     trigger.classList.remove('playing');
     codefield.classList.remove('playing');
-    buildCodeField();
-    void trigger.offsetWidth;            /* reflow, or the animation won't restart */
-    trigger.classList.add('playing');
-    codefield.classList.add('playing');
-    clearTimeout(hintClear);
-    hintClear = setTimeout(() => {
-      trigger.classList.remove('playing');
-      codefield.classList.remove('playing');
-      codefield.innerHTML = '';          /* nothing left behind between passes */
-    }, HINT_LEN);
-  }, HINT_EVERY);
+    primeCodeField();                    /* a fresh roll for the next pass */
+  }, HINT_LEN);
+}
+
+if(!reduceMotion){
+  primeCodeField();
+  hintLead = setTimeout(() => {
+    playHint();
+    hintTimer = setInterval(playHint, HINT_EVERY);
+  }, HINT_LEAD);
 }
 
 /* The hero canvas is fixed and full-screen, so it keeps shading even
