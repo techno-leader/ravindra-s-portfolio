@@ -413,7 +413,17 @@
   }
   .bin[data-n]:not([data-n="0"]) .n{opacity:1;scale:1;}
 
-  .photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  /* `align-content:start` is load-bearing, not tidiness. the default is
+     `normal`, which for a grid behaves as `stretch`: any height beyond what the
+     content needs gets distributed into the AUTO row tracks. the delete
+     animates this container's height DOWN (751 -> 497), so for the whole
+     animation it is taller than its content and the rows are pulled ~85px
+     apart, converging only at the end — on top of a FLIP that was measured
+     against the settled layout. that rubber-band is what read as a zoom.
+     undo animates the height UP, is never taller than its content, and so was
+     always clean. `start` parks the slack at the bottom instead, which is where
+     a shrinking grid should put it. */
+  .photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start;}
   .cell{position:relative;aspect-ratio:4 / 5;}
   .ph{
     position:absolute;inset:0;display:block;padding:0;border:0;
@@ -1303,18 +1313,23 @@
 
     var h1 = photos.getBoundingClientRect().height;
     if (!reduce.matches) {
+      /* identical to putBack()'s reflow, deliberately: same duration, no
+         stagger, translate only. the user asked for the rows to close up "like
+         they rearrange on undo", and the two are the same event in opposite
+         directions — a stagger on one and not the other made them read as two
+         different mechanics. */
       keep.forEach(function (c, i) {
         var a = first[i], b = c.getBoundingClientRect();
         var dx = a.left - b.left, dy = a.top - b.top;
         if (!dx && !dy) return;
         c.animate(
           [{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }],
-          { duration: 540, delay: Math.min(i, 5) * 26, easing: EASE, fill: 'both' }
+          { duration: 460, easing: EASE, fill: 'both' }
         );
       });
       if (h0 !== h1) {
         photos.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }],
-                       { duration: 540, easing: EASE });
+                       { duration: 460, easing: EASE });
       }
     }
 
@@ -1379,9 +1394,13 @@
       // `backwards`, not `both` — the from-state covers the delay and then the
       // stylesheet takes back over, so nothing stays pinned by a finished
       // animation (the bug that stranded 001's morph on its last keyframe).
+      /* opacity only — no scale. the returning tiles arrive while the others are
+         still shifting, so a scale here IS a scale during the rearrange, which
+         is the thing the user ruled out. it also kept them out of step with the
+         grid: every other box in this component moves by translation alone. */
       back.forEach(function (it, i) {
         it.node.animate(
-          [{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'none' }],
+          [{ opacity: 0 }, { opacity: 1 }],
           { duration: 420, delay: i * 70, easing: EASE, fill: 'backwards' }
         );
       });
