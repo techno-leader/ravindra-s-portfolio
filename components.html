@@ -204,8 +204,8 @@
 
   /* same gradient ring as the tiles. these buttons do not clip their overflow,
      so it can sit on the element itself rather than on a wrapper. */
-  .back:focus-visible,.cta:focus-visible{outline:none;}
-  .back::after,.cta::after{
+  .back:focus-visible,.cta:focus-visible,.bin:focus-visible{outline:none;}
+  .back::after,.cta::after,.bin::after{
     content:"";position:absolute;inset:-5px;z-index:1;pointer-events:none;opacity:0;
     border-radius:var(--r-pill);padding:2px;background:var(--grad);
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
@@ -343,6 +343,137 @@
   }
   .zoom b{font-weight:400;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:34px;}
 
+  /* ---------- 002 · disintegrate ---------- */
+  /* the same 400px footprint as 001's deck, so the two entries share a spine.
+     two-up inside it reads as a phone library without borrowing a phone. */
+  .ph-stage{position:relative;width:min(400px,100%);margin:0 auto;}
+  .shelf{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:16px;height:44px;margin-bottom:14px;
+  }
+  .shelf-l{display:flex;align-items:center;gap:12px;min-width:0;}
+
+  /* undo is a peer of the bin, not of the CTA — same paper-and-hairline
+     treatment and the same 44px target, just carrying a label as well. */
+  .undo{
+    display:inline-flex;align-items:center;gap:8px;
+    height:44px;padding:0 16px;border:0;border-radius:var(--r-pill);
+    background:var(--paper);box-shadow:inset 0 0 0 1px var(--line);
+    font:inherit;font-family:ui-monospace,Menlo,monospace;
+    font-size:var(--t-label,12px);letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-2);cursor:pointer;white-space:nowrap;
+    -webkit-tap-highlight-color:transparent;outline:none;
+    transition:background .2s var(--ease-out),color .2s var(--ease-out);
+  }
+  .undo:hover{background:var(--line-2);color:var(--ink);}
+  .undo:active{scale:.96;}
+  .undo:focus-visible{box-shadow:inset 0 0 0 1px var(--line),0 0 0 3px var(--ink);}
+  .undo svg{width:15px;height:15px;fill:currentColor;flex:none;}
+  .undo[hidden]{display:none;}
+
+  .bin{
+    position:relative;display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;padding:0;border:0;border-radius:var(--r-pill);
+    background:var(--paper);box-shadow:inset 0 0 0 1px var(--line);
+    color:var(--ink-2);cursor:pointer;
+    -webkit-tap-highlight-color:transparent;outline:none;
+    transition:background .2s var(--ease-out),color .2s var(--ease-out);
+  }
+  .bin:hover:not(:disabled){background:var(--line-2);color:var(--ink);}
+  .bin:active:not(:disabled){scale:.94;}
+  .bin:disabled{color:var(--mut);cursor:default;}
+  .bin svg{
+    width:20px;height:20px;flex:none;overflow:visible;
+    fill:none;stroke:currentColor;stroke-width:16;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  /* the lid hinges at its right end, where the rim meets the can, so it lifts
+     the way a pedal bin does rather than sliding off. `fill-box` makes the
+     origin the lid group's own bounds instead of the whole 256 viewBox.
+     the sign matters and is not the obvious one: SVG's y axis points down, so
+     a NEGATIVE rotate swings the free end down through the can. positive is
+     the one that opens it. */
+  .bin .lid{
+    transform-box:fill-box;transform-origin:100% 100%;
+    transition:rotate .24s var(--ease-out);
+  }
+  .bin.open .lid{rotate:22deg;}
+  /* the bin answers the fragments landing in it rather than the click that
+     sent them, so the pulse is retriggered from the rAF loop. */
+  .bin.eat{animation:eat .4s var(--ease-out);}
+  @keyframes eat{0%{scale:1;}32%{scale:1.16;}100%{scale:1;}}
+  .bin .n{
+    position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;
+    display:inline-flex;align-items:center;justify-content:center;padding:0 5px;
+    border-radius:var(--r-pill);background:var(--ink);color:#fff;
+    font-size:10px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;
+    box-shadow:0 0 0 2px var(--paper);
+    opacity:0;scale:.5;transform-origin:50% 50%;
+    transition:opacity .2s var(--ease-out),scale .3s var(--ease-out);
+  }
+  .bin[data-n]:not([data-n="0"]) .n{opacity:1;scale:1;}
+
+  .photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .cell{position:relative;aspect-ratio:4 / 5;}
+  .ph{
+    position:absolute;inset:0;display:block;padding:0;border:0;
+    background:var(--sunk);border-radius:var(--r-md);corner-shape:squircle;
+    overflow:hidden;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;outline:none;isolation:isolate;
+  }
+  .ph::before{ /* same hairline as 001 — and the same corner-shape:inherit,
+                  or it traces a round arc over a squircle and doubles up */
+    content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    border-radius:inherit;corner-shape:inherit;
+    box-shadow:inset 0 0 0 1px var(--line);
+    transition:box-shadow .22s var(--ease-out);
+  }
+  .ph[aria-pressed="true"]::before{box-shadow:inset 0 0 0 3px var(--ink);}
+  .ph img{
+    width:100%;height:100%;display:block;object-fit:cover;opacity:0;
+    /* monochrome, always. selection is carried by the border and the tick, not
+       by colour and not by a zoom — the photo itself never moves. */
+    filter:grayscale(1);
+    transition:opacity .5s var(--ease-out);
+  }
+  .ph.ready img{opacity:1;}
+
+  .tick{
+    position:absolute;right:8px;bottom:8px;z-index:3;
+    display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:var(--r-pill);
+    background:rgba(255,255,255,.72);box-shadow:inset 0 0 0 1px rgba(13,13,16,.16);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    transition:background .22s var(--ease-out),box-shadow .22s var(--ease-out),
+               opacity .16s linear,scale .26s var(--ease-out);
+  }
+  .tick svg{width:12px;height:12px;fill:#fff;opacity:0;transition:opacity .18s var(--ease-out);}
+  .ph[aria-pressed="true"] .tick{background:var(--ink);box-shadow:none;scale:1.1;}
+  .ph[aria-pressed="true"] .tick svg{opacity:1;}
+
+  /* the chrome leaves first, so what burns is the photograph and not a photo
+     still wearing a 3px border and a floating tick. */
+  .ph.going::before{box-shadow:inset 0 0 0 3px rgba(13,13,16,0);}
+  .ph.going .tick{opacity:0;scale:.6;}
+
+  .ph:focus-visible{outline:none;}
+  .cell:has(.ph:focus-visible) .ring{opacity:1;}
+  .ring-sm{border-radius:calc(var(--r-md) + 5px);}
+
+  /* the fragments fly past the grid and into the bin, so the canvas has to
+     span the whole stage, not just the photos. */
+  .px{position:absolute;inset:0;z-index:6;pointer-events:none;display:none;}
+  .px.on{display:block;}
+
+  .ph-empty{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:20px;min-height:200px;
+    opacity:0;transition:opacity .4s var(--ease-out);
+  }
+  .ph-empty.on{opacity:1;}
+  .ph-empty[hidden]{display:none;} /* the author display:flex would beat the UA rule */
+  .cta-sm{height:44px;padding:0 22px;font-size:14px;}
+
   @media (max-width:900px){
     :root{--t-head:40px;--t-sub:20px;--t-body:17px;}
     .wrap{padding:0 24px;}
@@ -430,6 +561,99 @@
       </div>
     </div>
 
+  </section>
+
+  <!-- ======================= 002 ======================= -->
+  <section class="entry" id="c002">
+    <div class="entry-head">
+      <h2>Delete</h2>
+    </div>
+
+    <div class="ph-stage" id="phStage">
+      <div class="shelf">
+        <div class="shelf-l">
+          <span class="mono" id="phCount" aria-live="polite">Select photos</span>
+          <button class="undo" id="phUndo" type="button" hidden>
+            <svg viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H80a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"></path></svg>
+            Undo
+          </button>
+        </div>
+
+        <!-- the trash is drawn as strokes, not one filled compound path, purely
+             so the lid can be its own <g> and hinge off the can. -->
+        <button class="bin" id="bin" data-n="0" disabled aria-label="Delete selected photos">
+          <svg viewBox="0 0 256 256" aria-hidden="true">
+            <g class="lid">
+              <path d="M40,56H216"/>
+              <path d="M96,56V40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8V56"/>
+            </g>
+            <g class="can">
+              <path d="M64,76V208a16,16,0,0,0,16,16h96a16,16,0,0,0,16-16V76"/>
+              <path d="M104,116v64"/>
+              <path d="M152,116v64"/>
+            </g>
+          </svg>
+          <span class="n" id="binN" aria-hidden="true">0</span>
+        </button>
+      </div>
+
+      <!-- six cells, three rows, all in the markup. deleting a pair does not
+           fetch a new row — the rows below simply rise into the space, which
+           is the "next line jumps in" read without any of it being faked.
+           dropped from ten: the two duplicate UI screens and the second
+           product shot and second logo, so no two tiles read as the same
+           kind of thing. -->
+      <div class="photos" id="photos">
+        <div class="cell">
+          <button class="ph" type="button" aria-pressed="false">
+            <img src="assets/grid/torq-onbaording-screen-ui.webp" alt="Onboarding screen from the Torq app" decoding="async">
+            <span class="tick"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path></svg></span>
+          </button>
+          <span class="ring ring-sm"></span>
+        </div>
+        <div class="cell">
+          <button class="ph" type="button" aria-pressed="false">
+            <img src="assets/grid/shilajit-photoshoot-my-hand.webp" alt="Hand holding a jar of shilajit in a product photoshoot" decoding="async">
+            <span class="tick"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path></svg></span>
+          </button>
+          <span class="ring ring-sm"></span>
+        </div>
+        <div class="cell">
+          <button class="ph" type="button" aria-pressed="false">
+            <img src="assets/grid/snapshot-from-shayog-project-dashboard-for-ambulance-tracking.webp" alt="Sahyog dashboard screen for ambulance tracking" decoding="async">
+            <span class="tick"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path></svg></span>
+          </button>
+          <span class="ring ring-sm"></span>
+        </div>
+        <div class="cell">
+          <button class="ph" type="button" aria-pressed="false">
+            <img src="assets/grid/ad-generated-from-tae-ad-studio-for-balaayah-body-oil.webp" alt="Advertisement for Balaayah body oil" decoding="async">
+            <span class="tick"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path></svg></span>
+          </button>
+          <span class="ring ring-sm"></span>
+        </div>
+        <div class="cell">
+          <button class="ph" type="button" aria-pressed="false">
+            <img src="assets/grid/i-like-to-observe.webp" alt="Street photograph taken while observing" decoding="async">
+            <span class="tick"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path></svg></span>
+          </button>
+          <span class="ring ring-sm"></span>
+        </div>
+        <div class="cell">
+          <button class="ph" type="button" aria-pressed="false">
+            <img src="assets/grid/torq-app-logo.webp" alt="Torq app logo" decoding="async">
+            <span class="tick"><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path></svg></span>
+          </button>
+          <span class="ring ring-sm"></span>
+        </div>
+      </div>
+      <canvas class="px" id="px" aria-hidden="true"></canvas>
+
+      <div class="ph-empty" id="phEmpty" hidden>
+        <p class="mono">Nothing left</p>
+        <button class="cta cta-sm" type="button" id="phReset">Put them back</button>
+      </div>
+    </div>
   </section>
 
 </div>
@@ -825,6 +1049,377 @@
 
   // the expanded box is sized off the viewport, so a resize invalidates the pan
   addEventListener('resize', function () { if (!lb.hidden) { clamp(); apply(false); } });
+})();
+
+/* ============================ 002 · delete ============================ */
+(function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  var EASE = 'cubic-bezier(.32,.72,0,1)';
+
+  var stage  = document.getElementById('phStage');
+  var photos = document.getElementById('photos');
+  var bin    = document.getElementById('bin');
+  var binN   = document.getElementById('binN');
+  var count  = document.getElementById('phCount');
+  var cv     = document.getElementById('px');
+  var empty  = document.getElementById('phEmpty');
+  var reset  = document.getElementById('phReset');
+  var undo   = document.getElementById('phUndo');
+  var ctx    = cv.getContext('2d');
+
+  var full = photos.innerHTML;   // for the reset; the markup is the source of truth
+  var busy = false;
+  /* the last batch that went in the bin, held as live nodes plus the index each
+     one sat at. only ever the last batch, which is what makes the indices exact:
+     the grid now is precisely the grid then, minus these. */
+  var trash = null;
+
+  /* ---- skeleton: same decode-not-load rule as 001 ---- */
+  function wire(root) {
+    [].slice.call(root.querySelectorAll('.ph')).forEach(function (b) {
+      var img = b.querySelector('img');
+      var ready = function () { b.classList.add('ready'); };
+      function settle() {
+        if (!img.decode) return ready();
+        img.decode().then(ready, ready);
+        setTimeout(ready, 500);
+      }
+      if (img.complete) settle();
+      else { img.addEventListener('load', settle); img.addEventListener('error', ready); }
+    });
+  }
+  wire(photos);
+
+  /* ---- selection ---- */
+  function picked() {
+    return [].slice.call(photos.querySelectorAll('.ph[aria-pressed="true"]'));
+  }
+  function sync() {
+    var n = picked().length;
+    bin.dataset.n = String(n);
+    binN.textContent = String(n);
+    bin.disabled = n === 0;
+    // a live selection outranks the receipt — you are told what the bin will do
+    // next, and only fall back to what it just did
+    count.textContent = n ? n + ' selected'
+                      : trash ? trash.length + ' deleted'
+                      : 'Select photos';
+    undo.hidden = !trash;
+  }
+
+  photos.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.ph') : null;
+    if (!b || busy) return;
+    b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    sync();
+  });
+
+  /* ---- the field ----------------------------------------------------------
+     the fragments are solid ink, not cut-outs of the photograph. the tile
+     divides on its grid, the grid goes black, the black travels. that is one
+     `fillStyle` and a `fillRect` per fragment — no offscreen flatten, no
+     source rect, no per-fragment resample of a bitmap being scaled down ~2x
+     with a kernel blind to its neighbours, which is what the whole handover
+     seam was. it costs a fraction of the per-frame work and it removes the
+     class of bug outright: there is no longer a bitmap to match.
+
+     the conversion is what sells it, so it is not a cut. `fin` fades the ink
+     in and the photo out on one shared clock, and by the time it is halfway
+     the nearest fragments have already left — you watch the image darken
+     while its bin-side corner is already crumbling off it. ---------------- */
+  /* CELL is the grain, in CSS px. picked by measuring, not by eye: total fill
+     area is the tile whatever the cell, so cost is per-call overhead and tracks
+     the fragment count. at the worst case this component can reach — all six
+     tiles selected — 10px is 3000 fragments / 0.69ms and 6px is 8118 / 2.11ms,
+     still 13% of a 60fps budget. 4px would be 17934 / 5.65ms and that is where
+     it stops being free. */
+  var CELL = 6, DUR = 760, SPREAD = 520, FADE = 220;
+
+  function build(btn, origin, bin_, dpr) {
+    var r = btn.getBoundingClientRect();
+    var Wd = Math.max(1, Math.round(r.width * dpr));
+    var Hd = Math.max(1, Math.round(r.height * dpr));
+
+    var x0 = Math.round((r.left - origin.left) * dpr);
+    var y0 = Math.round((r.top - origin.top) * dpr);
+    var C  = Math.max(2, Math.round(CELL * dpr));
+    var cols = Math.ceil(Wd / C), rows = Math.ceil(Hd / C);
+    var rad = 14 * dpr;                 // the tile's own corner radius
+    var out = [];
+
+    for (var j = 0; j < rows; j++) {
+      for (var i = 0; i < cols; i++) {
+        var px = i * C, py = j * C;
+        var pw = Math.min(C, Wd - px), ph = Math.min(C, Hd - py);
+        var cx = px + pw / 2, cy = py + ph / 2;
+
+        // drop fragments the corner would have clipped, or the field paints
+        // square corners the tile never had. the tile is corner-shape:squircle,
+        // which is the superellipse at exponent 4 — testing against a plain
+        // circle here cut visible arcs out of all four corners.
+        var qx = Math.max(rad - cx, cx - (Wd - rad), 0) / rad;
+        var qy = Math.max(rad - cy, cy - (Hd - rad), 0) / rad;
+        if (qx * qx * qx * qx + qy * qy * qy * qy > 1) continue;
+
+        var ax = x0 + px, ay = y0 + py;
+        var dx = bin_.x - (ax + pw / 2), dy = bin_.y - (ay + ph / 2);
+        var d  = Math.hypot(dx, dy);
+
+        out.push({
+          x: ax, y: ay, w: pw, h: ph,
+          d: d,
+          // a control point off to one side of the straight line turns the
+          // flight into an arc; a per-fragment sign keeps the stream from
+          // reading as a single rigid ribbon.
+          cx: ax + dx * 0.5 - dy * 0.22 * (Math.random() < 0.5 ? -1 : 1),
+          cy: ay + dy * 0.5 + dx * 0.22 * (Math.random() < 0.5 ? -1 : 1),
+          jx: (Math.random() - 0.5) * 26 * dpr,
+          jy: (Math.random() - 0.5) * 26 * dpr,
+          t0: 0
+        });
+      }
+    }
+    return out;
+  }
+
+  /* smoothstep, not a cubic ease-out. measured: under `1-(1-p)^3` a fragment is
+     87% of the way to the bin by the time half its clock has run, so the field
+     snaps over and then sits there shrinking — 70% of the duration was dead
+     time. an ease-in-out keeps the scatter readable and the arrival late. */
+  function ease(p) { return p * p * (3 - 2 * p); }
+
+  function run(sel) {
+    busy = true;
+    photos.style.pointerEvents = 'none';
+
+    var origin = stage.getBoundingClientRect();
+    var br = bin.getBoundingClientRect();
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    // device pixels all the way down, so no fragment ever lands on a fraction
+    var target = { x: (br.left - origin.left + br.width / 2) * dpr,
+                   y: (br.top - origin.top + br.height / 2) * dpr };
+
+    var ps = [];
+    sel.forEach(function (b) { ps = ps.concat(build(b, origin, target, dpr)); });
+
+    var far = 1;
+    ps.forEach(function (p) { if (p.d > far) far = p.d; });
+    // nearest the bin leaves first, so the field peels toward it instead of
+    // collapsing all at once
+    ps.forEach(function (p) { p.t0 = (p.d / far) * SPREAD; });
+
+    cv.width  = Math.round(origin.width * dpr);
+    cv.height = Math.round(origin.height * dpr);
+    cv.classList.add('on');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // one colour for the whole field, set once — the token, not a literal
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--ink').trim() || '#161616';
+
+    function paint(now) {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+
+      // the ink arriving and the photo leaving are the same number, so the
+      // tile can never be gone from under a fragment that has not appeared yet
+      var fin = Math.min(1, Math.max(0, now / FADE));
+      for (var k = 0; k < sel.length; k++) sel[k].style.opacity = 1 - fin;
+
+      var live = 0, done = 0;
+      for (var i = 0; i < ps.length; i++) {
+        var p = ps[i];
+        var raw = (now - p.t0) / DUR;
+        if (raw >= 1) { done++; continue; }
+        live++;
+        if (raw <= 0) {
+          ctx.globalAlpha = fin;
+          ctx.fillRect(p.x, p.y, p.w, p.h);
+          continue;
+        }
+        var t = ease(raw);
+        var u = 1 - t;
+        var bx = u * u * p.x + 2 * u * t * p.cx + t * t * target.x;
+        var by = u * u * p.y + 2 * u * t * p.cy + t * t * target.y;
+        // the scatter peaks early and is back to zero at t=1, so however wide
+        // a fragment wanders it still lands in the bin
+        var bump = Math.sin(Math.PI * Math.pow(raw, 0.6));
+        bx += p.jx * bump; by += p.jy * bump;
+
+        // shrink on the raw clock, not the eased one — tying it to `t` made the
+        // fragment lose 80% of its area in the first fifth of the flight
+        var s = 1 - 0.68 * raw;
+        ctx.globalAlpha = fin * (raw < 0.76 ? 1 : (1 - raw) / 0.24);
+        ctx.fillRect(bx, by, Math.max(p.w * s, 1), Math.max(p.h * s, 1));
+      }
+      ctx.globalAlpha = 1;
+      return { live: live, done: done };
+    }
+
+    var frozen = new URLSearchParams(location.search).get('px');
+    if (frozen !== null) {                       // deterministic capture hook
+      paint(parseFloat(frozen) * (DUR + SPREAD));
+      return;
+    }
+
+    paint(0);
+
+    bin.dataset.n = '0'; binN.textContent = '0';
+    bin.disabled = true; count.textContent = 'Select photos';
+
+    var start = performance.now(), bites = 0;
+    (function frame(ts) {
+      var st = paint(ts - start);
+      // the lid opens on the first fragment to arrive, not on the click — it is
+      // answering the particles, same as the pulse
+      if (st.done > 0) bin.classList.add('open');
+      if (st.done / ps.length > (bites === 0 ? 0.2 : 0.7) && bites < 2) {
+        bites++;
+        bin.classList.remove('eat'); void bin.offsetWidth; bin.classList.add('eat');
+      }
+      if (st.live) return requestAnimationFrame(frame);
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      cv.classList.remove('on');
+      // hold it open a beat past the last fragment, then let it fall shut
+      setTimeout(function () { bin.classList.remove('open'); }, 160);
+      settle(sel);
+    })(start);
+  }
+
+  /* ---- the survivors close the gap ---- */
+  function settle(sel) {
+    var keep = [].slice.call(photos.children).filter(function (c) {
+      return sel.indexOf(c.querySelector('.ph')) === -1;
+    });
+    var first = keep.map(function (c) { return c.getBoundingClientRect(); });
+    var h0 = photos.getBoundingClientRect().height;
+
+    // note where each one sat before anything moves — that index is what undo
+    // puts it back into, so the order survives too, not just the photos
+    var all = [].slice.call(photos.children);
+    trash = sel.map(function (b) {
+      var c = b.closest('.cell');
+      return { node: c, at: all.indexOf(c) };
+    });
+
+    sel.forEach(function (b) { b.closest('.cell').remove(); });
+
+    var h1 = photos.getBoundingClientRect().height;
+    if (!reduce.matches) {
+      keep.forEach(function (c, i) {
+        var a = first[i], b = c.getBoundingClientRect();
+        var dx = a.left - b.left, dy = a.top - b.top;
+        if (!dx && !dy) return;
+        c.animate(
+          [{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }],
+          { duration: 540, delay: Math.min(i, 5) * 26, easing: EASE, fill: 'both' }
+        );
+      });
+      if (h0 !== h1) {
+        photos.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }],
+                       { duration: 540, easing: EASE });
+      }
+    }
+
+    photos.style.pointerEvents = '';
+    busy = false;
+    sync();
+
+    if (!keep.length) {
+      empty.hidden = false;
+      requestAnimationFrame(function () { empty.classList.add('on'); });
+    }
+    // deleting disables the bin, and a focused disabled control drops focus to
+    // the body — so hand it somewhere real, but only if it was actually lost.
+    var a = document.activeElement;
+    if (!a || a === document.body) {
+      (keep.length ? keep[0].querySelector('.ph') : reset).focus();
+    }
+  }
+
+  /* ---- undo: the same reflow, run backwards, with no field ----
+     the photos are the very nodes that were deleted, still decoded, so putting
+     them back is an insert and not a rebuild. deliberately no particles on the
+     way in (user's call) — reversing the disintegration would read as a second
+     effect rather than as a correction, and undo should feel instant. */
+  function putBack() {
+    if (!trash || busy) return;
+    var back = trash.slice().sort(function (a, b) { return a.at - b.at; });
+    trash = null;
+
+    empty.classList.remove('on');
+    empty.hidden = true;
+
+    var keep  = [].slice.call(photos.children);
+    var first = keep.map(function (c) { return c.getBoundingClientRect(); });
+    var h0    = photos.getBoundingClientRect().height;
+
+    back.forEach(function (it) {
+      var b = it.node.querySelector('.ph');
+      b.classList.remove('going');          // the chrome-exit state from the delete
+      b.style.opacity = '';                 // the burn drove this down to 0
+      b.style.visibility = '';
+      b.setAttribute('aria-pressed', 'false');
+      photos.insertBefore(it.node, photos.children[it.at] || null);
+    });
+
+    var h1 = photos.getBoundingClientRect().height;
+
+    if (!reduce.matches) {
+      keep.forEach(function (c, i) {
+        var a = first[i], b = c.getBoundingClientRect();
+        var dx = a.left - b.left, dy = a.top - b.top;
+        if (!dx && !dy) return;
+        c.animate(
+          [{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }],
+          { duration: 460, easing: EASE, fill: 'both' }
+        );
+      });
+      if (h0 !== h1) {
+        photos.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }],
+                       { duration: 460, easing: EASE });
+      }
+      // `backwards`, not `both` — the from-state covers the delay and then the
+      // stylesheet takes back over, so nothing stays pinned by a finished
+      // animation (the bug that stranded 001's morph on its last keyframe).
+      back.forEach(function (it, i) {
+        it.node.animate(
+          [{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'none' }],
+          { duration: 420, delay: i * 70, easing: EASE, fill: 'backwards' }
+        );
+      });
+    }
+
+    sync();
+    var f = back[0].node.querySelector('.ph');
+    if (f) f.focus();
+  }
+
+  undo.addEventListener('click', putBack);
+
+  bin.addEventListener('click', function () {
+    var sel = picked();
+    if (!sel.length || busy) return;
+    if (reduce.matches) { settle(sel); return; }
+    busy = true;
+    // let the border and the tick get out of the way first. short, because the
+    // ink fades in over the photo rather than replacing it — the two beats
+    // overlap and only the last frame of this one has to be clean.
+    sel.forEach(function (b) { b.classList.add('going'); });
+    setTimeout(function () { run(sel); }, 140);
+  });
+
+  reset.addEventListener('click', function () {
+    empty.classList.remove('on');
+    empty.hidden = true;
+    photos.innerHTML = full;
+    // a full rebuild from the markup orphans the held nodes, so the receipt
+    // they belong to has to go with them
+    trash = null;
+    wire(photos);
+    sync();
+    var f = photos.querySelector('.ph');
+    if (f) f.focus();
+  });
+
+  sync();
 })();
 </script>
 </body>
