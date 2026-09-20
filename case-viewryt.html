@@ -218,6 +218,35 @@
   figure.product-shot{margin:0;padding:0;border:none;background:none;border-radius:var(--r-md);}
   .product-shot img{width:100%;height:auto;display:block;}
 
+  /* the Meta creatives that ran against this page — three square ads at one
+     size, so none of them reads as the hero. They are evidence, not artwork:
+     the inner radius steps down one level from the figure's own. */
+  /* no surface box: the ads already carry their own edges and colour, so a
+     panel around them framed a frame. They sit on the paper like the rest of
+     the prose does. */
+  figure.ads{
+    flex-wrap:wrap;margin:44px 0 0;padding:0;border:none;background:none;
+    border-radius:0;overflow:visible;gap:24px;
+  }
+  .ads img{flex:1 1 0;min-width:0;width:100%;height:auto;display:block;border-radius:var(--r-md);}
+  /* the caption is an answer to "what am I looking at", not a label the page
+     needs to assert — so it waits to be asked. It keeps its space at opacity 0,
+     so revealing it never moves the ads. The general-sibling combinator works
+     because figcaption is the last child after every img. */
+  .ads figcaption{
+    flex:1 0 100%;order:1;text-align:center;
+    font-size:var(--t-body);line-height:1.5;color:var(--mut);
+    opacity:0;transition:opacity .3s ease;
+  }
+  .ads.cap-on figcaption{opacity:1;}
+  /* the hover rule MUST be gated on a real pointer. A touch browser leaves a
+     sticky :hover on the last element tapped, so ungated it held the caption
+     open after the tap that was supposed to close it — the toggle appeared
+     dead when the class was in fact flipping correctly. */
+  @media (hover: hover){
+    .ads img:hover ~ figcaption{opacity:1;}
+  }
+
   /* three figures at one size — the conversion rate leads on colour alone,
      so no number is scaled up to argue for itself */
   .impact{
@@ -388,7 +417,7 @@
     .co{transition:none;}
     .ev-cap{transition:none;}
     .ann{transition:none;}
-    .define-t,.case-nav a,.facts a{transition:none;}
+    .define-t,.case-nav a,.facts a,.ads figcaption{transition:none;}
     html{scroll-behavior:auto;scroll-snap-type:none;}
     .snap-stop{scroll-snap-align:none;}
   }
@@ -403,6 +432,9 @@
     .facts{grid-template-columns:repeat(2,1fr);}
     .impact{grid-template-columns:1fr;gap:28px;}
     .impact > div + div{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:28px;}
+    /* four across in a 812px column is ~190px per ad, below the point where
+       the headline inside each one is legible. Two rows of two instead. */
+    .ads img{flex:1 1 calc(50% - 12px);}
     #orb{opacity:.4;}
   }
   @media (max-width:640px){
@@ -418,6 +450,8 @@
     .facts{grid-template-columns:1fr;gap:20px;}
     .cards{grid-template-columns:1fr;}
     figure{padding:20px;}
+    /* four 1:1 ads in a 276px column are ~57px each — unreadable. Stack them. */
+    .ads img{flex:1 1 100%;}
     .case-nav{grid-template-columns:1fr;}
   }
 </style>
@@ -469,7 +503,7 @@
       <div class="sec-label rv">The Problem</div>
       <div class="cols">
         <div class="rv">
-          <h2>The old pages (NLP7 and earlier) converted below 1.5% — and lost money on every dollar of ad spend.</h2>
+          <h2>The old pages converted below 1.5%.</h2>
         </div>
         <div class="rv rv-d1">
           <p>ViewRyt carries the full <strong>AREDS 2 formula</strong> — the NIH clinical standard shown to reduce advanced <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-amd">AMD<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-amd" role="tooltip" hidden>Age-related Macular Degeneration (AMD) is a common eye disease that damages the macula, the central part of the retina responsible for sharp, straight-ahead vision.</span></span> risk by 25%. A genuinely strong product.</p>
@@ -630,10 +664,10 @@
       <div class="sec-label rv">The Redesign</div>
       <div class="cols">
         <div class="rv">
-          <h2>Walk the page. <em>Every section has a job.</em></h2>
+          <h2>The page <em>Walkthrough</em></h2>
         </div>
         <div class="rv rv-d1">
-          <p>This is the shipped NLP8 page, exactly as it runs in production. Keep scrolling — the phone walks through the full page while the notes explain the intent behind each section.</p>
+          <p>This is the shipped new page, exactly as it runs in production. Side notes explain the intent behind each section.</p>
         </div>
       </div>
     </div>
@@ -680,26 +714,32 @@
       <h2 class="rv">From losing money on every visit <em>to profitable.</em></h2>
       <p class="rv rv-d1">Identical copy, identical product, identical traffic source — only the design changed. The page crossed from spending more than it returned to returning more than it spent. And the compounding effect: Meta's algorithm answered that performance by pushing far more budget through the new page than the old one ever earned.</p>
       <div class="impact rv">
-        <div class="lead"><b data-count="3.2" data-dec="1" data-suf="×">0.0×</b><span>Conversion rate</span></div>
-        <div><b data-count="4.2" data-dec="1" data-suf="×">0.0×</b><span>Earnings per visitor</span></div>
-        <div><b data-count="31" data-suf="×">0×</b><span>Ad spend earned from Meta</span></div>
+        <div class="lead"><b data-count="3.2" data-dec="1" data-suf="X">0.0X</b><span>Conversion rate</span></div>
+        <div><b data-count="4.2" data-dec="1" data-suf="X">0.0X</b><span>Earnings per visitor</span></div>
+        <div><b data-count="31" data-suf="X">0X</b><span>Ad spend earned from Meta</span></div>
       </div>
     </div>
   </section>
 
-  <!-- FURTHER IMPROVEMENTS -->
+  <!-- AFTERMATH -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">Further Improvements</div>
+      <div class="sec-label rv">Aftermath</div>
       <div class="cols">
         <div class="rv">
-          <h2>Where this page goes <em>next.</em></h2>
+          <h2>The Product <em>Aftermath</em></h2>
         </div>
         <div class="rv rv-d1">
-          <p><strong>Raise average order value.</strong> The page ran with a single-bottle pack only. The clearest next lift is bundles — and priming for them well before the offer, so the larger pack arrives as the sensible choice rather than the expensive one.</p>
-          <p>That means framing supply duration in the education section, then a price-per-day comparison at the point of decision, so the bundle is read as fewer refills and a lower daily cost, not a bigger bill.</p>
+          <p>Next we aimed to <strong>raise average order value</strong>, since the page ran with a single pack only. But the product was later discontinued: the <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-ltv">LTV<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-ltv" role="tooltip" hidden>Lifetime value (LTV) is the total revenue a brand expects from a customer across every purchase they ever make, not just the first one.</span></span> of this cohort never reached brand benchmarks.</p>
         </div>
       </div>
+      <figure class="ads rv">
+        <img src="assets/viewryt/ad-01.jpg" alt="ViewRyt Meta ad: one capsule a day at $7.50 a month versus two messy softgels at $14.50">
+        <img src="assets/viewryt/ad-02.jpg" alt="ViewRyt Meta ad: a capsule filled with marigold flowers, headlined Lutein and Zeaxanthin">
+        <img src="assets/viewryt/ad-03.jpg" alt="ViewRyt Meta ad: Blurry Vision does not equal Just Aging, over a photo of grandchildren at play">
+        <img src="assets/viewryt/ad-04.jpg" alt="ViewRyt Meta ad: Why AREDS 2 nutrients are essential for macular support after 40">
+        <figcaption>Creatives that ran against this page on Meta.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -1018,6 +1058,19 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
   document.addEventListener('keydown', e => {
     if(e.key !== 'Escape') return;
     all().forEach(t => { close(t); t.focus(); });
+  });
+})();
+
+/* ad-strip caption: hover reveals it on a pointer, tap toggles it on touch.
+   The CSS hover rule does the desktop half; this only adds the touch half, so
+   it is gated on (hover:none) — otherwise a desktop click would pin the caption
+   open and the pointer would no longer be what controls it. */
+(() => {
+  const fig = document.querySelector('.ads');
+  if(!fig || !matchMedia('(hover: none)').matches) return;
+  fig.addEventListener('click', e => {
+    if(!e.target.closest('img')) return;
+    fig.classList.toggle('cap-on');
   });
 })();
 </script>
