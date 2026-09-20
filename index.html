@@ -29,6 +29,13 @@
        lavender palette this replaced (matched in OKLab), so the page keeps its
        old weight; only the hue is gone. */
     --ink:#161616;    /* primary text            18.1:1 */
+    /* Hover fill for anything already filled with --ink. One grade, measured:
+       L* 7.2 -> 12.7, a +5.5 step. Filled buttons used to hover to --ink-3,
+       which is L* 46.4 — a +39.2 jump that made the button go pale exactly
+       when it was being touched, i.e. weaker under the cursor rather than
+       stronger. A token rather than three literals so the pill, the closing
+       CTA and the contact primary cannot drift apart. */
+    --ink-hover:#212121;
     --ink-2:#4a4a4a;  /* emphasis, hover, accent  8.9:1 */
     --ink-3:#6e6e6e;  /* mono labels, chrome      5.1:1 */
     --mut:#767676;    /* secondary prose          4.5:1 */
@@ -190,7 +197,11 @@
   h1{
     font-family:var(--sans);
     font-size:var(--t-head-lg);
-    line-height:1.05;
+    /* a token, not a literal: the loader's picker drum has to collapse to
+       exactly this line box on landing, and a second copy of the number would
+       let the two drift apart silently */
+    --lh:1.05;
+    line-height:var(--lh);
     letter-spacing:-0.035em;
     font-weight:var(--w-head);
     /* centred in the .wrap grid: the 13ch measure still governs where the
@@ -290,6 +301,114 @@
     70%{transform:translate(-.03em,0);
         filter:drop-shadow(.03em 0 var(--g-b));}
   }
+  /* =============================================================
+     Pre-home loader — "I make [drum]" morphing into the headline
+     Tuned in loader.html. It reuses .wrap and h1 above rather than
+     redeclaring them: the alignment onto the real headline is structural,
+     not a magic number, so the veil must be laid out by the same rules as
+     the page it is covering.
+  ============================================================= */
+  .loader{
+    position:fixed;inset:0;z-index:60;   /* over .progress (40) and .cta (15) */
+    background:var(--paper);
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  /* The page must not scroll under a veil the visitor cannot see past. */
+  html.loading,html.loading body{overflow:hidden;}
+  /* The same trap .hero > .wrap documents above: .wrap's auto side margins
+     suppress the flex cross-axis stretch, so without this it shrink-wraps to
+     the h1 and self-centres, landing nowhere near the 1180 grid. The text
+     still *looks* centred — everything here is — but the h1 box came out
+     18.6px narrower than the headline's, so the measure that decides where
+     the line breaks was not the page's measure. */
+  .loader > .wrap{width:100%;}
+  .loader h1{color:var(--ink);}
+  .loader .ln{display:block;white-space:nowrap;}
+  /* opacity only — visibility:hidden would collapse them out of the line box
+     and the middle line would not be vertically where the hero puts it */
+  .loader .ln1,.loader .ln3{opacity:0;}
+  /* it borrows h1 .convert for the serif italic, but it is a span, not the
+     real button — nothing here is clickable */
+  .loader .convert{pointer-events:none;cursor:default;}
+  /* The gap is the *measured* advance of a space in Onest at this size, not a
+     guessed em. A flex gap that is merely close makes the whole centred line
+     wider than the hero's, so "I make" sits off to one side of where the real
+     headline puts it and jumps on handoff. */
+  .loader .ln2{display:flex;align-items:center;justify-content:center;gap:var(--spacew,.26em);}
+
+  /* An actual cylinder: each row is rotated about the wheel's horizontal axis
+     and pushed out by the radius, so rows compress toward the top and bottom
+     the way an iOS picker does. Faking it with scale+blur gets the silhouette
+     wrong at the edges. */
+  .wheel{
+    position:relative;
+    height:calc(var(--item-h) * var(--rows));
+    perspective:var(--persp);
+    /* No overflow clip and no mask. The box only tracks the *centre* word, so
+       clipping to it beheaded every wider row — "websites" rendered as
+       "vebsites". The cosine falloff already takes the edge rows to 0.03,
+       which is the fade a mask would have provided, and rows overflow
+       symmetrically so they stay centred on the drum axis. */
+    overflow:visible;
+    transition:width .18s cubic-bezier(.22,.61,.36,1);
+  }
+  /* As a drum it reserves five rows, which holds lines 1 and 3 about 220px
+     from where the headline puts them — the landed veil read as three
+     stranded lines and the handoff was a jump. Collapsing to one line box is
+     what makes this a morph. Rows are centred on top:50% with their own
+     negative margin, so the landed word does not move while the height comes
+     down; only the two arriving lines travel. */
+  .loader.landing .wheel{
+    height:calc(var(--lh) * 1em);
+    transition:height .52s cubic-bezier(.22,.61,.36,1);
+  }
+  .wheel-in{
+    position:absolute;inset:0;
+    transform-style:preserve-3d;
+    /* the unit must be inside the custom property: translateZ() takes a
+       length, and a bare number invalidates the entire transform list */
+    transform:translateZ(calc(var(--radius) * -1));
+  }
+  .wheel .it{
+    position:absolute;left:0;right:0;top:50%;
+    height:var(--item-h);margin-top:calc(var(--item-h) / -2);
+    display:flex;align-items:center;justify-content:center;
+    white-space:nowrap;
+    backface-visibility:hidden;
+    will-change:transform,opacity;
+  }
+  /* The measuring copy: same type, out of flow, never painted. It must live
+     inside the h1 or it inherits body type and every column comes out ~3.5x
+     too narrow. */
+  .ruler{
+    position:absolute;visibility:hidden;pointer-events:none;
+    top:0;left:0;white-space:nowrap;
+    font:inherit;letter-spacing:inherit;
+  }
+  /* No progress bar on the veil. The drum is already the progress indicator —
+     it starts slow, peaks, and settles onto the headline — so a hairline
+     measuring the same wait twice only splits attention. The comet idiom now
+     belongs to the case pages alone, where it measures scroll. */
+
+  /* The veil does not slide or wipe: it is already the same paper as the
+     page, so the only honest exit is to stop being there. */
+  .loader.done{opacity:0;transition:opacity .42s ease;pointer-events:none;}
+  .loader.skipped{display:none;}
+  /* The width gate, in CSS, because the script cannot run early enough: the
+     markup already contains "I make", so between first paint and the inline
+     script there is a frame where a phone would show a veil it is about to
+     skip. Below 400px the headline re-wraps to "I make designs / that
+     convert." while the drum is a nowrap flex row, so the veil cannot land on
+     it. 399.98 is the exact complement of the script's `min-width:400px` —
+     if one of these numbers moves, the other has to move with it. */
+  @media (max-width:399.98px){ html:not(.force-loader) .loader{display:none;} }
+  .loader .ln1,.loader .ln3{transform:translateY(.12em);}
+  .loader .ln3{transform:translateY(-.12em);}
+  .loader .ln1.in,.loader .ln3.in{
+    opacity:1;transform:translateY(0);
+    transition:opacity .5s ease,transform .5s cubic-bezier(.22,.61,.36,1);
+  }
+
   /* ---------- end CTA ---------- */
   .cta{
     position:fixed;inset:0;z-index:15;
@@ -305,16 +424,12 @@
     padding:12px 34px;border-radius:var(--r-pill);letter-spacing:.02em;
     transition:background .25s ease;
   }
-  .cta a:hover{background:var(--ink-3);}
+  .cta a:hover{background:var(--ink-hover);}
 
-  /* "Comet": the tail is the bar's own width, so the fade stretches as you
-     scroll — near the top it is a short dark nib, at the bottom a long sweep.
-     A fixed-length tail (the other candidate) reads as a constant-size object
-     sliding across, which fights the idea that the bar measures the page. */
-  .progress{
-    position:fixed;top:0;left:0;height:2px;z-index:40;width:0;
-    background:linear-gradient(90deg,transparent 0%,var(--ink) 100%);
-  }
+  /* No scroll-progress comet here. It lives on the three case pages, which are
+     long linear reads where "how much is left" is the question. The home page
+     is a short browse, and a permanent hairline over the hero competes with
+     the one thing that page is for. */
   /* ================= page sections ================= */
   #content{position:relative;z-index:25;background:var(--paper);border-top:1px solid var(--line);}
   .wrap{max-width:1180px;margin:0 auto;padding:0 44px;}
@@ -391,7 +506,7 @@
   .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
   @media (prefers-reduced-motion:reduce){
     .rv,.rv-vis{opacity:1;transform:none;filter:none;transition:none;}
-    .case-link .ring,.case-link .icon,.case-link .label,.cta a,.contact-actions a,nav a,footer a,.define-t{transition:none;}
+    .case-link,.case-link .icon,.cta a,.contact-actions a,nav a,footer a,.define-t{transition:none;}
     .tile img,.tile::after,.cap > *{transition:none;}
     html{scroll-behavior:auto;}
     /* the hint is never scheduled under reduce (see the JS), but belt and
@@ -403,30 +518,26 @@
     h1 .convert.playing .cur svg{animation:none;}
     h1 .convert .cur{opacity:0;}
     .codefield,.codefield.playing,.codefield.playing .col{animation:none;opacity:0;}
+    /* The loader still runs under reduce — it is a loading screen, and hiding
+       what the wait is for helps nobody. Its transitions come off, so the
+       drum's landing, the collapse and the handoff all snap. */
+    .wheel,.loader.landing .wheel,.loader.done,
+    .loader .ln1.in,.loader .ln3.in{transition:none;}
   }
 
-  /* case-study link — arrow in a ring, label underlined beside it */
+  /* case-study link — solid pill, the same shape and geometry as the closing
+     CTA, so the page carries exactly one button form. Padding gives the 44px
+     target here; the old version leaned on a 44px ring that no longer exists. */
   .case-link{
-    display:inline-flex;align-items:center;gap:14px;margin-top:6px;
-    text-decoration:none;color:var(--ink);
-  }
-  /* the ring is 44px, so it carries the touch target on its own */
-  .case-link .ring{
-    flex:none;width:44px;height:44px;border-radius:var(--r-pill);font-size:18px;
-    display:flex;align-items:center;justify-content:center;
-    border:1px solid var(--line-2);color:var(--ink-2);
-    transition:background .3s ease,border-color .3s ease,color .3s ease;
+    display:inline-flex;align-items:center;gap:10px;min-height:44px;margin-top:6px;
+    font-size:var(--t-body);text-decoration:none;
+    color:var(--paper);background:var(--ink);
+    padding:12px 28px;border-radius:var(--r-pill);letter-spacing:.02em;
+    transition:background .25s ease;
   }
   .case-link .icon{transition:transform .45s cubic-bezier(.22,1,.36,1);}
-  /* body copy, not mono chrome — the label reads as a sentence, not a tag */
-  .case-link .label{
-    font-size:var(--t-body);line-height:1.5;
-    border-bottom:1px solid var(--ink-3);padding-bottom:4px;
-    transition:color .3s ease,border-color .3s ease;
-  }
-  .case-link:hover .ring{background:var(--ink-2);border-color:var(--ink-2);color:var(--paper);}
+  .case-link:hover{background:var(--ink-hover);}
   .case-link:hover .icon{transform:translateX(3px);}
-  .case-link:hover .label{color:var(--ink-2);border-color:var(--ink-2);}
 
   /* ---- mockup panels ---- */
   /* flat panel fill and no lift — the mockup is read, not clicked */
@@ -566,7 +677,7 @@
     transition:background .25s ease, border-color .25s ease, color .25s ease;
   }
   .contact-actions .primary{background:var(--ink);color:var(--paper);}
-  .contact-actions .primary:hover{background:var(--ink-3);}
+  .contact-actions .primary:hover{background:var(--ink-hover);}
   .contact-actions .ghost{border:1px solid var(--line-2);color:var(--ink);}
   .contact-actions .ghost:hover{border-color:var(--ink-3);color:var(--ink-2);}
   footer{
@@ -617,7 +728,285 @@
 </style>
 </head>
 <body>
-<div class="progress" id="progress"></div>
+
+<!-- Pre-home loader. First in the body so it paints before anything it is
+     meant to be covering. aria-hidden: the real headline is in the <h1> below
+     and a screen reader should be given that one, not this mock of it. -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="wrap">
+    <h1>
+      <span class="ln ln1">Hi, I&rsquo;m Ravindra.</span>
+      <span class="ln ln2"><span>I make</span><span class="wheel" id="wheel"><span class="wheel-in" id="wheelIn"></span></span></span>
+      <span class="ln ln3"><span class="convert">convert.</span></span>
+      <!-- inside the h1, or it measures at body size and every column comes
+           out about 3.5x too narrow -->
+      <span class="ruler" id="ruler" aria-hidden="true"></span>
+    </h1>
+  </div>
+</div>
+
+<script>
+/* =============================================================
+   Pre-home loader — an iOS-picker drum of services that comes to rest on
+   "designs that", completing the real headline.
+
+   It runs here, inline and before the three.js tag below, because that is
+   the whole point: the drum has to be on screen while the page is still
+   arriving. Tuned in loader.html; the constants below are that bench's
+   settled values.
+
+   Progress is the eased clock *capped* until the page is genuinely ready, so
+   on a slow connection the drum stalls one row short of the final word rather
+   than the bar lying about being finished.
+============================================================= */
+(function(){
+'use strict';
+
+const loader = document.getElementById('loader');
+const root   = document.documentElement;
+
+/* ---------- should it run at all? ---------- */
+/* ?loader=1 forces it past every gate below, which is the only way to
+   verify the veil at widths and in tabs where it is normally skipped. */
+const FORCE = new URLSearchParams(location.search).get('loader') === '1';
+if(FORCE) root.classList.add('force-loader');
+
+const SEEN_KEY = 'rp:loader-seen';
+const seen = (() => { try{ return sessionStorage.getItem(SEEN_KEY) === '1'; }catch(e){ return false; } })();
+
+/* Below this the headline re-wraps to "I make designs / that convert." while
+   the drum is a single nowrap row, so the veil cannot land on it. Alignment is
+   verified pixel-exact from 1440 down to 390. Mirrored in the CSS above. */
+const MIN_W = 400;
+
+let skipped = '';
+if(!FORCE){
+  /* A deep link is a request for a specific place on the page, not for the
+     front door — do not make it sit through an introduction. */
+  if(location.hash)                                        skipped = 'deep-link';
+  else if(seen)                                            skipped = 'seen-this-tab';
+  else if(!matchMedia('(min-width:' + MIN_W + 'px)').matches) skipped = 'narrow';
+}
+
+/* Resolves when the page is the visitor's to use. The hint on "convert."
+   waits on this, so it cannot fire under the veil. */
+let veilDone;
+window.__loaderVeil = new Promise(r => { veilDone = r; });
+
+if(skipped){
+  loader.classList.add('skipped');
+  window.__loaderReady = function(){};
+  window.__loaderInfo  = { skipped:true, reason:skipped };
+  veilDone(skipped);
+  return;
+}
+
+/* ---------- the copy ---------- */
+/* "designs that" is the last item on the wheel rather than a separate end
+   state: the headline breaks after it anyway, so "convert." completing the
+   line comes for free. */
+const WORDS = ['apps','ads','sales pages','strategy','brands','websites','art','experiences'];
+const FINAL = 'designs that';
+/* three real words of lead-in above the first, so the drum is populated at
+   rest instead of showing blank rows over "apps" */
+const LEAD  = 3;
+
+/* ---------- the settled constants ---------- */
+/* DUR is a *floor*, not a duration: the HOLD cap below can stretch the run past
+   it while the page is still arriving, but nothing can make it shorter. The
+   collapse and handoff add ~720ms on top of this. */
+const DUR = 5000, LOOPS = 3;
+const PEAK = 0.80, RISE = 1.7, ENDV = 0.26, FALL = 2.0;   /* velocity shape */
+const ANGLE = 20, ROWS = 5, PERSP = 900, FADE = 2.4;      /* drum geometry */
+const FOCUS = 0.86, HOLD = 0.92;
+/* If the main script never runs — a parse error, a blocked CDN — the veil has
+   to lift anyway. A loading screen that can trap the page is worse than none. */
+const READY_MAX = 6000;
+
+/* ---------- easing ----------
+   The brief is about *velocity*: slow, peaking around 80%, then easing off.
+   A cubic-bezier cannot be aimed at a velocity peak, so state v(t) with the
+   peak where it belongs and integrate it into a position table. */
+function velocity(t){
+  if(t <= PEAK) return Math.pow(t / PEAK, RISE);
+  return 1 - (1 - ENDV) * Math.pow((t - PEAK) / (1 - PEAK), FALL);
+}
+const N = 1024, LUT = new Float64Array(N + 1);
+(function buildLUT(){
+  let s = 0; LUT[0] = 0;
+  for(let i = 1; i <= N; i++){
+    const a = velocity((i - 1) / N), b = velocity(i / N);
+    s += (a + b) / 2 / N; LUT[i] = s;
+  }
+  const tot = LUT[N] || 1;
+  for(let i = 0; i <= N; i++) LUT[i] /= tot;
+})();
+function ease(t){
+  if(t <= 0) return 0; if(t >= 1) return 1;
+  const x = t * N, i = Math.floor(x);
+  return LUT[i] + (LUT[i + 1] - LUT[i]) * (x - i);
+}
+
+/* ---------- the strip ---------- */
+const wheel   = document.getElementById('wheel');
+const wheelIn = document.getElementById('wheelIn');
+const ruler   = document.getElementById('ruler');
+const ln2     = loader.querySelector('.ln2');
+const ln1     = loader.querySelector('.ln1');
+const ln3     = loader.querySelector('.ln3');
+
+let strip = [], widths = [], nodes = [], wheelW = 0;
+
+function buildStrip(){
+  strip = WORDS.slice(-LEAD);
+  for(let i = 0; i < LOOPS; i++) strip = strip.concat(WORDS);
+  strip.push(FINAL);
+  wheelIn.textContent = '';
+  nodes = strip.map(w => {
+    const el = document.createElement('span');
+    el.className = 'it'; el.textContent = w;
+    wheelIn.appendChild(el);
+    return el;
+  });
+  measure();
+}
+
+function measure(){
+  widths = strip.map(w => { ruler.textContent = w; return ruler.getBoundingClientRect().width; });
+  /* A trailing space collapses, so the advance has to come out of a
+     difference between two strings that differ only by it. A guessed em makes
+     the whole centred line wider than the hero's and "I make" jumps. */
+  ruler.textContent = 'nn';  const w2 = ruler.getBoundingClientRect().width;
+  ruler.textContent = 'n n'; const w3 = ruler.getBoundingClientRect().width;
+  ln2.style.setProperty('--spacew', (w3 - w2).toFixed(2) + 'px');
+  ruler.textContent = '';
+  /* Fixed, and fixed at the *final* word specifically. The wheel's width is
+     what places "I make", so on landing it has to be exactly the width the
+     headline gives "designs that". It also happens to be the longest item, so
+     nothing overhangs on the way past; if the copy ever changes so it is not,
+     a longer word overhangs this box symmetrically rather than the landing
+     going crooked — the right way round to fail. */
+  wheelW = widths[widths.length - 1];
+}
+
+/* ---------- geometry ---------- */
+function apply(){
+  const itemH = Math.round(parseFloat(getComputedStyle(loader.querySelector('h1')).fontSize) * 1.16);
+  const rad = itemH / (2 * Math.tan((ANGLE * Math.PI / 180) / 2));
+  wheel.style.setProperty('--item-h', itemH + 'px');
+  wheel.style.setProperty('--rows', ROWS);
+  wheel.style.setProperty('--persp', PERSP + 'px');
+  /* the unit has to be baked in: translateZ() takes a length, and a bare
+     number invalidates the whole transform list — every row then collapses
+     onto the centre and the drum renders as one illegible pile */
+  wheel.style.setProperty('--radius', rad.toFixed(2) + 'px');
+  buildStrip();
+  render(pos, lastProg);
+}
+
+function render(p, prog){
+  if(prog !== undefined) lastProg = prog;
+  /* Over the last stretch the drum stops being a drum and becomes a line of
+     type. The final item is the end of the strip, so there is nothing below it
+     to balance the tail still showing above and it lands lopsided. Blend the
+     drum's falloff toward a hard focus — centre row only.
+     Raising the exponent instead is not enough: the neighbour sits one ANGLE
+     off centre, cos .9397, and even at exponent 62 that is opacity .021, which
+     on white paper is a legible grey ghost. Blending to a 0/1 target reaches
+     exactly 0. */
+  const f = prog === undefined ? 0
+          : Math.max(0, Math.min(1, (prog - FOCUS) / (1 - FOCUS)));
+  const k = f * f * (3 - 2 * f);
+  const near = Math.round(p);
+  for(let i = 0; i < nodes.length; i++){
+    const th = (i - p) * ANGLE;
+    if(Math.abs(th) > 91){ nodes[i].style.display = 'none'; continue; }
+    nodes[i].style.display = '';
+    const c = Math.cos(th * Math.PI / 180);
+    nodes[i].style.transform = `rotateX(${(-th).toFixed(2)}deg) translateZ(var(--radius))`;
+    /* opacity falls with a power of the cosine, so a row dims as it turns away
+       and only the centre row is at full ink — this is the drum's fade now
+       that there is no mask */
+    const drum = Math.max(0, Math.pow(c, FADE));
+    nodes[i].style.opacity = (drum + ((i === near ? 1 : 0) - drum) * k).toFixed(3);
+  }
+  wheel.style.width = wheelW.toFixed(1) + 'px';
+}
+
+/* ---------- the run ---------- */
+let lastProg = 0, pos = LEAD, raf = 0, t0 = performance.now();
+let ready = false, readyAt = 0, done = false;
+
+function markReady(){
+  if(ready) return;
+  ready = true;
+  readyAt = Math.round(performance.now() - t0);
+}
+window.__loaderReady = markReady;
+setTimeout(markReady, READY_MAX);
+
+function tick(now){
+  const t = Math.min(1, (now - t0) / DUR);
+  let p = ease(t);
+  if(!ready) p = Math.min(p, HOLD);      /* the floor: never claim to be done */
+  pos = LEAD + p * (strip.length - 1 - LEAD);
+  render(pos, p);
+  if(p >= 1 - 1e-4 && ready){ finish(); return; }
+  raf = requestAnimationFrame(tick);
+}
+
+function finish(){
+  done = true;
+  /* Order matters. The drum collapses first, and the two lines it was never
+     holding fade in *while* that space is closing — start them together and
+     they appear at the stranded five-row spacing before travelling, which
+     reads as a layout bug rather than a landing. The veil only lifts once the
+     collapse has settled, so the crossfade is between two identical headlines
+     rather than two differently-spaced ones. */
+  loader.classList.add('landing');
+  setTimeout(() => { ln1.classList.add('in'); ln3.classList.add('in'); }, 120);
+  setTimeout(() => {
+    loader.classList.add('done');
+    root.classList.remove('loading');
+    veilDone('ran');
+  }, 600);
+  /* and it is gone for good once the fade is over */
+  setTimeout(() => { loader.classList.add('skipped'); }, 1100);
+}
+
+/* A backgrounded tab advances the clock but paints nothing, so a visitor who
+   opens the site in a background tab would come back to a finished veil they
+   never saw. Restart the clock when they actually arrive. */
+document.addEventListener('visibilitychange', () => {
+  if(!document.hidden && !done) t0 = performance.now();
+});
+
+addEventListener('resize', () => { if(done) return; measure(); apply(); });
+/* Widths must be re-measured once Onest lands, or every column is sized from
+   the fallback and the line jumps on swap. */
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(() => { if(!done){ measure(); render(pos, lastProg); } });
+}
+
+try{ sessionStorage.setItem(SEEN_KEY, '1'); }catch(e){}
+root.classList.add('loading');
+scrollTo(0, 0);
+apply();
+render(pos, 0);
+t0 = performance.now();
+raf = requestAnimationFrame(tick);
+
+window.__loaderInfo = { skipped:false, MIN_W, DUR,
+  /* t0, so a harness can time the run itself. Everything else here is relative
+     to it, and a probe that only starts at DOMContentLoaded cannot see the
+     start — under SwiftShader that is ~2.9s after the drum began turning. */
+  get t0(){ return t0; },
+  get ready(){ return ready; }, get readyAt(){ return readyAt; },
+  get done(){ return done; }, get pos(){ return pos; },
+  get strip(){ return strip; }, get widths(){ return widths; },
+  get wheelW(){ return wheelW; } };
+})();
+</script>
 
 <nav>
   <div class="logo">Ravindra&nbsp;Pratap<span style="color:var(--ink-3)">.</span></div>
@@ -652,9 +1041,9 @@
       <!-- ViewRyt -->
       <article class="case" id="viewryt">
         <div class="case-info rv">
-          <h3>ViewRyt — a redesign that made design's ROI undeniable</h3>
+          <h3>ViewRyt — a redesign for 3X conversion</h3>
           <p>A <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-d2c">D2C<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-d2c" role="tooltip" hidden>Direct-to-consumer — a brand that sells straight to the buyer through its own site and ads, with no retailer or marketplace in between, so the landing page is the entire storefront.</span></span> supplement landing page for the US market was losing money on ads. I rebuilt it with <strong>identical copy</strong>, so design was the only variable — and turned it profitable.</p>
-          <a class="case-link" href="case-viewryt.html" aria-label="View the ViewRyt case study"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span><span class="label">View</span></a>
+          <a class="case-link" href="case-viewryt.html" aria-label="View the ViewRyt case study">View case<svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
           <div class="fx-wrap">
@@ -667,8 +1056,8 @@
       <article class="case flip" id="dentomate">
         <div class="case-info rv">
           <h3>Dentomate — killing the "WhatsApp tax" for Indian dental clinics</h3>
-          <p>A SaaS platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month "WhatsApp tax" Indian dental clinics pay to message patients — and bring them back automatically.</p>
-          <a class="case-link" href="case-dentomate.html" aria-label="View the Dentomate case study"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span><span class="label">View</span></a>
+          <p>A platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month "WhatsApp tax" Indian dental clinics pay to message patients — and bring them back automatically.</p>
+          <a class="case-link" href="case-dentomate.html" aria-label="View the Dentomate case study">View case<svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
           <div class="fx-wrap">
@@ -681,8 +1070,8 @@
       <article class="case" id="irbs">
         <div class="case-info rv">
           <h3>IRBS — room booking for a 7,000-student campus</h3>
-          <p>A <strong>three-step room-booking flow</strong> I researched and designed for IIT Guwahati's <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-onestop">OneStop<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-onestop" role="tooltip" hidden>OneStop IITG is a centralized mobile application developed by the Students' Web Committee to assist the IIT Guwahati community with daily campus life. It consolidates essential services into a single platform, offering features like academic timetables, bus and ferry schedules, room bookings and a lost-and-found portal.</span></span> app, replacing a broken legacy portal. Live for the campus since September 2023.</p>
-          <a class="case-link" href="case-irbs.html" aria-label="View the IRBS case study"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span><span class="label">View</span></a>
+          <p>A <strong>three-step room-booking flow</strong> I researched and designed for IIT Guwahati's <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-onestop">OneStop<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-onestop" role="tooltip" hidden>OneStop IITG is a centralized mobile application developed by the Students' Web Committee to assist the IIT Guwahati community with daily campus life. It consolidates essential services into a single platform, offering features like academic timetables, bus and ferry schedules, room bookings and a lost-and-found portal.</span></span> app, replacing a broken legacy portal. Live for campus students since September 2023.</p>
+          <a class="case-link" href="case-irbs.html" aria-label="View the IRBS case study">View case<svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
           <div class="fx-wrap">
@@ -702,9 +1091,9 @@
       <div class="about-grid">
         <div class="rv">
           <p><strong>I sit where design meets code meets revenue.</strong> Two years in, I've shipped work across the full stack of persuasion — pixel-level interface craft, motion that guides attention, and the funnel math that tells you whether any of it worked.</p>
-          <p>Most designers stop at the mockup. I prototype in code, ship the real thing, then instrument it — because a design isn't finished when it looks right, it's finished when the number moves.</p>
-          <p>On the side I keep a <a href="components.html">component lab</a> — one interface primitive a day, built to the last pixel. It's where the craft stays sharp between projects.</p>
-          <p>Currently open to <strong>product design and design-engineering roles</strong> with teams that care about craft and outcomes in equal measure.</p>
+          <p>I am a curiosity-driven human — always learning, always expanding horizons. I grew up in the beautiful city of Udaipur, admiring and learning art. Then I did my engineering at IIT Guwahati, got introduced to design as a subject, and have been obsessed ever since. At Transformative Ventures I fine-tuned those skills on marketing and everything D2C ecommerce.</p>
+          <p>I prototype in code, ship the real thing, then instrument it — because a design isn't finished when it looks right, it's finished when the numbers improve experience. My biggest win was when a customer mentioned she felt hungry looking at an ad I'd made. (Full story on a call :)</p>
+          <p>On the side I keep experimenting, like the <a href="components.html">component lab</a>. Currently open to <strong>design roles</strong> with teams that care about craft and outcomes in equal measure.</p>
         </div>
         <div class="skills rv rv-d1">
           <h4>Design</h4>
@@ -998,7 +1387,6 @@ readScroll();
 
 const hero = document.getElementById('hero');
 const cta = document.getElementById('cta');
-const progress = document.getElementById('progress');
 
 /* ---- aurora reveal ------------------------------------------------
    The field does not exist until the visitor asks for it. Everything
@@ -1130,7 +1518,9 @@ function primeCodeField(){
   hintPre = idle(() => { buildCodeField(); void codefield.offsetHeight; }, { timeout: 900 });
 }
 
+let hintKilled = false;
 function stopHint(){
+  hintKilled = true;
   clearInterval(hintTimer); clearTimeout(hintClear); clearTimeout(hintLead);
   if(window.cancelIdleCallback) cancelIdleCallback(hintPre); else clearTimeout(hintPre);
   hintTimer = null;
@@ -1157,10 +1547,18 @@ function playHint(){
 
 if(!reduceMotion){
   primeCodeField();
-  hintLead = setTimeout(() => {
-    playHint();
-    hintTimer = setInterval(playHint, HINT_EVERY);
-  }, HINT_LEAD);
+  /* HINT_LEAD is measured from the moment the word is on screen and clickable,
+     not from navigation. Under the loader the first pass would otherwise play
+     behind an opaque veil and be spent before anyone could see it — the exact
+     failure this lead time was added to fix. Resolves immediately when the
+     loader is skipped, so nothing changes on a phone or a second visit. */
+  (window.__loaderVeil || Promise.resolve()).then(() => {
+    if(hintKilled) return;          /* clicked before the veil lifted */
+    hintLead = setTimeout(() => {
+      playHint();
+      hintTimer = setInterval(playHint, HINT_EVERY);
+    }, HINT_LEAD);
+  });
 }
 
 /* The hero canvas is fixed and full-screen, so it keeps shading even
@@ -1204,8 +1602,6 @@ function frame(){
   cta.style.opacity = ctaIn;
   cta.style.transform = `translateY(${ (1 - ctaIn) * 60 }px)`;
 
-  progress.style.width = (p * 100) + '%';
-
   /* fade the fixed hero chrome once the sections take over */
   const runwayEnd = document.getElementById('runway').offsetHeight - innerHeight;
   const over = Math.min(Math.max((scrollY - runwayEnd + 60) / 220, 0), 1);
@@ -1220,6 +1616,19 @@ function frame(){
   requestAnimationFrame(frame);
 }
 frame();
+
+/* ---- tell the loader the page is actually ready ----
+   This is the real gate behind the veil's progress floor: the type it is
+   about to hand the headline to, and the hero it is about to uncover, both
+   have to exist first. Two rAFs because the first render() above is only
+   *issued* synchronously — the frame it drew reaches the screen on the next
+   paint, and uncovering before that shows a blank canvas. */
+if(window.__loaderReady){
+  Promise.all([
+    document.fonts ? document.fonts.ready : Promise.resolve(),
+    new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))
+  ]).then(window.__loaderReady, window.__loaderReady);
+}
 
 addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
