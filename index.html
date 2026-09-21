@@ -113,8 +113,13 @@
     font-family:var(--sans);
     overflow-x:hidden;
   }
-  /* total scroll runway */
-  #runway{height:340vh;position:relative;}
+  /* The hero is exactly one screen. #content is z-index:25 on an opaque
+     --paper background against the hero's z-index:10, so Selected work
+     slides up and covers the hero rather than needing it out of the way
+     first — which is what lets the runway be this short at all.
+     NOTE: at 100vh the old `offsetHeight - innerHeight` scroll denominator
+     evaluates to 0 and pins progress at 0 forever. See readScroll(). */
+  #runway{height:100vh;position:relative;}
 
   canvas#gl{
     position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;
@@ -193,6 +198,24 @@
      default cross-axis stretch. Without width:100% it shrink-wraps to the
      h1 and self-centres, landing nowhere near the 1180 grid. */
   .hero > .wrap{width:100%;}
+  /* Credential line. Absolutely positioned, NOT a second flex child: .hero
+     is a centred column, so any sibling of .wrap pushes the h1 up and the
+     loader drum no longer lands on the headline. Its own .wrap keeps it
+     inside the 1180 gutter so it can never touch the viewport edge.
+     Centred, not flush left: the h1 above is max-width:13ch +
+     margin-inline:auto + text-align:center, so a left-flushed line under it
+     reads as an orphan (measured — at 1440 the h1 starts at x=441, the
+     gutter at x=174). Type ported from footer, the page's only other mono
+     label. */
+  .hero-cred{
+    position:absolute;left:0;right:0;bottom:56px;
+    font-family:var(--sans);font-size:var(--t-body);
+    color:var(--ink-2);line-height:1.5;
+  }
+  .hero-cred .wrap{text-align:center;}
+  /* the separator is punctuation, not a word — stepped back a tone so it
+     divides the two claims instead of competing with them */
+  .hero-cred .dot{color:var(--ink-3);margin:0 .5em;}
   /* stepped at 1180/900/640 rather than clamp() — a clamp lands on off-scale sizes */
   h1{
     font-family:var(--sans);
@@ -409,23 +432,6 @@
     transition:opacity .5s ease,transform .5s cubic-bezier(.22,.61,.36,1);
   }
 
-  /* ---------- end CTA ---------- */
-  .cta{
-    position:fixed;inset:0;z-index:15;
-    display:flex;flex-direction:column;gap:22px;justify-content:center;align-items:center;
-    text-align:center;opacity:0;pointer-events:none;
-  }
-  .cta h2{font-family:var(--sans);font-size:var(--t-head);letter-spacing:-0.03em;font-weight:var(--w-head);max-width:18ch;line-height:1.06;}
-  /* no lift — the colour shift carries the affordance */
-  .cta a{
-    pointer-events:auto;
-    display:inline-flex;align-items:center;gap:10px;min-height:44px;
-    font-size:var(--t-body);text-decoration:none;color:var(--paper);background:var(--ink);
-    padding:12px 34px;border-radius:var(--r-pill);letter-spacing:.02em;
-    transition:background .25s ease;
-  }
-  .cta a:hover{background:var(--ink-hover);}
-
   /* No scroll-progress comet here. It lives on the three case pages, which are
      long linear reads where "how much is left" is the question. The home page
      is a short browse, and a permanent hairline over the hero competes with
@@ -500,7 +506,7 @@
   .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
   @media (prefers-reduced-motion:reduce){
     .rv,.rv-vis{opacity:1;transform:none;filter:none;transition:none;}
-    .case-link,.case-link .icon,.cta a,.contact-actions a,nav a,footer a,.define-t{transition:none;}
+    .case-link,.case-link .icon,.contact-actions a,nav a,footer a,.define-t{transition:none;}
     .tile img,.tile::after,.cap > *{transition:none;}
     html{scroll-behavior:auto;}
     /* the hint is never scheduled under reduce (see the JS), but belt and
@@ -702,7 +708,6 @@
   }
   @media (max-width:900px){
     h1{font-size:var(--t-head);}
-    .cta h2{font-size:var(--t-sub-lg);}
     .sec-head h2{font-size:var(--t-sub-lg);}
     .cap h2{font-size:var(--t-sub-lg);}
     .case h3{font-size:var(--t-sub-md);}
@@ -712,7 +717,6 @@
   }
   @media (max-width:640px){
     h1{font-size:var(--t-sub-lg);}
-    .cta h2{font-size:var(--t-sub-md);}
     .sec-head h2{font-size:var(--t-sub-md);}
     .cap h2{font-size:var(--t-sub-md);}
     .cap .now{font-size:var(--t-sub);}
@@ -1019,11 +1023,9 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
   <div class="wrap">
     <h1>Hi, I’m Ravindra.<br/>I make designs that <button type="button" class="convert" id="trigger"><span class="w" data-word="convert.">convert.</span><i class="cur" aria-hidden="true"><svg viewBox="0 0 12 16" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><g fill="var(--paper)"><rect x="4" y="1" width="1" height="14"/><rect x="6" y="3" width="1" height="12"/><rect x="8" y="4" width="1" height="11"/><rect x="10" y="5" width="1" height="10"/><rect x="1" y="6" width="2" height="2"/><rect x="3" y="7" width="1" height="5"/><rect x="5" y="7" width="1" height="8"/><rect x="7" y="7" width="1" height="8"/><rect x="9" y="7" width="1" height="8"/><rect x="2" y="8" width="1" height="2"/><rect x="0" y="9" width="1" height="7"/><rect x="1" y="11" width="1" height="5"/><rect x="2" y="13" width="1" height="3"/></g><g fill="currentColor"><rect x="3" y="0" width="3" height="1"/><rect x="3" y="1" width="1" height="6"/><rect x="5" y="1" width="1" height="6"/><rect x="6" y="2" width="2" height="1"/><rect x="7" y="3" width="3" height="1"/><rect x="7" y="4" width="1" height="3"/><rect x="9" y="4" width="3" height="1"/><rect x="0" y="5" width="3" height="1"/><rect x="9" y="5" width="1" height="2"/><rect x="11" y="5" width="1" height="11"/><rect x="0" y="6" width="1" height="3"/><rect x="1" y="8" width="1" height="3"/><rect x="2" y="10" width="1" height="3"/><rect x="3" y="12" width="1" height="4"/><rect x="4" y="15" width="7" height="1"/></g></svg></i></button></h1>
   </div>
-</div>
-
-<div class="cta" id="cta">
-  <h2>Attention is earned in pixels, converted in flows.</h2>
-  <a href="#work">View case studies <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,149.66l-72,72a8,8,0,0,1-11.32,0l-72-72a8,8,0,0,1,11.32-11.32L120,196.69V40a8,8,0,0,1,16,0V196.69l58.34-58.35a8,8,0,0,1,11.32,11.32Z"/></svg></a>
+  <div class="hero-cred">
+    <div class="wrap">2+ years exp. designing for performance marketing<span class="dot" aria-hidden="true">·</span>IIT Eng. Grad.</div>
+  </div>
 </div>
 
 <div id="runway"></div>
@@ -1088,10 +1090,9 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
       </div>
       <div class="about-grid">
         <div class="rv">
-          <p><strong>I sit where design meets code meets revenue.</strong> Two years in, I've shipped work across the full stack of persuasion — pixel-level interface craft, motion that guides attention, and the funnel math that tells you whether any of it worked.</p>
-          <p>I am a curiosity-driven human — always learning, always expanding horizons. I grew up in the beautiful city of Udaipur, admiring and learning art. Then I did my engineering at IIT Guwahati, got introduced to design as a subject, and have been obsessed ever since. At Transformative Ventures I fine-tuned those skills on marketing and everything D2C ecommerce.</p>
-          <p>I prototype in code, ship the real thing, then instrument it — because a design isn't finished when it looks right, it's finished when the numbers improve experience. My biggest win was when a customer mentioned she felt hungry looking at an ad I'd made. (Full story on a call :)</p>
-          <p>On the side I keep experimenting, like the <a href="components.html">component lab</a>. Currently open to <strong>design roles</strong> with teams that care about craft and outcomes in equal measure.</p>
+          <p>I am a curiosity-driven human — <strong>always learning,</strong> always expanding horizons. I grew up in the beautiful city of <strong>Udaipur,</strong> admiring and learning art. Then I did my engineering at <strong>IIT Guwahati,</strong> got introduced to design as a subject, and have been obsessed ever since. At Transformative Ventures I fine-tuned those skills on marketing and <strong>everything D2C ecommerce.</strong></p>
+          <p>I prototype in code, ship the real thing, then instrument it — because a design isn't finished when it looks right, it's finished when the numbers improve experience. My biggest win was when <strong>a customer mentioned she felt hungry</strong> looking at an ad I'd made. (Full story on a call :)</p>
+          <p>On the side I keep experimenting, like the <a href="components.html">component lab</a>.</p>
         </div>
         <figure class="about-frame rv rv-d1">
           <img src="assets/about/frame.webp" alt="The Ravindra Pratap mark, framed on a sunlit wall" loading="lazy" width="1200" height="1200">
@@ -1371,15 +1372,20 @@ let targetScroll = 0, smoothScroll = 0, lastT = 0;
 /* debug: force a scroll phase with ?s=0.75 */
 const forcedScroll = parseFloat(new URLSearchParams(location.search).get('s'));
 function readScroll(){
-  /* the morph lives inside the runway only; sections scroll over it after */
-  const max = document.getElementById('runway').offsetHeight - innerHeight;
+  /* The runway is one viewport, so progress is measured over its whole
+     height, NOT `offsetHeight - innerHeight` — that denominator is the
+     distance a taller-than-screen runway scrolls before its bottom edge
+     arrives, and at exactly 100vh it is 0, which would pin p at 0 and
+     freeze the headline fully opaque over the content forever.
+     p=1 is therefore the moment #content's top edge reaches the top of
+     the viewport, i.e. the hero is completely covered. */
+  const max = document.getElementById('runway').offsetHeight;
   targetScroll = max > 0 ? Math.min(scrollY / max, 1) : 0;
 }
 addEventListener('scroll', readScroll, {passive:true});
 readScroll();
 
 const hero = document.getElementById('hero');
-const cta = document.getElementById('cta');
 
 /* ---- aurora reveal ------------------------------------------------
    The field does not exist until the visitor asks for it. Everything
@@ -1398,27 +1404,22 @@ const frozenReveal = !isNaN(forcedReveal);
 if(frozenReveal) reveal = Math.min(Math.max(forcedReveal, 0), 1);
 
 const trigger = document.getElementById('trigger');
-trigger.setAttribute('aria-pressed', 'false');
-trigger.addEventListener('click', () => {
-  /* Toggle on the direction, not on `reveal`, so a click mid-flight
-     turns the front around from wherever it has got to instead of
-     snapping to an end state. */
-  revealDir = revealDir === 1 ? -1 : 1;
-  trigger.setAttribute('aria-pressed', String(revealDir === 1));
+/* The word is now a navigation control, not a toggle, so it carries no
+   aria-pressed — a scroll has no on/off state to announce.
 
-  /* Only re-anchor when starting from rest. Moving the origin while the
-     front is in flight would tear the wake off its centre. */
-  if(reveal === 0){
-    const r = trigger.getBoundingClientRect();
-    uniforms.uRevOrigin.value.set(
-      (r.left + r.width/2)/innerWidth,
-      1 - (r.top + r.height/2)/innerHeight
-    );
-  }
-  /* No travelling wave to watch under reduced motion, so land on the
-     target state directly rather than animating the front across. */
-  if(reduceMotion) reveal = revealDir === 1 ? 1 : 0;
+   The aurora-curtain reveal this used to fire is PARKED, not deleted: the
+   shader, its uniforms and the revealDir/reveal ramp in the render loop are
+   all still here and still driveable via ?reveal=0.35, because the
+   animation is being rebuilt as an interactive component in the lab. With
+   nothing setting revealDir to 1 any more, the curtain never plays on this
+   page — that is intended. Delete the shader only once the lab owns it. */
+trigger.addEventListener('click', () => {
   stopHint();
+  /* Uses the CSS html{scroll-behavior:smooth} rather than a hand-rolled
+     easing loop, so it matches the nav's Work/About/Contact links exactly
+     and is disabled automatically by the prefers-reduced-motion block that
+     already sets scroll-behavior:auto. */
+  document.getElementById('work').scrollIntoView();
 });
 
 /* The hint, on a 5s interval: the word has to advertise itself, but only
@@ -1584,21 +1585,20 @@ function frame(){
   }
   uniforms.uReveal.value = frozenReveal ? reveal : 1 - Math.pow(1 - reveal, 3);
 
-  /* headline: parallax up + fade in the second act */
+  /* headline: parallax up + fade as Selected work rides over it.
+     The fade is normalised to END AT p=1 rather than at a hardcoded upper
+     bound, so it can never again finish early and leave dead scroll behind
+     it. It starts at 0.2 rather than immediately because a headline that
+     begins dissolving on the first pixel of scroll reads as a glitch.
+     80px, not 150: the runway is one viewport now, and the content above
+     it travels a full 100vh in the same span — the hero only has to move
+     slower than that to register as parallax, and a larger offset just
+     races the thing it is supposed to be sitting behind. */
   const p = smoothScroll;
-  const fadeOut = Math.min(Math.max((p - 0.38) / 0.3, 0), 1);
-  hero.style.transform = `translateY(${ -p * 220 }px)`;
+  const FADE_FROM = 0.2;
+  const fadeOut = Math.min(Math.max((p - FADE_FROM) / (1 - FADE_FROM), 0), 1);
+  hero.style.transform = `translateY(${ -p * 80 }px)`;
   hero.style.opacity = 1 - fadeOut;
-
-  /* CTA: final act */
-  const ctaIn = Math.min(Math.max((p - 0.72) / 0.22, 0), 1);
-  cta.style.opacity = ctaIn;
-  cta.style.transform = `translateY(${ (1 - ctaIn) * 60 }px)`;
-
-  /* fade the fixed hero chrome once the sections take over */
-  const runwayEnd = document.getElementById('runway').offsetHeight - innerHeight;
-  const over = Math.min(Math.max((scrollY - runwayEnd + 60) / 220, 0), 1);
-  cta.style.pointerEvents = over > 0.5 ? 'none' : '';
 
   /* Skip the draw only when the canvas is off-screen. Skipping it while
      merely unrevealed would be wrong: the renderer is
