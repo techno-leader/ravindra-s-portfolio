@@ -216,6 +216,9 @@
   /* the separator is punctuation, not a word — stepped back a tone so it
      divides the two claims instead of competing with them */
   .hero-cred .dot{color:var(--ink-3);margin:0 .5em;}
+  /* Keeps the noun phrase whole so the line can only ever break at
+     "designing for |", never orphaning "marketing" on its own line. */
+  .hero-cred .nb{white-space:nowrap;}
   /* stepped at 1180/900/640 rather than clamp() — a clamp lands on off-scale sizes */
   h1{
     font-family:var(--sans);
@@ -716,6 +719,17 @@
     .about-grid{grid-template-columns:1fr;gap:40px;}
   }
   @media (max-width:640px){
+    /* The credential line cannot hold one line here: the first claim
+       measures 431px against 356px of available width at 400 and 276 at
+       320, so it wraps no matter what. Left to itself it broke mid-phrase
+       ("…for performance / marketing"). Promoting each claim to its own
+       line makes the separator redundant — the break now does its job — and
+       .nb keeps "performance marketing" whole above, so all three lines
+       land on meaning boundaries. Also stable: 3 lines at 400, 375 and 320
+       alike, where the inline version flips from 2 to 3 between 400 and
+       375. */
+    .hero-cred .claim{display:block;}
+    .hero-cred .dot{display:none;}
     h1{font-size:var(--t-sub-lg);}
     .sec-head h2{font-size:var(--t-sub-md);}
     .cap h2{font-size:var(--t-sub-md);}
@@ -1024,7 +1038,7 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
     <h1>Hi, I’m Ravindra.<br/>I make designs that <button type="button" class="convert" id="trigger"><span class="w" data-word="convert.">convert.</span><i class="cur" aria-hidden="true"><svg viewBox="0 0 12 16" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><g fill="var(--paper)"><rect x="4" y="1" width="1" height="14"/><rect x="6" y="3" width="1" height="12"/><rect x="8" y="4" width="1" height="11"/><rect x="10" y="5" width="1" height="10"/><rect x="1" y="6" width="2" height="2"/><rect x="3" y="7" width="1" height="5"/><rect x="5" y="7" width="1" height="8"/><rect x="7" y="7" width="1" height="8"/><rect x="9" y="7" width="1" height="8"/><rect x="2" y="8" width="1" height="2"/><rect x="0" y="9" width="1" height="7"/><rect x="1" y="11" width="1" height="5"/><rect x="2" y="13" width="1" height="3"/></g><g fill="currentColor"><rect x="3" y="0" width="3" height="1"/><rect x="3" y="1" width="1" height="6"/><rect x="5" y="1" width="1" height="6"/><rect x="6" y="2" width="2" height="1"/><rect x="7" y="3" width="3" height="1"/><rect x="7" y="4" width="1" height="3"/><rect x="9" y="4" width="3" height="1"/><rect x="0" y="5" width="3" height="1"/><rect x="9" y="5" width="1" height="2"/><rect x="11" y="5" width="1" height="11"/><rect x="0" y="6" width="1" height="3"/><rect x="1" y="8" width="1" height="3"/><rect x="2" y="10" width="1" height="3"/><rect x="3" y="12" width="1" height="4"/><rect x="4" y="15" width="7" height="1"/></g></svg></i></button></h1>
   </div>
   <div class="hero-cred">
-    <div class="wrap">2+ years exp. designing for performance marketing<span class="dot" aria-hidden="true">·</span>IIT Eng. Grad.</div>
+    <div class="wrap"><span class="claim">2+ years exp. designing for <span class="nb">performance marketing</span></span><span class="dot" aria-hidden="true">·</span><span class="claim">IIT Eng. Grad.</span></div>
   </div>
 </div>
 
@@ -1090,7 +1104,7 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
       </div>
       <div class="about-grid">
         <div class="rv">
-          <p>I am a curiosity-driven human — <strong>always learning,</strong> always expanding horizons. I grew up in the beautiful city of <strong>Udaipur,</strong> admiring and learning art. Then I did my engineering at <strong>IIT Guwahati,</strong> got introduced to design as a subject, and have been obsessed ever since. At Transformative Ventures I fine-tuned those skills on marketing and <strong>everything D2C ecommerce.</strong></p>
+          <p>I am a curiosity-driven human — <strong>always learning,</strong> always expanding horizons. I grew up in the beautiful city of <strong>Udaipur,</strong> admiring and learning art. Then I did my engineering at <strong>IIT Guwahati,</strong> got introduced to design as a subject, and have been obsessed ever since. At Transformative Ventures I fine-tuned those skills on marketing and <strong>everything D2C ecom.</strong></p>
           <p>I prototype in code, ship the real thing, then instrument it — because a design isn't finished when it looks right, it's finished when the numbers improve experience. My biggest win was when <strong>a customer mentioned she felt hungry</strong> looking at an ad I'd made. (Full story on a call :)</p>
           <p>On the side I keep experimenting, like the <a href="components.html">component lab</a>.</p>
         </div>
