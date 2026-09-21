@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IRBS — Case Study · Ravindra Pratap</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16.png">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -100,13 +103,35 @@
     background:linear-gradient(90deg,transparent 0%,var(--ink) 100%);
   }
 
+  /* Opaque, not a wash. The bar used to be a --paper gradient fading to
+     nothing, which only works while whatever passes under it is also white —
+     over a figure or a dark shot the copy showed through. It is now a real
+     surface closed with the same hairline every other divider on the page
+     uses, so content scrolls UNDER the header instead of bleeding through it.
+     padding is 12px, not the 8px this page used to carry: index.html has
+     always been 12 and an invisible 8px difference became a visible one the
+     moment the bar grew a background. One bar, one height, 68px. */
   nav{
     position:fixed;top:0;left:0;right:0;z-index:30;
     display:flex;justify-content:space-between;align-items:center;
-    padding:8px 44px;font-size:13px;
-    background:linear-gradient(color-mix(in srgb, var(--paper) 92%, transparent),transparent);
+    padding:12px 44px;font-size:13px;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    transform:translateY(0);
+    transition:transform .32s cubic-bezier(.22,1,.36,1);
   }
-  nav .logo{font-weight:600;text-decoration:none;color:var(--ink);}
+  /* Pinned for the first 5% of the document, then tucks on a downward scroll
+     and returns on an upward one — driven by the header IIFE at the foot of
+     the page. -100% takes the border with it, so nothing is left hanging at
+     the top edge. */
+  nav.is-tucked{transform:translateY(-100%);}
+  /* A tucked bar must never strand keyboard focus off-screen. */
+  nav:focus-within{transform:translateY(0);}
+  /* opacity:1 overrides `nav a`'s .65 — the logo is an <a> here (it links
+     home) but it is identity, not a nav item to be de-emphasised, and a
+     black silhouette at 65% just reads as a printing fault. */
+  nav .logo{font-weight:600;text-decoration:none;color:var(--ink);opacity:1;}
+  nav .logo img{display:block;height:28px;width:auto;}
   nav .links{display:flex;gap:26px;}
   /* 44px minimum touch target — the padding is on the link, not the bar */
   nav a{
@@ -260,14 +285,28 @@
   .case-nav small{display:block;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
   .case-nav b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
   .case-nav .next{text-align:right;}
+  /* The footer is now one thing: the lockup, signing the page off and
+     doubling as the way home. The three mono spans it replaced — copyright,
+     "Back to portfolio", and the project tag — are gone deliberately; the
+     back-link's job is absorbed by the lockup, and the other two were chrome.
+     (index.html is the exception and keeps a © on the right.) */
   footer{
-    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:var(--t-label);letter-spacing:.1em;color:var(--mut);
-    border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;text-transform:uppercase;
+    border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;
+    display:flex;align-items:center;
   }
-  /* 44px minimum touch target — the only link in the footer is still a way out */
-  footer a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;transition:color .3s;}
-  footer a:hover{color:var(--ink-2);}
+  /* 51px is not a round number. The name's cap height is 0.256 of the
+     lockup's own height and Onest's cap is 0.722 of its font-size, so
+     51 = --t-body 18px x 0.722 / 0.256 — the name reads at exactly the body
+     size, the site's floor for anything meant to be read. 28px (the nav
+     mark's height) would put it at 9.9px, under the 12px label floor.
+     44px min-height keeps the touch target legal even though the art is 51. */
+  footer .sig{
+    display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
+    opacity:1;transition:opacity .3s;
+  }
+  /* pure black artwork — it dims, it cannot recolour */
+  footer .sig:hover{opacity:.6;}
+  footer .sig img{display:block;height:51px;width:auto;}
 
   /* ---------------- motion ---------------- */
   .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
@@ -276,7 +315,10 @@
   .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}
   @media (prefers-reduced-motion:reduce){
     .rv{opacity:1;transform:none;filter:none;transition:none;}
-    .define-t,.case-nav a,nav a,footer a{transition:none;}
+    .define-t,.case-nav a,nav a,footer .sig{transition:none;}
+    /* The header still tucks — it is a layout response to scroll direction,
+       not decoration — but it does it in one frame instead of sliding. */
+    nav{transition:none;}
     #orb{animation:none;}
     html{scroll-behavior:auto;}
   }
@@ -310,7 +352,7 @@
 <div class="progress" id="progress"></div>
 
 <nav>
-  <a class="logo" href="index.html">Ravindra&nbsp;Pratap<span style="color:var(--ink-3)">.</span></a>
+  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap — home" width="202" height="280"></a>
   <div class="links">
     <a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
   </div>
@@ -470,9 +512,7 @@
       <a class="next" href="case-viewryt.html"><small>Next case <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></small><b>ViewRyt — design's ROI, proven</b></a>
     </div>
     <footer>
-      <span>© 2026 Ravindra Pratap</span>
-      <span><a href="index.html"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg> Back to portfolio</a></span>
-      <span>IRBS · OneStop · IIT Guwahati</span>
+      <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap — home" width="387" height="125"></a>
     </footer>
   </div>
 </main>
@@ -575,6 +615,52 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     if(e.key !== 'Escape') return;
     all().forEach(t => { close(t); t.focus(); });
   });
+})();
+
+/* ====================================================================
+   HEADER  —  pinned for the first 5%, then tucks away
+   Visible while the reader is still at the top of the document. Past the
+   5% mark it hides on a downward scroll and comes straight back on an
+   upward one, so the bar is never covering what you are reading but is
+   always one flick away.
+   ==================================================================== */
+(() => {
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+  const PIN = 0.05;     /* fraction of the document that stays pinned */
+  const DEADZONE = 6;   /* px — trackpad jitter must not flip the bar */
+  let last = window.scrollY;
+  let queued = false;
+
+  function apply(){
+    queued = false;
+    /* clamped: iOS rubber-banding reports negative scrollY at the top and a
+       past-the-end value at the bottom, both of which read as direction
+       changes and would flap the bar against the stop. */
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const y = Math.min(Math.max(window.scrollY, 0), Math.max(max, 0));
+    /* measured every frame rather than cached — these pages grow as images
+       decode, and a stale height puts the 5% mark in the wrong place */
+    const pin = document.documentElement.scrollHeight * PIN;
+    const delta = y - last;
+
+    if(y <= pin){
+      nav.classList.remove('is-tucked');
+      last = y;
+      return;
+    }
+    /* last only advances on a move we acted on, so a slow drag accumulates
+       to the threshold instead of being thrown away a frame at a time. */
+    if(Math.abs(delta) > DEADZONE){
+      nav.classList.toggle('is-tucked', delta > 0);
+      last = y;
+    }
+  }
+
+  addEventListener('scroll', () => {
+    if(!queued){ queued = true; requestAnimationFrame(apply); }
+  }, {passive:true});
+  apply();
 })();
 </script>
 </body>

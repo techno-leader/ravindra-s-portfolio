@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Components — one a day · Ravindra Pratap</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16.png">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -54,6 +57,51 @@
     letter-spacing:.16em;text-transform:uppercase;color:var(--mut);
   }
   .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
+
+  /* ---------- site chrome ----------
+     The lab had no header and no footer — it was reachable only from one line
+     of About prose and had no way back. Both are ported from the cluster, but
+     built out of THIS page's tokens (--ink #0d0d10, --line #e8e8ec, Inter),
+     not case-viewryt's: the lab is a deliberately separate monochrome system
+     and must not start importing the other one variable by variable. */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:30;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 44px;font-size:13px;letter-spacing:.02em;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    transform:translateY(0);
+    transition:transform .32s var(--ease-out);
+  }
+  /* Pinned for the first 5% of the document, then tucks on a downward scroll
+     and returns on an upward one — see the header IIFE at the foot of the
+     page. -100% takes the border with it. */
+  nav.is-tucked{transform:translateY(-100%);}
+  /* A tucked bar must never strand keyboard focus off-screen. */
+  nav:focus-within{transform:translateY(0);}
+  nav .logo{font-weight:600;text-decoration:none;color:var(--ink);opacity:1;}
+  nav .logo img{display:block;height:28px;width:auto;}
+  nav .links{display:flex;gap:26px;}
+  /* 44px minimum touch target — the padding is on the link, not the bar */
+  nav a{
+    color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
+    display:inline-flex;align-items:center;min-height:44px;
+  }
+  nav a:hover{opacity:1;}
+
+  /* 51px: the name's cap is 0.256 of the lockup's height, so 51px sets it to
+     --t-body 18px. Measured against Onest on the cluster pages; Inter's cap
+     ratio (0.727) is close enough that the same height holds here. */
+  footer{
+    border-top:1px solid var(--line);padding:26px 0 40px;
+    display:flex;align-items:center;
+  }
+  footer .sig{
+    display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
+    opacity:1;transition:opacity .3s;
+  }
+  footer .sig:hover{opacity:.6;}
+  footer .sig img{display:block;height:51px;width:auto;}
 
   /* ---------- page shell ---------- */
   header.top{padding:132px 0 64px;}
@@ -487,6 +535,10 @@
   @media (max-width:900px){
     :root{--t-head:40px;--t-sub:20px;--t-body:17px;}
     .wrap{padding:0 24px;}
+    /* The bar's gutter has to track .wrap's, or the mark stops sharing a left
+       edge with the content under it. 24px here, not the cluster's 22px,
+       because this page's own .wrap is 24. */
+    nav{padding:12px 24px;}
     header.top{padding:96px 0 48px;}
     /* stacked rows put flex on the block axis, where flex-basis:0 would win
        over aspect-ratio and collapse every tile to zero height. */
@@ -494,6 +546,13 @@
     [data-stage="gallery"] .gal-row .tile{flex:none;width:100%;}
     .lb-view{width:calc(100vw - 32px);}
     .lb-bar{bottom:16px;}
+  }
+
+  /* The cluster pages drop the bar to 53px below 640 (4px padding on a 44px
+     target). Matching that here keeps one header height across the whole
+     site on a phone; only the gutter differs, because this page's does. */
+  @media (max-width:640px){
+    nav{padding:4px 24px;}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -510,6 +569,13 @@
 </style>
 </head>
 <body>
+
+<nav>
+  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap — home" width="202" height="280"></a>
+  <div class="links">
+    <a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
+  </div>
+</nav>
 
 <div class="wrap">
   <header class="top">
@@ -665,6 +731,10 @@
       </div>
     </div>
   </section>
+
+  <footer>
+    <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap — home" width="387" height="125"></a>
+  </footer>
 
 </div>
 
@@ -1439,6 +1509,52 @@
   });
 
   sync();
+})();
+
+/* ====================================================================
+   HEADER  —  pinned for the first 5%, then tucks away
+   Visible while the reader is still at the top of the document. Past the
+   5% mark it hides on a downward scroll and comes straight back on an
+   upward one, so the bar is never covering what you are reading but is
+   always one flick away.
+   ==================================================================== */
+(function () {
+  var nav = document.querySelector('nav');
+  if(!nav) return;
+  var PIN = 0.05;     /* fraction of the document that stays pinned */
+  var DEADZONE = 6;   /* px — trackpad jitter must not flip the bar */
+  var last = window.scrollY;
+  var queued = false;
+
+  function apply(){
+    queued = false;
+    /* clamped: iOS rubber-banding reports negative scrollY at the top and a
+       past-the-end value at the bottom, both of which read as direction
+       changes and would flap the bar against the stop. */
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var y = Math.min(Math.max(window.scrollY, 0), Math.max(max, 0));
+    /* measured every frame rather than cached — these pages grow as images
+       decode, and a stale height puts the 5% mark in the wrong place */
+    var pin = document.documentElement.scrollHeight * PIN;
+    var delta = y - last;
+
+    if(y <= pin){
+      nav.classList.remove('is-tucked');
+      last = y;
+      return;
+    }
+    /* last only advances on a move we acted on, so a slow drag accumulates
+       to the threshold instead of being thrown away a frame at a time. */
+    if(Math.abs(delta) > DEADZONE){
+      nav.classList.toggle('is-tucked', delta > 0);
+      last = y;
+    }
+  }
+
+  addEventListener('scroll', function () {
+    if (!queued) { queued = true; requestAnimationFrame(apply); }
+  }, { passive: true });
+  apply();
 })();
 </script>
 </body>
