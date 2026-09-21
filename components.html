@@ -89,9 +89,10 @@
   }
   nav a:hover{opacity:1;}
 
-  /* 51px: the name's cap is 0.256 of the lockup's height, so 51px sets it to
-     --t-body 18px. Measured against Onest on the cluster pages; Inter's cap
-     ratio (0.727) is close enough that the same height holds here. */
+  /* 32px, matching the cluster pages. Set by eye, not by the scale: the name's
+     cap is 0.256 of the lockup's height, so this renders it at 8.2px — under
+     the 12px floor, on purpose, so the lockup reads as one mark rather than as
+     a line of type. */
   footer{
     border-top:1px solid var(--line);padding:26px 0 40px;
     display:flex;align-items:center;
@@ -101,7 +102,7 @@
     opacity:1;transition:opacity .3s;
   }
   footer .sig:hover{opacity:.6;}
-  footer .sig img{display:block;height:51px;width:auto;}
+  footer .sig img{display:block;height:32px;width:auto;}
 
   /* ---------- page shell ---------- */
   header.top{padding:132px 0 64px;}

@@ -294,19 +294,21 @@
     border-top:1px solid var(--line);margin-top:44px;padding:26px 0 30px;
     display:flex;align-items:center;
   }
-  /* 51px is not a round number. The name's cap height is 0.256 of the
-     lockup's own height and Onest's cap is 0.722 of its font-size, so
-     51 = --t-body 18px x 0.722 / 0.256 — the name reads at exactly the body
-     size, the site's floor for anything meant to be read. 28px (the nav
-     mark's height) would put it at 9.9px, under the 12px label floor.
-     44px min-height keeps the touch target legal even though the art is 51. */
+  /* 32px, chosen by eye against the rendered page, not derived from the type
+     scale — and it deliberately sits below it. The name's cap height is 0.256
+     of the lockup's own height, so 32 renders the cap at 8.2px, equivalent to
+     roughly 11px of type: just under the 12px --t-label floor. That is the
+     point. At the 51px the scale argues for, the name reads as a line of copy
+     competing with the page; at 32 the whole thing reads as one mark, which is
+     what a sign-off is. 44px min-height still keeps the touch target legal
+     even though the artwork is only 32 tall. */
   footer .sig{
     display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
     opacity:1;transition:opacity .3s;
   }
   /* pure black artwork — it dims, it cannot recolour */
   footer .sig:hover{opacity:.6;}
-  footer .sig img{display:block;height:51px;width:auto;}
+  footer .sig img{display:block;height:32px;width:auto;}
 
   /* ---------------- motion ---------------- */
   .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
