@@ -85,7 +85,7 @@
     --mono:ui-monospace,"SF Mono",Menlo,monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth;scroll-snap-type:y proximity;}
   body{
     background:var(--paper);color:var(--ink);
     font-family:var(--sans);
@@ -164,7 +164,7 @@
   h1 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink-2);letter-spacing:-.01em;}
   .lede{margin-top:30px;font-size:var(--t-sub);line-height:1.55;color:var(--mut);max-width:48ch;}
   .facts{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:26px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
     border-top:1px solid var(--line);margin-top:64px;padding-top:26px;
   }
   .facts small{display:block;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
@@ -243,6 +243,20 @@
   .step div b{display:block;font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
   .step div p{font-size:var(--t-body);line-height:1.6;margin:0;}
 
+  /* interview verbatims — a lighter register than .pull, since several run in sequence */
+  .quotes{margin:26px 0;}
+  .quote{padding:20px 0;border-top:1px solid var(--line);}
+  .quote p{font-family:var(--sans);font-style:italic;color:var(--ink);font-size:var(--t-body);line-height:1.6;margin:0 0 10px;max-width:56ch;}
+  .quote i{font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--mut);text-transform:uppercase;}
+
+  /* information-architecture tree — proves "lives inside OneStop" without a screenshot */
+  .ia-tree{border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;background:var(--surface);}
+  .ia-path{display:flex;align-items:center;flex-wrap:wrap;gap:0;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;margin-bottom:22px;}
+  .ia-path span:not(:last-child)::after{content:"/";margin:0 10px;color:var(--line);}
+  .ia-path span:last-child{color:var(--ink);font-weight:600;}
+  .ia-branches{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-top:18px;border-top:1px solid var(--line);}
+  .ia-leaf{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 10px;background:var(--paper);font-size:var(--t-body);color:var(--ink-body);text-align:center;}
+
   /* ---------------- figures ---------------- */
   /* flat panel fill — the dot grid and gradient were decoration competing with the artwork */
   figure{
@@ -310,6 +324,51 @@
   footer .sig:hover{opacity:.6;}
   footer .sig img{display:block;height:32px;width:auto;}
 
+  /* ---------------- evidence reel ---------------- */
+  /* one pinned frame, the hi-fi screens running through it as a single specimen
+     reel — ported from case-viewryt.html. Screens here are dark UI, so .shot
+     takes the ink-inv/mut-inv pair instead of ViewRyt's paper surface. */
+  .evidence{display:block;margin-top:44px;}
+  .ev-scrolly{position:relative;height:200vh;}
+  .snap-stop{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;}
+  .ev-stage{
+    position:sticky;top:0;height:100vh;
+    display:grid;grid-template-columns:minmax(250px,330px) auto;grid-template-rows:auto;
+    justify-content:center;align-content:center;align-items:center;
+    max-width:1180px;margin:0 auto;padding:56px 44px 0;
+  }
+  .ev-caps{grid-column:1;grid-row:1;align-self:start;justify-self:stretch;display:grid;padding-right:44px;}
+  .ev-cap{grid-area:1/1;display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:8px;opacity:0;transition:opacity .5s ease;}
+  .ev-cap.on{opacity:1;}
+  .ev-cap i{font-style:normal;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--ink-3);text-transform:uppercase;}
+  .ev-cap b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub-lg);line-height:1.14;letter-spacing:-.025em;}
+  .ev-shots{grid-column:2;grid-row:1;display:flex;justify-content:center;height:min(76vh,880px);}
+  .ev-gut{grid-column:1;grid-row:1;position:relative;align-self:stretch;height:100%;}
+  .shot{position:relative;margin:0;padding:0;height:100%;aspect-ratio:9/19.5;
+    border-width:2px;border-style:solid;border-radius:var(--r-device);box-shadow:none;}
+  .shot.dark{border-color:var(--ink-inv);background:var(--ink-inv);}
+  .ev-screen{position:absolute;inset:0;border-radius:calc(var(--r-device) - 2px);overflow:hidden;}
+  .shot.dark .ev-screen{background:var(--ink-inv);}
+  /* the feed runs left → right: a row of full-screen slides, one per specimen */
+  .ev-feed{position:absolute;left:0;top:0;height:100%;display:flex;flex-direction:row;will-change:transform;}
+  .ev-slide{flex:0 0 auto;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;gap:14px;overflow:hidden;}
+  .ev-slide img{display:block;width:100%;height:auto;flex:0 0 auto;}
+  .wire{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 18px;overflow:hidden;}
+  .wire i{display:block;flex:0 0 auto;height:10px;border-radius:var(--r-pill);}
+  .shot.dark .wire i{background:color-mix(in srgb, var(--mut-inv) 26%, var(--ink-inv));}
+  .shot .pbar{position:absolute;right:-16px;top:14%;bottom:14%;width:3px;border-radius:var(--r-pill);overflow:hidden;}
+  .shot.dark .pbar{background:color-mix(in srgb, var(--mut-inv) 22%, var(--ink-inv));}
+  .shot .pbar i{position:absolute;left:0;top:0;width:100%;height:0;border-radius:var(--r-pill);}
+  .shot.dark .pbar i{background:var(--mut-inv);}
+  .co{position:absolute;top:0;left:0;right:44px;margin-left:auto;width:auto;max-width:100%;text-align:right;opacity:0;will-change:transform,opacity;}
+  .co span{display:block;font-size:var(--t-body);line-height:1.55;color:var(--mut);}
+  @media (max-width:1180px){
+    .ev-stage{grid-template-columns:minmax(200px,265px) auto;padding:56px 24px 0;}
+    .ev-shots{height:min(76vh,820px);}
+    .co{right:26px;}
+    .ev-caps{padding-right:26px;}
+  }
+
   /* ---------------- motion ---------------- */
   .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
       transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
@@ -322,7 +381,9 @@
        not decoration — but it does it in one frame instead of sliding. */
     nav{transition:none;}
     #orb{animation:none;}
-    html{scroll-behavior:auto;}
+    .co,.ev-cap{transition:none;}
+    html{scroll-behavior:auto;scroll-snap-type:none;}
+    .snap-stop{scroll-snap-align:none;}
   }
 
   @media (max-width:900px){
@@ -336,6 +397,22 @@
     .impact{grid-template-columns:1fr;gap:28px;}
     .impact > div + div{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:28px;}
     #orb{opacity:.4;}
+    .ia-branches{grid-template-columns:repeat(2,1fr);}
+    /* reel stacks: caption above frame, one callout at a time below it */
+    .ev-scrolly{height:180vh;}
+    .ev-stage{grid-template-columns:1fr;grid-template-rows:auto auto auto;align-items:start;justify-content:stretch;padding:100px 22px 0;}
+    .ev-caps{grid-column:1;grid-row:1;justify-self:stretch;align-self:auto;padding-right:0;margin-bottom:16px;}
+    .ev-cap{flex-direction:row;align-items:baseline;text-align:left;gap:12px;}
+    .ev-cap b{font-size:var(--t-sub);}
+    .ev-shots{grid-column:1;grid-row:2;height:52vh;}
+    .shot .pbar{right:-10px;}
+    .ev-gut{display:contents;}
+    .co{
+      position:relative;top:auto;left:auto;right:auto;margin-left:0;max-width:none;text-align:left;
+      grid-column:1;grid-row:3;display:none;opacity:1;transform:none !important;
+      padding-left:18px;border-left:1px solid var(--line);margin-top:18px;
+    }
+    .co.on{display:block;}
   }
   @media (max-width:640px){
     h1{font-size:var(--t-sub-lg);}
@@ -345,7 +422,9 @@
     header{padding:140px 0 60px}
     .facts{grid-template-columns:1fr;gap:20px;}
     .cards, .cards.four{grid-template-columns:1fr;}
-    figure{padding:20px;}
+    /* a figure holding two specimens side by side stacks, like .fig-grid above.
+       Single-image figures are unaffected, and .shot's child is absolute. */
+    figure{padding:20px;flex-direction:column;}
     .case-nav{grid-template-columns:1fr;}
   }
 </style>
@@ -368,7 +447,6 @@
     <div class="facts rv rv-d2">
       <div><small>Role</small><b>Design Lead — Students' Web Committee</b></div>
       <div><small>Team</small><b>1 designer · 3 developers</b></div>
-      <div><small>Timeline</small><b>2022 → April 2023</b></div>
       <div><small>Status</small><b>Live since Sept 2023</b></div>
     </div>
   </div>
@@ -384,7 +462,7 @@
           <h2>Campus students don't get proper rooms for meetings &amp; practice sessions.</h2>
         </div>
         <div class="rv rv-d1">
-          <p><span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-sac">NEW SAC<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-sac" role="tooltip" hidden>The New Students' Activity Centre at IIT Guwahati — the building that houses the club rooms, common rooms and board rooms that campus extracurriculars run out of.</span></span> is the beating heart of extracurriculars at IITG — music, dance, coding, quizzing, robotics. But reserving its club rooms, common rooms and board rooms ran on a legacy web portal almost nobody could find, let alone use.</p>
+          <p><span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-sac">NEW SAC<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-sac" role="tooltip" hidden>The New Students' Activity Centre at IIT Guwahati — the building that houses the club rooms, common rooms and board rooms that campus extracurriculars run out of.</span></span> is the beating heart of extracurriculars at IITG — music, dance, coding, art, robotics. But reserving its club rooms, common rooms and board rooms ran on a legacy web portal almost nobody could find, let alone use.</p>
           <p><strong>No time restrictions, confusing UI, and near-zero admin control</strong> meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.</p>
           <div class="pull">"The conference hall was booked for a whole week — without permission."
             <span class="mono">Incident that kicked off the redesign</span>
@@ -416,6 +494,28 @@
     </div>
   </section>
 
+  <!-- ROOT CAUSE -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">Root Cause</div>
+      <div class="cols">
+        <div class="rv">
+          <h2>One workaround explains <em>most of what broke.</em></h2>
+          <p>Every symptom students reported — hoarded rooms, empty common rooms, clubs practising outdoors — traced back to a single administrative shortcut, not a UI problem.</p>
+        </div>
+        <div class="rv rv-d1">
+          <div class="steps">
+            <div class="step"><div><b>No notifications</b><p>The legacy portal never told a secretary or the VP that a request existed — it just sat, unopened.</p></div></div>
+            <div class="step"><div><b>Calls and mails to the VP</b><p>With nothing to ping them, students chased permission directly — enough volume that it crowded out academics.</p></div></div>
+            <div class="step"><div><b>Every permission set to auto-approve</b><p>The only way to stop the calls and mails was to remove the approval step for everyone, by default.</p></div></div>
+            <div class="step"><div><b>First to apply keeps the room</b><p>With no gate left, submission order — not actual need — decided who got the keys.</p></div></div>
+            <div class="step"><div><b>Priority use loses every time</b><p>Common rooms sat booked-and-empty for weeks, some clubs rehearsed outdoors, and inter-college tech competitions suffered for it.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- RESEARCH -->
   <section>
     <div class="wrap">
@@ -423,7 +523,7 @@
       <div class="cols">
         <div class="rv">
           <h2>Eleven interviews, <em>three findings.</em></h2>
-          <p>I interviewed <strong>2 vice presidents, 4 club secretaries and 5 general students</strong> about how they actually got rooms — their current practices, their experience with the old portal, and the workarounds they'd invented.</p>
+          <p>I interviewed <strong>the VP, an ex-VP, 3 club secretaries and a spread of general students</strong> about how they actually got rooms — their current practices, their experience with the old portal, and the workarounds they'd invented.</p>
         </div>
         <div class="rv rv-d1">
           <div class="cards" style="grid-template-columns:1fr;">
@@ -433,6 +533,19 @@
           </div>
         </div>
       </div>
+      <div class="quotes rv">
+        <div class="quote"><p>"I didn't even know there was an IRBS portal; we usually just use WhatsApp groups."</p><i>Student</i></div>
+        <div class="quote"><p>"Attending calls and mails all day is really a hectic task, it has become hard to concentrate on academics."</p><i>Vice President</i></div>
+        <div class="quote"><p>"When the handling of room bookings becomes too difficult and busy I give charge to any of the General secretaries who have more events."</p><i>Vice President</i></div>
+        <div class="quote"><p>"There's no system in place to notify us if a room suddenly becomes available."</p><i>Club Secretary</i></div>
+        <div class="quote"><p>"Sometimes, I go all the way to the room only to find out it's already occupied."</p><i>Student</i></div>
+        <div class="quote"><p>"I've missed important study sessions because I couldn't find a free room in time."</p><i>Student</i></div>
+      </div>
+      <figure class="rv">
+        <img class="ph" src="assets/irbs/whatsapp-1.webp" alt="The Gymkhana WhatsApp group: a secretary is told to look for a room in another board, and replies that most tech clubs are short of space ahead of Inter IIT Tech Meet" />
+        <img class="ph" src="assets/irbs/whatsapp-2.webp" alt="The same group two months later: a secretary asks whether the yoga room is free from nine to twelve, and is answered by another secretary guessing that Alcher is using it" />
+        <figcaption>The group the portal lost to — secretaries brokering rooms by hand</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -451,20 +564,69 @@
           </div>
         </div>
         <div class="rv rv-d1">
-          <figure class="dark" style="margin-top:0;">
-            <img class="ph" src="assets/irbs/app-home.png" alt="IRBS home — requests, pinned rooms, common rooms" />
-            <figcaption>Secretary view — requests &amp; pinned rooms</figcaption>
-          </figure>
+          <div class="ia-tree" style="margin-top:0;">
+            <div class="ia-path">
+              <span>OneStop</span><span>Home</span><span>Services</span><span>IRBS</span>
+            </div>
+            <div class="ia-branches">
+              <div class="ia-leaf">Requests</div>
+              <div class="ia-leaf">Room list</div>
+              <div class="ia-leaf">Calendar</div>
+              <div class="ia-leaf">Booking history</div>
+              <div class="ia-leaf">Pinned rooms</div>
+              <div class="ia-leaf">Permissions</div>
+              <div class="ia-leaf">Notifications</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="cards rv">
         <div class="card"><i>For approvers</i><b>Accept / reject with a reason</b><p>Secretaries get notified on every request and must state a reason to reject — killing the silent-limbo problem.</p></div>
         <div class="card"><i>For frequent users</i><b>Default permissions</b><p>Trusted users earn automated acceptance; hierarchy handles high-demand fest periods.</p></div>
       </div>
+      <p class="rv">Living inside OneStop means inheriting its system rather than authoring one. Nothing here was chosen — the palette, the typeface, the 8px scale and the 24×24 icon size all arrived with the host app, and text contrast holds WCAG AAA on every background already in use.</p>
       <figure class="dark rv">
-        <img class="flat" src="assets/irbs/phones-duo.png" alt="Room calendar and home screen" style="max-height:560px;width:auto;" />
-        <figcaption>Room detail with slot calendar · home</figcaption>
+        <img src="assets/irbs/onestop-system.webp" alt="OneStop's design system: seven palette swatches from #001B3E through #FFFFFF, a Montserrat specimen in Regular, Medium and SemiBold, and a spacing spec showing an 80px avatar beside a 24px icon" />
+        <figcaption>Inherited whole — OneStop's palette, typeface and 8px scale</figcaption>
       </figure>
+
+      <!-- no .rv here, as in case-viewryt.html: the reveal's translateY(36px)
+           sits on an ancestor of the .snap-stop targets, so it would drag every
+           snap point 36px while it plays and the reel would settle off-centre. -->
+      <div class="evidence">
+        <div class="ev-scrolly">
+          <div class="ev-stage">
+            <div class="ev-gut">
+              <div class="co" data-shot="0"><span>Requests, pinned rooms and common rooms live on one screen — nothing needs a second app open beside it.</span></div>
+              <div class="co" data-shot="1"><span>A real calendar, not a blind request — students see every existing booking before choosing a slot.</span></div>
+              <div class="co" data-shot="2"><span>Status is colour-coded — pending, approved, rejected — so a secretary never has to open a request to know where it stands.</span></div>
+              <div class="co" data-shot="3"><span>Pinned rooms surface first; the rest are grouped by the same room types laid out in Context.</span></div>
+              <div class="co" data-shot="4"><span>Every field a secretary needs to decide fast — name, designation, date, time, purpose — travels with the request.</span></div>
+            </div>
+            <div class="ev-shots">
+              <figure class="shot dark">
+                <div class="ev-screen">
+                  <div class="ev-feed">
+                    <img data-fault="0" src="assets/irbs/ev-01-home.jpg" alt="IRBS home — requests, pinned rooms and common rooms">
+                    <img data-fault="1" src="assets/irbs/ev-02-calendar.jpg" alt="Yoga Room slot calendar showing an existing booking">
+                    <img data-fault="2" src="assets/irbs/ev-03-history.jpg" alt="Booking history — colour-coded pending, approved and rejected requests">
+                    <img data-fault="3" src="assets/irbs/ev-04-roomlist.jpg" alt="Room list grouped by pinned, common and club rooms">
+                    <img data-fault="4" src="assets/irbs/ev-05-request.jpg" alt="Booking request form for the Yoga Room">
+                  </div>
+                </div>
+                <div class="pbar"><i></i></div>
+              </figure>
+            </div>
+            <div class="ev-caps">
+              <div class="ev-cap"><i>Screen 01</i><b>Home</b></div>
+              <div class="ev-cap"><i>Screen 02</i><b>Slot calendar</b></div>
+              <div class="ev-cap"><i>Screen 03</i><b>Booking history</b></div>
+              <div class="ev-cap"><i>Screen 04</i><b>Room list</b></div>
+              <div class="ev-cap"><i>Screen 05</i><b>Request form</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -477,17 +639,19 @@
           <h2>Wireframes, walkthroughs, <em>and a humbling beta.</em></h2>
         </div>
         <div class="rv rv-d1">
-          <p>We tested multiple layouts with <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-cw">cognitive walkthroughs<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-cw" role="tooltip" hidden>A usability method where evaluators step through a task exactly as a first-time user would, asking at each step whether the next action is obvious and whether its result is understood.</span></span> before writing code. The beta then did what betas do: it corrected us. We <strong>removed empty booking sections</strong> that confused first-timers, <strong>deferred calendar drag-select</strong> that felt clever but tested poorly, and <strong>fixed navigation behaviour</strong> that trapped users mid-flow.</p>
+          <p>We tested multiple layouts with <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-cw">cognitive walkthroughs<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-cw" role="tooltip" hidden>A usability method where evaluators step through a task exactly as a first-time user would, asking at each step whether the next action is obvious and whether its result is understood.</span></span> before writing code — split testing layouts against each other and watching where participants actually hesitated.</p>
         </div>
       </div>
-      <div class="fig-grid rv">
-        <figure class="dark"><img class="flat" src="assets/irbs/wireframes-1.png" alt="Low-fidelity wireframes" /><figcaption>Low-fi explorations</figcaption></figure>
-        <figure class="dark"><img class="flat" src="assets/irbs/wireframes-2.png" alt="Wireframe iterations" /><figcaption>Layout iterations</figcaption></figure>
+      <div class="cards rv rv-d1">
+        <div class="card"><i>Finding 01</i><b>Icons earned their place</b><p>Layouts pairing text with icons outperformed text-only ones — participants scanned them faster.</p></div>
+        <div class="card"><i>Finding 02</i><b>The carousel went unnoticed</b><p>Participants couldn't tell a horizontal carousel was scrollable, and never interacted with it.</p></div>
+        <div class="card"><i>Finding 03</i><b>One filled button, not two</b><p>A filled primary against an outlined secondary beat two filled buttons, which caused hesitation and mis-taps.</p></div>
+        <div class="card"><i>Finding 04</i><b>Colour did the sorting</b><p>Colour-coding request status let participants read it at a glance, without opening anything.</p></div>
       </div>
-      <figure class="dark rv">
-        <img class="flat" src="assets/irbs/phones-flow.png" alt="Final flow — home, booking history, room list, request form" />
-        <figcaption>The shipped flow — home · history · rooms · request</figcaption>
-      </figure>
+      <div class="fig-grid rv">
+        <figure class="dark"><img src="assets/irbs/wireframe-a.webp" alt="Wireframe of the layout that put cards and filter chips in horizontal carousels" /><figcaption>Layout A — horizontal carousels</figcaption></figure>
+        <figure class="dark"><img src="assets/irbs/wireframe-b.webp" alt="Wireframe of the layout that laid every card out in a visible grid" /><figcaption>Layout B — everything in view</figcaption></figure>
+      </div>
     </div>
   </section>
 
@@ -573,6 +737,167 @@ const io = new IntersectionObserver((entries) => {
   });
 }, {threshold: 0.15, rootMargin: '0px 0px -6% 0px'});
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* evidence reel: one pinned frame runs the whole strip of specimens.
+   Every specimen owns a full screen, so no screen gets more weight than another.
+   Callouts are anchored to the specimen they explain and ride up with it; the
+   heading swaps to whichever specimen fills the frame. Ported from
+   case-viewryt.html, with the feed turned sideways: the specimens travel on X,
+   so the callout column rides a synthetic vertical track driven by the same p. */
+function evidenceReel(sc){
+  const screen = sc.querySelector('.ev-screen');
+  const feed   = sc.querySelector('.ev-feed');
+  const bar    = sc.querySelector('.pbar i');
+  const gut    = sc.querySelector('.ev-gut');
+  const clamp01 = v => Math.min(Math.max(v, 0), 1);
+
+  /* give every specimen its own screen, and pad the leftover space with a few
+     quiet bars so a short image never sits in a blank frame */
+  const imgs = [...feed.querySelectorAll('img')];
+  const WIRE = [[.45,1,.78],[1,.82,.6],[.9,.68,.95],[.5,.88,.7]];  /* bar widths */
+  imgs.forEach((img, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'ev-slide';
+    slide.dataset.fault = img.dataset.fault;
+    feed.insertBefore(slide, img);
+    const wire = at => {
+      const w = document.createElement('div');
+      w.className = 'wire';
+      WIRE[(i + at) % WIRE.length].forEach(width => {
+        const b = document.createElement('i');
+        b.style.width = (width * 100) + '%';
+        w.append(b);
+      });
+      return w;
+    };
+    slide.append(wire(0), img, wire(1));
+  });
+
+  const shots  = [...feed.children];
+  const cos    = [...sc.querySelectorAll('.co')];
+  const capsBox = sc.querySelector('.ev-caps');
+  const caps   = [...sc.querySelectorAll('.ev-cap')];
+  /* one snap stop per specimen now that each owns a screen */
+  const marks = shots.map((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'snap-stop';
+    d.dataset.shot = i;
+    sc.insertBefore(d, sc.firstChild);
+    return d;
+  });
+  let m = null, ticking = false;
+
+  function measure(){
+    const screenW = screen.clientWidth, screenH = screen.clientHeight;
+    if(!screenW || !shots[0].offsetWidth) return false;
+    /* each slide is exactly one screen wide, so the row is n screens long */
+    const travel = feed.scrollWidth - screenW;
+    if(travel <= 0) return false;
+    const span = sc.offsetHeight - innerHeight;
+    const n = shots.length;
+    m = {
+      screenW, screenH, travel, span, n,
+      lefts: shots.map(s => s.offsetLeft),
+      ws:    shots.map(s => s.offsetWidth),
+      /* a line can cover a run of specimens: [first, last] */
+      range: cos.map(c => [+c.dataset.shot, +(c.dataset.thru ?? c.dataset.shot)]),
+      /* the images no longer move on Y, so the callout column gets a synthetic
+         vertical track instead: callout i is centred at p = i/(n-1) */
+      vtravel: (n - 1) * screenH,
+      vmids:  shots.map((_, i) => screenH / 2 + i * screenH)
+    };
+    /* park a snap point where each specimen is best framed */
+    marks.forEach(mk => {
+      const i = +mk.dataset.shot;
+      const p = (m.lefts[i] + m.ws[i] / 2 - screenW / 2) / travel;
+      mk.style.top = clamp01(p) * span + 'px';
+    });
+    return true;
+  }
+
+  function update(){
+    ticking = false;
+    if(!m && !measure()) return;
+    const p = Math.min(Math.max(-sc.getBoundingClientRect().top / (m.span || 1), 0), 1);
+    const shift = p * m.travel;
+
+    feed.style.transform = 'translateX(' + -shift + 'px)';
+    bar.style.height = (p * 100) + '%';
+
+    /* how much of shot i is inside the frame right now, 0..1 */
+    const cover = i => {
+      const left = m.lefts[i] - shift, right = left + m.ws[i];
+      const vis = Math.min(right, m.screenW) - Math.max(left, 0);
+      return Math.max(0, vis) / Math.min(m.ws[i], m.screenW);
+    };
+
+    /* heading follows whichever shot fills the frame most */
+    let near = 0, best = -1;
+    m.lefts.forEach((_, i) => { const c = cover(i); if(c > best){ best = c; near = i; } });
+    const fault = +shots[near].dataset.fault;
+    caps.forEach((c, i) => c.classList.toggle('on', i === fault));
+
+    /* a line shared by several specimens tracks the one currently filling the
+       frame, weighted by coverage, so it holds steady while the images change */
+    const anchorOf = ([a, b]) => {
+      let num = 0, den = 0;
+      for(let s = a; s <= b; s++){
+        const wgt = Math.max(cover(s), 0.001);
+        num += wgt * m.vmids[s];
+        den += wgt;
+      }
+      return num / den;
+    };
+    /* summed, not maxed — across a seam the two specimens each half-fill the
+       frame, and the line they share should not dip as it passes */
+    const covOf = ([a, b]) => { let t = 0; for(let s = a; s <= b; s++) t += cover(s); return Math.min(t, 1); };
+
+    /* stacked layout shows one callout at a time: whichever range sits nearest the playhead */
+    if(innerWidth <= 900){
+      let act = 0, bd = Infinity;
+      m.range.forEach((r, i) => {
+        const a = (r[0] + r[1]) / 2 / Math.max(m.n - 1, 1);
+        const d = Math.abs(a - p);
+        if(d < bd){ bd = d; act = i; }
+      });
+      cos.forEach((c, i) => { c.style.opacity = ''; c.classList.toggle('on', i === act); });
+      return;
+    }
+
+    /* keep the callout track clear of the heading parked at the top of the column */
+    const off = screen.getBoundingClientRect().top - gut.getBoundingClientRect().top;
+    const floor = capsBox.offsetHeight + 26;
+    const vshift = p * m.vtravel;
+    const placed = [];
+    cos.forEach((c, i) => {
+      c.classList.remove('on');
+      const half = c.offsetHeight / 2;
+      const y = Math.min(Math.max(anchorOf(m.range[i]) - vshift, floor + half), m.screenH - half - 8);
+      /* a callout is full strength while its specimens hold the frame, and fades as they leave */
+      const o = clamp01((covOf(m.range[i]) - 0.3) / 0.45);
+      c.style.opacity = o;
+      if(o > 0.02) placed.push({c, y, half});
+      else c.style.transform = 'translateY(' + (off + y - half) + 'px)';
+    });
+    /* two callouts can be on screen together during a handoff and both hit the
+       same clamp — nudge them apart so they never stack */
+    placed.sort((a, b) => a.y - b.y);
+    for(let i = 1; i < placed.length; i++){
+      const need = placed[i-1].y + placed[i-1].half + 18 + placed[i].half;
+      if(placed[i].y < need) placed[i].y = need;
+    }
+    placed.forEach(q => { q.c.style.transform = 'translateY(' + (off + q.y - q.half) + 'px)'; });
+  }
+
+  function remeasure(){ m = null; update(); }
+
+  addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  addEventListener('resize', remeasure);
+  addEventListener('load', remeasure);
+  imgs.forEach(s => s.complete || s.addEventListener('load', remeasure, {once:true}));
+  update();
+}
+document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
 
 /* ---- click-to-define glossary ----
    Escape to close. Click rather than hover so it works on touch too. */
