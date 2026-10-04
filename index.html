@@ -586,6 +586,113 @@
   }
   .fx-wrap canvas{display:block;width:100%;height:100%;}
 
+  /* ---- special project: text over a full-width video ---- */
+  /* One column instead of the case's two, so the film gets the whole wrap.
+     No case link — there is no case study behind it; the film is the page. */
+  .case.wide{grid-template-columns:1fr;gap:40px;}
+
+  /* The shell is .fx-wrap's: same radius, hairline and paper, so it reads as
+     the fourth thumbnail in the set. Rests at 3:1 and morphs to the film's
+     16:9 on play. Poster and video are both full 16:9 frames under
+     object-fit:cover, and the width never changes — so cover's scale stays
+     fixed and the morph only *uncovers* the top and bottom of the frame,
+     it never zooms. The height is tweened through --vid-h (set from JS);
+     aspect-ratio itself does not interpolate reliably. */
+  .vid{
+    position:relative;width:100%;aspect-ratio:3/1;border-radius:var(--r-lg);overflow:hidden;
+    background:var(--paper);border:1px solid var(--line-2);
+  }
+  .vid.open{aspect-ratio:16/9;}
+  .vid.morph{aspect-ratio:auto;height:var(--vid-h);transition:height .8s cubic-bezier(.22,1,.36,1);}
+  .vid video,.vid-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+  /* the video is transparent until its first frame, so paper shows through
+     the morph instead of a black slab; it fades up once frames arrive */
+  .vid video{opacity:0;transition:opacity .5s ease;}
+  .vid.playing-once video{opacity:1;}
+  /* The thumbnail is a particle field, same engine as the three cases. The
+     colour poster stays underneath only as the no-WebGL fallback. */
+  .vid.fx-live .vid-poster{display:none;}
+  .vid-poster{transition:opacity .5s ease;}
+  .vid.playing-once .vid-poster{opacity:0;pointer-events:none;}
+  /* Pinned at the resting 3:1 and centred, so while the box grows to 16:9
+     around it the field disperses at its own size rather than stretching. */
+  .vid canvas.fx{
+    position:absolute;left:0;top:50%;width:100%;aspect-ratio:3/1;transform:translateY(-50%);
+    display:block;transition:opacity .7s ease .15s;
+  }
+  .vid.open canvas.fx{opacity:0;pointer-events:none;}
+  .vid:fullscreen{border:0;border-radius:0;background:var(--ink);}
+  .vid:fullscreen video{object-fit:contain;}
+
+  /* resting state: the whole thumbnail is the play target */
+  .vid-start{
+    position:absolute;inset:0;z-index:2;display:grid;place-items:center;
+    background:none;border:0;padding:0;cursor:pointer;color:var(--paper);
+  }
+  .vid.open .vid-start{display:none;}
+  .vid-start .ring{
+    position:relative;display:grid;place-items:center;width:88px;height:88px;
+    border-radius:var(--r-pill);background:var(--ink);
+    transition:transform .45s cubic-bezier(.22,1,.36,1),background .25s ease;
+  }
+  /* Optical centre. Phosphor's triangle spans x 64-240 of 256, so its box
+     already sits 24 units right of centre; its centroid sits 5 units left.
+     Halfway between the two is where a triangle reads as centred, which is
+     15 units (.06em) back from where the glyph draws itself. */
+  .vid-start .ring .icon{font-size:var(--t-sub);transform:translateX(-.06em);}
+  /* Solid ink on the paper field — the site's one button form, as on the
+     case links. The pulse: two ink halos breathing out of it, half a beat
+     apart. */
+  .vid-start .ring::before,.vid-start .ring::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;
+    border:1.5px solid var(--ink);opacity:0;
+    animation:vid-pulse 2.6s cubic-bezier(.22,1,.36,1) infinite;
+  }
+  .vid-start .ring::after{animation-delay:1.3s;}
+  @keyframes vid-pulse{
+    0%{transform:scale(1);opacity:.7;}
+    100%{transform:scale(1.7);opacity:0;}
+  }
+  .vid-start:hover .ring{transform:scale(1.05);background:var(--ink-hover);}
+  .vid-start:focus-visible{outline:2px solid var(--ink);outline-offset:-6px;border-radius:var(--r-lg);}
+
+  /* playing state: one solid ink pill, the Explore Case Study shape */
+  .vid-bar{
+    position:absolute;z-index:2;left:50%;bottom:20px;transform:translateX(-50%);
+    display:flex;gap:2px;padding:4px;border-radius:var(--r-pill);background:var(--ink);
+    opacity:0;pointer-events:none;transition:opacity .35s ease;
+  }
+  .vid.open .vid-bar{opacity:1;pointer-events:auto;}
+  .vid.open.idle .vid-bar{opacity:0;pointer-events:none;}
+  .vid.open.idle{cursor:none;}
+  /* twice the 44px target wide: at 44 square the three sat shoulder to
+     shoulder and the pill read cramped */
+  .vid-btn{
+    display:grid;place-items:center;width:88px;height:44px;min-height:44px;
+    border:0;border-radius:var(--r-pill);background:none;color:var(--paper);cursor:pointer;
+    font-size:var(--t-sub);transition:background .25s ease;
+  }
+  .vid-btn:hover{background:var(--ink-hover);}
+  .vid-btn:focus-visible{outline:2px solid var(--paper);outline-offset:-4px;}
+  /* each button holds both glyphs; the state class picks one */
+  .vid-btn .alt{display:none;}
+  .vid.is-paused .vid-play .main,.vid.is-muted .vid-mute .main,.vid.is-fs .vid-fs .main{display:none;}
+  .vid.is-paused .vid-play .alt,.vid.is-muted .vid-mute .alt,.vid.is-fs .vid-fs .alt{display:block;}
+  /* progress: the scroll bar's comet, inverted to paper for a dark surface */
+  .vid-prog{
+    position:absolute;z-index:1;left:0;bottom:0;height:3px;width:calc(var(--vp,0)*100%);
+    background:linear-gradient(90deg,transparent 0%,var(--paper) 100%);
+    opacity:0;transition:opacity .35s ease;pointer-events:none;
+  }
+  .vid.open .vid-prog{opacity:1;}
+  /* Its own reduce block, not the shared one above: that one comes earlier
+     in the file, so these rules would simply win it back. The film still
+     opens to 16:9, in one frame; the halos do not breathe. */
+  @media (prefers-reduced-motion:reduce){
+    .vid.morph,.vid video,.vid-poster,.vid canvas.fx,.vid-start .ring,.vid-bar,.vid-btn,.vid-prog{transition:none;}
+    .vid-start .ring::before,.vid-start .ring::after{animation:none;}
+  }
+
   /* ---- about ---- */
   /* no border-top: the .sec-head rules already draw a hairline through the
      heading, and a second one 24px below read as a doubled rule */
@@ -786,6 +893,11 @@
     .cap h2{font-size:var(--t-sub-md);}
     .cap .now{font-size:var(--t-sub);}
     .case h3{font-size:var(--t-sub);}
+    /* 3:1 at phone width is a 110px letterbox — the button would fill it.
+       2:1 keeps the ring of ads readable around a smaller button. */
+    .vid,.vid canvas.fx{aspect-ratio:2/1;}
+    .vid-start .ring{width:64px;height:64px;}
+    .vid-bar{bottom:12px;}
     nav{padding:4px 22px}
     .wrap{padding:0 22px}
     section{padding:80px 0 20px}
@@ -1141,6 +1253,41 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
         <div class="case-visual rv rv-vis rv-d1">
           <div class="fx-wrap">
             <canvas class="fx" data-fx="rooms"></canvas>
+          </div>
+        </div>
+      </article>
+
+      <!-- TAE Ad Studio — special project, film instead of a case study -->
+      <article class="case wide" id="ad-studio">
+        <div class="case-info rv">
+          <h3>TAE Ad Studio — from one brief to every market</h3>
+          <p>An app concept I <strong>ideated and built</strong> that grew into an agentic content engine. It reads performance data and makes on-brand ads that convert. The app helps conceptualize, makes variants, translates for different geographies and learns from every round of feedback.</p>
+        </div>
+        <div class="case-visual rv rv-vis rv-d1">
+          <div class="vid is-paused">
+            <img class="vid-poster" src="assets/ad-studio/poster.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+            <canvas class="fx" data-fx="ads"></canvas>
+            <video playsinline preload="none" aria-label="TAE Ad Studio product film, one minute">
+              <source src="assets/ad-studio/tae-ad-studio.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="vid-start" aria-label="Play the TAE Ad Studio film, one minute">
+              <span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/></svg></span>
+            </button>
+            <div class="vid-bar">
+              <button type="button" class="vid-btn vid-play" aria-label="Pause">
+                <svg class="icon main" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,48V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V48a16,16,0,0,1,16-16h40A16,16,0,0,1,216,48ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Z"/></svg>
+                <svg class="icon alt" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/></svg>
+              </button>
+              <button type="button" class="vid-btn vid-mute" aria-label="Mute">
+                <svg class="icon main" viewBox="0 0 256 256" aria-hidden="true"><path d="M160,32.25V223.69a8.29,8.29,0,0,1-3.91,7.18,8,8,0,0,1-9-.56l-65.57-51A4,4,0,0,1,80,176.16V79.84a4,4,0,0,1,1.55-3.15l65.57-51a8,8,0,0,1,10,.16A8.27,8.27,0,0,1,160,32.25ZM60,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H60a4,4,0,0,0,4-4V84A4,4,0,0,0,60,80Zm126.77,20.84a8,8,0,0,0-.72,11.3,24,24,0,0,1,0,31.72,8,8,0,1,0,12,10.58,40,40,0,0,0,0-52.88A8,8,0,0,0,186.74,100.84Zm40.89-26.17a8,8,0,1,0-11.92,10.66,64,64,0,0,1,0,85.34,8,8,0,1,0,11.92,10.66,80,80,0,0,0,0-106.66Z"/></svg>
+                <svg class="icon alt" viewBox="0 0 256 256" aria-hidden="true"><path d="M213.92,210.62a8,8,0,1,1-11.84,10.76L160,175.09v48.6a8.29,8.29,0,0,1-3.91,7.18,8,8,0,0,1-9-.56l-65.55-51A4,4,0,0,1,80,176.18V87.09L42.08,45.38A8,8,0,1,1,53.92,34.62Zm-27.21-55.46a8,8,0,0,0,11.29-.7,40,40,0,0,0,0-52.88,8,8,0,1,0-12,10.57,24,24,0,0,1,0,31.72A8,8,0,0,0,186.71,155.16Zm40.92-80.49a8,8,0,1,0-11.92,10.66,64,64,0,0,1,0,85.34,8,8,0,1,0,11.92,10.66,80,80,0,0,0,0-106.66ZM153,119.87a4,4,0,0,0,7-2.7V32.25a8.27,8.27,0,0,0-2.88-6.4,8,8,0,0,0-10-.16L103.83,59.33a4,4,0,0,0-.5,5.85ZM60,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H60a4,4,0,0,0,4-4V84A4,4,0,0,0,60,80Z"/></svg>
+              </button>
+              <button type="button" class="vid-btn vid-fs" aria-label="Enter full screen">
+                <svg class="icon main" viewBox="0 0 256 256" aria-hidden="true"><path d="M93.66,202.34A8,8,0,0,1,88,216H48a8,8,0,0,1-8-8V168a8,8,0,0,1,13.66-5.66ZM88,40H48a8,8,0,0,0-8,8V88a8,8,0,0,0,13.66,5.66l40-40A8,8,0,0,0,88,40ZM211.06,160.61a8,8,0,0,0-8.72,1.73l-40,40A8,8,0,0,0,168,216h40a8,8,0,0,0,8-8V168A8,8,0,0,0,211.06,160.61ZM208,40H168a8,8,0,0,0-5.66,13.66l40,40A8,8,0,0,0,216,88V48A8,8,0,0,0,208,40Z"/></svg>
+                <svg class="icon alt" viewBox="0 0 256 256" aria-hidden="true"><path d="M152,96V48a8,8,0,0,1,13.66-5.66l48,48A8,8,0,0,1,208,104H160A8,8,0,0,1,152,96ZM96,152H48a8,8,0,0,0-5.66,13.66l48,48A8,8,0,0,0,104,208V160A8,8,0,0,0,96,152ZM99.06,40.61a8,8,0,0,0-8.72,1.73l-48,48A8,8,0,0,0,48,104H96a8,8,0,0,0,8-8V48A8,8,0,0,0,99.06,40.61ZM208,152H160a8,8,0,0,0-8,8v48a8,8,0,0,0,13.66,5.66l48-48A8,8,0,0,0,208,152Z"/></svg>
+              </button>
+            </div>
+            <span class="vid-prog" aria-hidden="true"></span>
           </div>
         </div>
       </article>
@@ -1711,6 +1858,100 @@ const io = new IntersectionObserver((entries) => {
 }, {threshold: 0.18, rootMargin: '0px 0px -8% 0px'});
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
+/* TAE Ad Studio film. The 3:1 thumbnail morphs to the film's 16:9 in place:
+   pin the current height in --vid-h, flip to .morph, then move --vid-h to the
+   16:9 height so the height transition carries it. On transitionend the pin
+   comes off and .open's aspect-ratio holds it, so it stays fluid on resize.
+   preload="none" — 14 MB is fetched on the click, not on page load. */
+(function(){
+  const box = document.querySelector('.vid');
+  if(!box) return;
+  const video = box.querySelector('video');
+  const start = box.querySelector('.vid-start');
+  const btnPlay = box.querySelector('.vid-play');
+  const btnMute = box.querySelector('.vid-mute');
+  const btnFs = box.querySelector('.vid-fs');
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let idleT;
+
+  const sync = () => {
+    box.classList.toggle('is-paused', video.paused);
+    box.classList.toggle('is-muted', video.muted);
+    btnPlay.setAttribute('aria-label', video.paused ? 'Play' : 'Pause');
+    btnMute.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
+  };
+  const play = () => video.play().catch(err => {
+    // a browser that refuses sound even on a click still gets the film.
+    // Only that refusal — a pause() landing before play() settles rejects
+    // with AbortError, and retrying that would un-pause the visitor.
+    if(err.name !== 'NotAllowedError') return;
+    video.muted = true; sync(); return video.play().catch(() => {});
+  });
+
+  // controls step aside after 2s of stillness while playing; any move, tap
+  // or focus brings them back, and they never hide on a paused frame
+  const wake = () => {
+    box.classList.remove('idle');
+    clearTimeout(idleT);
+    if(!video.paused) idleT = setTimeout(() => {
+      if(!box.querySelector(':focus-visible')) box.classList.add('idle');   // keyboard users keep them
+    }, 2000);
+  };
+
+  const open = () => {
+    const from = box.offsetHeight;
+    const to = box.offsetWidth * 9 / 16;
+    box.classList.add('open');
+    if(!reduce){
+      box.style.setProperty('--vid-h', from + 'px');
+      box.classList.add('morph');
+      box.offsetHeight;                       // commit the pinned height first
+      box.style.setProperty('--vid-h', to + 'px');
+      box.addEventListener('transitionend', function done(e){
+        if(e.target !== box || e.propertyName !== 'height') return;
+        box.removeEventListener('transitionend', done);
+        box.classList.remove('morph');
+        box.style.removeProperty('--vid-h');
+      });
+    }
+    // bring the grown frame fully into view if it would hang off the screen
+    const r = box.getBoundingClientRect();
+    if(r.top + to > innerHeight - 24){
+      scrollBy({top: r.top - Math.max(80, (innerHeight - to) / 2), behavior: reduce ? 'auto' : 'smooth'});
+    }
+    play();
+    btnPlay.focus({preventScroll:true});
+  };
+
+  start.addEventListener('click', open);
+  btnPlay.addEventListener('click', () => video.paused ? play() : video.pause());
+  btnMute.addEventListener('click', () => { video.muted = !video.muted; });
+  video.addEventListener('click', () => video.paused ? play() : video.pause());
+
+  btnFs.addEventListener('click', () => {
+    if(document.fullscreenElement) return document.exitFullscreen();
+    if(box.requestFullscreen) return box.requestFullscreen().catch(() => {});
+    if(video.webkitEnterFullscreen) video.webkitEnterFullscreen();  // iOS Safari: video only
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const fs = document.fullscreenElement === box;
+    box.classList.toggle('is-fs', fs);
+    btnFs.setAttribute('aria-label', fs ? 'Exit full screen' : 'Enter full screen');
+  });
+
+  video.addEventListener('playing', () => { box.classList.add('playing-once'); });
+  ['play','pause','volumechange','ended'].forEach(ev => video.addEventListener(ev, () => { sync(); wake(); }));
+  video.addEventListener('timeupdate', () => {
+    if(video.duration) box.style.setProperty('--vp', video.currentTime / video.duration);
+  });
+  ['pointermove','pointerdown','focusin'].forEach(ev => box.addEventListener(ev, wake));
+
+  // scrolled out of sight mid-film: stop it rather than play to nobody
+  new IntersectionObserver(en => {
+    if(!en[0].isIntersecting && !video.paused && !document.fullscreenElement) video.pause();
+  }, {threshold: 0.25}).observe(box);
+})();
+
 /* inline glossary: click the term to open its definition, click away or hit
    Escape to close. Click rather than hover so it works on touch too. */
 (function(){
@@ -1810,7 +2051,10 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     huePath: 'spectrum +', gradSrc: 'by ink',
     hoverColMix: 0.56, hoverColR: 0.53, hoverAlpha: 0.6,
     hoverMode: 'attract', hoverR: 0.59, hoverS: 0.01,
-    parallax: 1, ease: 0.35,
+    /* Cursor follow, in seconds per stage (see the loop). Was a flat
+       ease:0.35 per frame — a 39ms time constant, so the field tracked
+       every twitch of the mouse and leapt back to centre on leave. */
+    parallax: 1, ptrTau: 0.16, hovTau: 0.22,
     blinkAmt: 1, blinkSpeed: 0.4, blinkPow: 15,
     roomHeight: 1.9, camY: 2.3, camR: 2.9,
     lightWrap: 0.58, lightGamma: 0.64,
@@ -2075,6 +2319,27 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         gl_FragColor=vec4(dith(lum,hit),hit>.5?lum:1.);  /* alpha = UNDITHERED lum, for particle shading */
       }`;
 
+  /* The fourth source is not an SDF: it is a still of the TAE Ad Studio film
+     (0:51, the ring of ads) with the green backdrop cut away to paper and
+     the ads graded to ink, prepared offline into ring.webp. The bake maps it
+     onto a canvas-shaped target with object-fit:cover maths, then sways it a
+     degree or two about the centre — the film's own ring turns, and this is
+     that motion, small enough that the cover crop never shows an edge. */
+  const ADS = `
+      uniform sampler2D uImg;
+      uniform float uZoom,uAsp,uReady;
+      void main(){
+        vec2 uv=gl_FragCoord.xy/r;
+        vec2 p=(uv-.5)*vec2(uAsp,1.);           /* units of bake height */
+        p=rot(.026*sin(t*.5))*p/uZoom;
+        float srcA=16./9., k=max(uAsp/srcA,1.); /* cover: source height, in bake heights */
+        vec2 q=p/vec2(srcA*k,k)+.5;
+        float lum=texture2D(uImg,q).r;
+        if(uReady<.5||q.x<0.||q.x>1.||q.y<0.||q.y>1.) lum=1.;
+        float hit=1.-step(.97,lum);
+        gl_FragColor=vec4(dith(lum,hit),hit>.5?lum:1.);
+      }`;
+
   /* Per-source framing. The originals render into wide case-card canvases,
      where uv.x spans further than uv.y; a square bake would crop them, so
      each gets its own zoom. `lid` marks the one source the eyelid blink
@@ -2089,7 +2354,10 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
   const SRC = {
     eye:   {frag:EYE,   zoom:1.35, ofs:[0, -0.230], period:Math.PI/0.4},
     tooth: {frag:TOOTH, zoom:1.44, ofs:[0, -0.201], period:2*Math.PI/0.6},
-    rooms: {frag:ROOMS, zoom:1.98, ofs:[0, -0.269], period:2*Math.PI/0.5}
+    rooms: {frag:ROOMS, zoom:1.98, ofs:[0, -0.269], period:2*Math.PI/0.5},
+    /* `img` marks an image source; its lattice and bake take the canvas's
+       own aspect instead of the square the SDF cards share */
+    ads:   {frag:ADS,   zoom:1.04, ofs:[0, 0], period:4*Math.PI, img:'assets/ad-studio/ring.webp'}
   };
 
   const OKLCH = `
@@ -2335,29 +2603,37 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
      identical, only the bake each samples differs. A regular grid
      would beat against the ordered dither into moire, so every
      sample is jittered inside its own cell. */
-  const G = Math.max(16, P.grid|0), N = G*G;
-  const aPos  = new Float32Array(N*3), aTgt = new Float32Array(N*3);
-  const aUv   = new Float32Array(N*2), aSeed = new Float32Array(N);
-  for(let i=0, gy=0; gy<G; gy++){
-    for(let gx=0; gx<G; gx++, i++){
-      const u = (gx+Math.random())/G, v = (gy+Math.random())/G;
-      aUv[i*2] = u; aUv[i*2+1] = v;
-      aTgt[i*3] = (u-.5)*SPAN; aTgt[i*3+1] = (v-.5)*SPAN; aTgt[i*3+2] = 0;
-      aSeed[i] = Math.random();
-      /* scatter start stored as a unit ball, scaled by uScatter */
-      const a = Math.random()*2-1, th = Math.random()*Math.PI*2;
-      const rr = Math.cbrt(Math.random()), sq = Math.sqrt(1-a*a);
-      aPos[i*3] = rr*sq*Math.cos(th);
-      aPos[i*3+1] = rr*sq*Math.sin(th);
-      aPos[i*3+2] = rr*a*0.7;
+  const G = Math.max(16, P.grid|0);
+  /* A is width/height. The SDF cards share one square (A=1) lattice; the
+     image source builds its own at the canvas aspect, at the same density
+     per world unit, so its particles are the same size and spacing. */
+  function lattice(A){
+    const GX = Math.round(G*A), N = GX*G;
+    const aPos  = new Float32Array(N*3), aTgt = new Float32Array(N*3);
+    const aUv   = new Float32Array(N*2), aSeed = new Float32Array(N);
+    for(let i=0, gy=0; gy<G; gy++){
+      for(let gx=0; gx<GX; gx++, i++){
+        const u = (gx+Math.random())/GX, v = (gy+Math.random())/G;
+        aUv[i*2] = u; aUv[i*2+1] = v;
+        aTgt[i*3] = (u-.5)*SPAN*A; aTgt[i*3+1] = (v-.5)*SPAN; aTgt[i*3+2] = 0;
+        aSeed[i] = Math.random();
+        /* scatter start stored as a unit ball, scaled by uScatter */
+        const a = Math.random()*2-1, th = Math.random()*Math.PI*2;
+        const rr = Math.cbrt(Math.random()), sq = Math.sqrt(1-a*a);
+        aPos[i*3] = rr*sq*Math.cos(th)*A;
+        aPos[i*3+1] = rr*sq*Math.sin(th);
+        aPos[i*3+2] = rr*a*0.7;
+      }
     }
+    return {aPos, aTgt, aUv, aSeed};
   }
-  function makeGeo(){
+  const SQUARE = lattice(1);
+  function makeGeo(L){
     const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(aPos, 3));
-    g.setAttribute('aTarget',  new THREE.BufferAttribute(aTgt, 3));
-    g.setAttribute('aUV',      new THREE.BufferAttribute(aUv, 2));
-    g.setAttribute('aSeed',    new THREE.BufferAttribute(aSeed, 1));
+    g.setAttribute('position', new THREE.BufferAttribute(L.aPos, 3));
+    g.setAttribute('aTarget',  new THREE.BufferAttribute(L.aTgt, 3));
+    g.setAttribute('aUV',      new THREE.BufferAttribute(L.aUv, 2));
+    g.setAttribute('aSeed',    new THREE.BufferAttribute(L.aSeed, 1));
     return g;
   }
 
@@ -2395,7 +2671,10 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     rd.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     rd.setClearColor(new THREE.Color(P.bg), 1);
 
-    const rt = new THREE.WebGLRenderTarget(SIZE, SIZE);
+    const src = SRC[key];
+    const aspectOf = () => src.img ? (cv.clientWidth||900)/(cv.clientHeight||300) : 1;
+    let A = aspectOf();
+    const rt = new THREE.WebGLRenderTarget(Math.round(SIZE*A), SIZE);
     /* nearest, and no mipmaps: the dither must stay crisp, and a
        particle samples a single pixel rather than an average */
     rt.texture.minFilter = rt.texture.magFilter = THREE.NearestFilter;
@@ -2416,7 +2695,8 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         uAO:{value:P.lightAO},
         uCamY:{value:P.camY}, uCamR:{value:P.camR},
         uFaceAmt:{value:P.faceAmt}, uFaceX:{value:P.faceX},
-        uFaceZ:{value:P.faceZ}
+        uFaceZ:{value:P.faceZ},
+        uImg:{value:null}, uAsp:{value:A}, uReady:{value:0}
       },
       vertexShader:'void main(){gl_Position=vec4(position,1.0);}',
       fragmentShader:HEAD+SRC[key].frag
@@ -2460,21 +2740,47 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
     const scene = new THREE.Scene();
     const cam = new THREE.PerspectiveCamera(FOV, 4/3, .1, 100);
-    scene.add(new THREE.Points(makeGeo(), mat));
+    const pts = new THREE.Points(makeGeo(src.img ? lattice(A) : SQUARE), mat);
+    scene.add(pts);
 
-    const o = {key, rd, rt, bakeMat, bakeScene, bakeCam, mat, scene, cam,
+    /* The image source is not drawable until its texture lands — before
+       that it samples black, which would flash a solid ink slab. It also
+       answers to the film player: once .vid opens, the field disperses
+       and the loop lets it go. */
+    const box = src.img ? cv.closest('.vid') : null;
+    if(box) box.classList.add('fx-live');
+    if(src.img){
+      new THREE.TextureLoader().load(src.img, tex => {
+        bakeMat.uniforms.uImg.value = tex;
+        bakeMat.uniforms.uReady.value = 1;
+        o.ready = true;
+        if(reduce && o.on && !o.drawn){ o.drawn = true; draw(o, P.formEnd); }
+      });
+    }
+
+    const o = {key, rd, rt, bakeMat, bakeScene, bakeCam, mat, scene, cam, box,
+               ready:!src.img, exit:0,
                on:false, drawn:false, phase:'form', tAnim:0, tCycle:0,
-               halfW:1, halfH:1, ptr:new THREE.Vector2(),
+               halfW:1, halfH:1, ptr:new THREE.Vector2(), ptrMid:new THREE.Vector2(), hovMid:0,
                /* `over` is the raw hover state, `hov` its eased 0..1 form */
                over:false, hov:0};
 
     function size(){
       const w = cv.clientWidth||600, h = cv.clientHeight||450;
       rd.setSize(w, h, false);
+      /* the image lattice follows the canvas across the 3:1 / 2:1 step */
+      if(src.img && Math.abs(aspectOf() - A) > .01){
+        A = aspectOf();
+        pts.geometry.dispose(); pts.geometry = makeGeo(lattice(A));
+        rt.setSize(Math.round(SIZE*A), SIZE);
+        bakeMat.uniforms.uAsp.value = A;
+      }
       const aspect = w/h;
       cam.aspect = aspect;
       /* frame the baked square in whichever dimension is tighter */
-      const need = SPAN*0.54;
+      /* the SDF cards float with a margin; the image field is a crop and
+         runs edge to edge */
+      const need = SPAN*(src.img ? 0.5 : 0.54);
       cam.position.z = Math.max(need/halfTan, need/(halfTan*aspect));
       cam.updateProjectionMatrix();
       const db = new THREE.Vector2(); rd.getDrawingBufferSize(db);
@@ -2506,7 +2812,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
       o.on = en[0].isIntersecting;
       /* reduced motion never starts the loop, so draw the one settled
          frame here instead, the first time the card is on screen */
-      if(reduce && o.on && !o.drawn){ o.drawn = true; draw(o, P.formEnd); }
+      if(reduce && o.on && o.ready && !o.drawn){ o.drawn = true; draw(o, P.formEnd); }
     }, {threshold:.05}).observe(cv);
 
     inst.push(o);
@@ -2521,6 +2827,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     /* Bake first, then draw the points: the particles must sample the
        current frame of the illustration, not the previous one. */
     o.bakeMat.uniforms.t.value = o.tAnim;
+    o.bakeMat.uniforms.r.value.set(o.rt.width, o.rt.height);
     o.rd.setRenderTarget(o.rt);
     o.rd.render(o.bakeScene, o.bakeCam);
     o.rd.setRenderTarget(null);
@@ -2535,22 +2842,35 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
       /* frame-rate independent easing — a flat per-frame factor stalls
          badly on slow hardware, where the field barely moves */
       const dt = Math.min((now-last)/1000, 0.1); last = now;
-      const k = 1 - Math.pow(1-P.ease, dt*60);
+      /* Two exponential stages in series = a critically damped follow:
+         it starts and stops at zero velocity, so entering, crossing and
+         leaving a card all ease instead of jumping. Per stage, so the
+         felt settle time is about 2.5x tau. */
+      const kp = 1 - Math.exp(-dt/P.ptrTau);
+      const kh = 1 - Math.exp(-dt/P.hovTau);
       inst.forEach(o => {
-        if(!o.on) return;
+        if(!o.on || !o.ready || o.exit >= 1) return;
         o.tAnim  += dt*P.timeSpeed;
         o.tCycle += dt*P.timeSpeed;
         /* the drive is a normalised 0..1 sweep; start/end decide what it
            spans. start above 0 means the field never fully scatters. */
-        const form = P.formStart + (P.formEnd-P.formStart)*cycle(o, o.tCycle);
+        let form = P.formStart + (P.formEnd-P.formStart)*cycle(o, o.tCycle);
+        /* the film opened: scatter fully over ~0.9s while CSS fades the
+           canvas, then stop drawing it for good */
+        if(o.box && o.box.classList.contains('open')){
+          o.exit = Math.min(1, o.exit + dt/0.9);
+          form *= 1 - o.exit;
+        }
         const u = o.mat.uniforms;
-        u.uPointer.value.lerp(o.ptr, k);
+        o.ptrMid.lerp(o.ptr, kp);
+        u.uPointer.value.lerp(o.ptrMid, kp);
         /* Gate every cursor-driven effect on actually being over the card.
            uPointer rests at (0,0), which is the CENTRE of the field, so an
            ungated hover term sits at full strength there forever — that is
            what painted a permanent rainbow blob in the middle of all three
            illustrations. Resting state has to be the monochrome base. */
-        o.hov += ((o.over ? 1 : 0) - o.hov)*k;
+        o.hovMid += ((o.over ? 1 : 0) - o.hovMid)*kh;
+        o.hov    += (o.hovMid - o.hov)*kh;
         u.uHoverColMix.value = P.hoverColMix*o.hov;
         u.uHoverAlpha.value  = P.hoverAlpha*o.hov;
         u.uHoverS.value      = P.hoverS*o.hov;
