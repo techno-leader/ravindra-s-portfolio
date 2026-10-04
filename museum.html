@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Museum — Ravindra</title>
+<title>Museum - Ravindra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
     --line:#eceaf6;
     --paper:#ffffff;
 
-    /* museum runs inverted — dark room, lit drawings */
+    /* museum runs inverted - dark room, lit drawings */
     --room:#0f0e15;
     --room-2:#17161f;
     --chalk:#f4f2ff;
@@ -214,8 +214,8 @@
       gl_Position = projectionMatrix * mv;
     }`;
   /* uKey remaps each drawing's own ink range onto 0..1. The scans are not
-     consistent — the gate's linework sits at ink 0.23 while the medallions'
-     paper fill sits at 0.30 — so one global threshold would either erase the
+     consistent - the gate's linework sits at ink 0.23 while the medallions'
+     paper fill sits at 0.30 - so one global threshold would either erase the
      gate or keep the fill. Per-drawing keying does both jobs at once: it
      drops paper to fully transparent and lifts linework to full chalk. */
   const FRAG = `
@@ -232,7 +232,7 @@
       gl_FragColor = vec4(uTint, a);
     }`;
 
-  /* The canopy is a filled shape, not line work — it must occlude what is
+  /* The canopy is a filled shape, not line work - it must occlude what is
      behind it. Its fill is near-white, which the ink flip above would erase,
      so it gets its own opaque material keyed off alpha alone. */
   const SOLID_FRAG = `
@@ -310,7 +310,7 @@
 
   function inGroup(m){ scene.remove(m); canopyGroup.add(m); return m; }
 
-  // filled canopy first, as an opaque surface — this is what stops the
+  // filled canopy first, as an opaque surface - this is what stops the
   // palace showing straight through the parasol
   inGroup(solid('assets/museum/umbrella/canopy.png', U, U, 0, 0, -1.10, 0x2a2440));
   inGroup(plane('assets/museum/umbrella/stripes.png', U, U, 0, 0, -0.55,
@@ -334,7 +334,7 @@
           const y = (0.5 - it.cy) * U;
           // deterministic spread so reloads look identical
           const z = 0.35 + (Math.sin(i * 12.9898) * 0.5 + 0.5) * 1.15;
-          // these carry an opaque paper fill at ink .30 — keyed out above it
+          // these carry an opaque paper fill at ink .30 - keyed out above it
           inGroup(plane('assets/museum/umbrella/med/' + it.f, w, h, x, y, z,
                         {opacity:0.95, tint:0xffffff, key:[0.50, 0.80]}));
         });
@@ -402,8 +402,8 @@
     const z = Z_START + (Z_END - Z_START) * smooth;
 
     /* Drift and pointer-look are only allowed in open space. Approaching a
-       plane they fall to zero, so the camera is dead on axis — and therefore
-       dead centre in the opening — at the moment it passes through. */
+       plane they fall to zero, so the camera is dead on axis - and therefore
+       dead centre in the opening - at the moment it passes through. */
     let gap = Infinity;
     for(let i = 0; i < STATIONS.length; i++){
       gap = Math.min(gap, Math.abs(z - STATIONS[i]));

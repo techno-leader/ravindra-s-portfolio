@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ravindra — Designs that convert</title>
+<title>Ravindra - Designs that convert</title>
 <!-- PNG, not the .webp the nav uses: Safari does not accept a WebP favicon,
      and iOS composites any transparency in apple-touch-icon to solid BLACK.
      Both icons are therefore flattened onto --paper, which also keeps a pure
@@ -29,7 +29,7 @@
         url(https://cdn.jsdelivr.net/fontsource/fonts/redaction-35@latest/latin-400-italic.woff) format("woff");
   }
   :root{
-    /* Monochrome ramp. Every step is a true neutral — colour on this site is
+    /* Monochrome ramp. Every step is a true neutral - colour on this site is
        spent only where it carries meaning: the aurora hero, the pointer
        gradient on the case illustrations, selection, and the hero word's
        glitch. Lightness is inherited from the
@@ -38,7 +38,7 @@
     --ink:#161616;    /* primary text            18.1:1 */
     /* Hover fill for anything already filled with --ink. One grade, measured:
        L* 7.2 -> 12.7, a +5.5 step. Filled buttons used to hover to --ink-3,
-       which is L* 46.4 — a +39.2 jump that made the button go pale exactly
+       which is L* 46.4 - a +39.2 jump that made the button go pale exactly
        when it was being touched, i.e. weaker under the cursor rather than
        stronger. A token rather than three literals so the pill, the closing
        CTA and the contact primary cannot drift apart. */
@@ -54,7 +54,7 @@
        surface. */
     --tint:#939393;
     /* Selection is the third place colour is allowed. Not picked by eye and
-       not read off the GLSL constants either — the aurora's CA/CB/CC stops
+       not read off the GLSL constants either - the aurora's CA/CB/CC stops
        are green/cyan/magenta, but the field as it actually renders is a mint
        at hue 180 (sampled: 535,647 coloured pixels, mean #b0fded). This is
        that mean pushed to oklch(0.95 0.07 180), the lightest in-gamut point
@@ -64,7 +64,7 @@
 
     /* The fourth and last: the glitch on the hero word, which runs for 680ms
        and leaves nothing behind. These are the shader's own stops, hue for
-       hue — CA 150, CB 205, CC 318 — and only L and C have moved. The shader
+       hue - CA 150, CB 205, CC 318 - and only L and C have moved. The shader
        declares all three at L .88, where the cyan and the magenta are outside
        sRGB: a render of the revealed hero is 80.9% chromatic but covers only
        hues 135-210, so the magenta is mixed into every frame and has never
@@ -75,7 +75,7 @@
     --g-b:oklch(0.62 0.301 318);  /* CC, magenta */
     --g-c:oklch(0.62 0.106 205);  /* CB, cyan    */
 
-    /* radius scale — every corner on the page resolves to one of these */
+    /* radius scale - every corner on the page resolves to one of these */
     --r-sm:8px;
     --r-md:14px;
     --r-lg:20px;
@@ -98,7 +98,7 @@
     --t-sub-lg:40px;
     --t-head:56px;
     --t-head-lg:64px;
-    --t-label:12px;   /* mono labels — the one size every one of them uses */
+    --t-label:12px;   /* mono labels - the one size every one of them uses */
     /* Display weight. Was a literal 600 in ~25 places and shouted next to
        Onest; 450 is a genuine instance of the 400..600 variable range,
        not a synthesised in-between. */
@@ -106,7 +106,7 @@
 
     /* Gutter between tiles in the closing grid. Spent as padding on each tile
        rather than as `gap` on the field, so a shared edge gets half from each
-       side — see .tile. */
+       side - see .tile. */
     --gap:20px;
 
     /* One stack per role. Onest carries display and body alike, so the old
@@ -129,7 +129,7 @@
   /* The hero is exactly one screen. #content is z-index:25 on an opaque
      --paper background against the hero's z-index:10, so Selected work
      slides up and covers the hero rather than needing it out of the way
-     first — which is what lets the runway be this short at all.
+     first - which is what lets the runway be this short at all.
      NOTE: at 100vh the old `offsetHeight - innerHeight` scroll denominator
      evaluates to 0 and pins progress at 0 forever. See readScroll(). */
   #runway{height:100vh;position:relative;}
@@ -142,7 +142,7 @@
      Rain that only exists while the word is glitching: it sits above the
      aurora canvas (z 0) and below the hero copy (z 10), so the heading never
      has to compete with it and the paper stays white underneath. Grey text on
-     white, no panel, no tint — the field is made of type, not of a colour.
+     white, no panel, no tint - the field is made of type, not of a colour.
 
      The glyphs are English letters, digits and operators in mixed case,
      sampled with two rules (see buildCodeField): never the same glyph twice
@@ -160,7 +160,7 @@
      is 17,000 flex-nested block boxes: measured 1.3s of layout and 2.4-4.8s to
      the first painted frame, so the 1.96s animation was over before anything
      reached the screen. The ramp is a pure function of row, which is exactly
-     what a linear-gradient is — one text node per column instead. */
+     what a linear-gradient is - one text node per column instead. */
   .codefield .col{
     flex:1 1 0;text-align:center;
     -webkit-mask-image:linear-gradient(to bottom,transparent var(--t0),#000 var(--t1),transparent var(--t1));
@@ -200,14 +200,14 @@
     transition:transform .32s cubic-bezier(.22,1,.36,1);
   }
   /* Pinned for the first 5% of the document, then tucks on a downward scroll
-     and returns on an upward one — driven by the header IIFE at the foot of
+     and returns on an upward one - driven by the header IIFE at the foot of
      the page. -100% takes the border with it, so nothing is left hanging at
      the top edge. */
   nav.is-tucked{transform:translateY(-100%);}
   /* A tucked bar must never strand keyboard focus off-screen. */
   nav:focus-within{transform:translateY(0);}
   /* The mark stands in for the wordmark. opacity:1 because `nav a` dims to
-     .65 and on the case pages the logo IS an <a> — a link back to home is
+     .65 and on the case pages the logo IS an <a> - a link back to home is
      still identity, not a nav item to be de-emphasised, and a black
      silhouette at 65% just reads as a printing fault.
      height + width:auto in CSS deliberately beat the img's width/height
@@ -216,7 +216,7 @@
   nav .logo{font-weight:600;opacity:1;}
   nav .logo img{display:block;height:28px;width:auto;}
   nav .links{display:flex;gap:28px;}
-  /* 44px minimum touch target — the padding is on the link, not the bar */
+  /* 44px minimum touch target - the padding is on the link, not the bar */
   nav a{
     color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
     display:inline-flex;align-items:center;min-height:44px;
@@ -226,7 +226,7 @@
   /* ---------- hero copy ---------- */
   /* The inner .wrap is the same container every section below uses, so the
      h1 starts on the exact vertical line as "Selected work". Padding lives
-     on .wrap, not here — one gutter definition for the whole page. */
+     on .wrap, not here - one gutter definition for the whole page. */
   .hero{
     position:fixed;inset:0;z-index:10;
     display:flex;flex-direction:column;justify-content:center;
@@ -242,7 +242,7 @@
      inside the 1180 gutter so it can never touch the viewport edge.
      Centred, not flush left: the h1 above is max-width:13ch +
      margin-inline:auto + text-align:center, so a left-flushed line under it
-     reads as an orphan (measured — at 1440 the h1 starts at x=441, the
+     reads as an orphan (measured - at 1440 the h1 starts at x=441, the
      gutter at x=174). Type ported from footer, the page's only other mono
      label. */
   .hero-cred{
@@ -251,13 +251,13 @@
     color:var(--ink-2);line-height:1.5;
   }
   .hero-cred .wrap{text-align:center;}
-  /* the separator is punctuation, not a word — stepped back a tone so it
+  /* the separator is punctuation, not a word - stepped back a tone so it
      divides the two claims instead of competing with them */
   .hero-cred .dot{color:var(--ink-3);margin:0 .5em;}
   /* Keeps the noun phrase whole so the line can only ever break at
      "designing for |", never orphaning "marketing" on its own line. */
   .hero-cred .nb{white-space:nowrap;}
-  /* stepped at 1180/900/640 rather than clamp() — a clamp lands on off-scale sizes */
+  /* stepped at 1180/900/640 rather than clamp() - a clamp lands on off-scale sizes */
   h1{
     font-family:var(--sans);
     font-size:var(--t-head-lg);
@@ -298,7 +298,7 @@
   /* ---- the hint: a tear, and a pointer that takes the same hits ----
      Nobody clicks a word in a sentence unless the page tells them to, and a
      cursor arriving to press it says that faster than any label. It runs
-     every 5s until the first click and then never again — once the field is
+     every 5s until the first click and then never again - once the field is
      open the word has explained itself.
 
      Nothing here paints an opaque box: the two bands are text and the word
@@ -341,7 +341,7 @@
   h1 .convert .cur svg{display:block;width:100%;height:auto;}
   /* Two elements, not one: the entrance and the press live on .cur while the
      glitch lives on the svg inside it. Both animate transform, and two
-     animations on one element do not compose — the later would eat the
+     animations on one element do not compose - the later would eat the
      earlier. */
   h1 .convert.playing .cur{animation:cur 1.84s steps(1,end) 1;}
   h1 .convert.playing .cur svg{animation:cur-jolt .68s steps(1,end) 2;}
@@ -366,7 +366,7 @@
         filter:drop-shadow(.03em 0 var(--g-b));}
   }
   /* =============================================================
-     Pre-home loader — "I make [drum]" morphing into the headline
+     Pre-home loader - "I make [drum]" morphing into the headline
      Tuned in loader.html. It reuses .wrap and h1 above rather than
      redeclaring them: the alignment onto the real headline is structural,
      not a magic number, so the veil must be laid out by the same rules as
@@ -382,17 +382,17 @@
   /* The same trap .hero > .wrap documents above: .wrap's auto side margins
      suppress the flex cross-axis stretch, so without this it shrink-wraps to
      the h1 and self-centres, landing nowhere near the 1180 grid. The text
-     still *looks* centred — everything here is — but the h1 box came out
+     still *looks* centred - everything here is - but the h1 box came out
      18.6px narrower than the headline's, so the measure that decides where
      the line breaks was not the page's measure. */
   .loader > .wrap{width:100%;}
   .loader h1{color:var(--ink);}
   .loader .ln{display:block;white-space:nowrap;}
-  /* opacity only — visibility:hidden would collapse them out of the line box
+  /* opacity only - visibility:hidden would collapse them out of the line box
      and the middle line would not be vertically where the hero puts it */
   .loader .ln1,.loader .ln3{opacity:0;}
   /* it borrows h1 .convert for the serif italic, but it is a span, not the
-     real button — nothing here is clickable */
+     real button - nothing here is clickable */
   .loader .convert{pointer-events:none;cursor:default;}
   /* The gap is the *measured* advance of a space in Onest at this size, not a
      guessed em. A flex gap that is merely close makes the whole centred line
@@ -409,7 +409,7 @@
     height:calc(var(--item-h) * var(--rows));
     perspective:var(--persp);
     /* No overflow clip and no mask. The box only tracks the *centre* word, so
-       clipping to it beheaded every wider row — "websites" rendered as
+       clipping to it beheaded every wider row - "websites" rendered as
        "vebsites". The cosine falloff already takes the edge rows to 0.03,
        which is the fade a mask would have provided, and rows overflow
        symmetrically so they stay centred on the drum axis. */
@@ -417,7 +417,7 @@
     transition:width .18s cubic-bezier(.22,.61,.36,1);
   }
   /* As a drum it reserves five rows, which holds lines 1 and 3 about 220px
-     from where the headline puts them — the landed veil read as three
+     from where the headline puts them - the landed veil read as three
      stranded lines and the handoff was a jump. Collapsing to one line box is
      what makes this a morph. Rows are centred on top:50% with their own
      negative margin, so the landed word does not move while the height comes
@@ -449,8 +449,8 @@
     top:0;left:0;white-space:nowrap;
     font:inherit;letter-spacing:inherit;
   }
-  /* No progress bar on the veil. The drum is already the progress indicator —
-     it starts slow, peaks, and settles onto the headline — so a hairline
+  /* No progress bar on the veil. The drum is already the progress indicator -
+     it starts slow, peaks, and settles onto the headline - so a hairline
      measuring the same wait twice only splits attention. The comet idiom now
      belongs to the case pages alone, where it measures scroll. */
 
@@ -463,7 +463,7 @@
      script there is a frame where a phone would show a veil it is about to
      skip. Below 400px the headline re-wraps to "I make designs / that
      convert." while the drum is a nowrap flex row, so the veil cannot land on
-     it. 399.98 is the exact complement of the script's `min-width:400px` —
+     it. 399.98 is the exact complement of the script's `min-width:400px` -
      if one of these numbers moves, the other has to move with it. */
   @media (max-width:399.98px){ html:not(.force-loader) .loader{display:none;} }
   .loader .ln1,.loader .ln3{transform:translateY(.12em);}
@@ -484,7 +484,7 @@
   /* the mono counterweight is gone; the hairline is the one piece of chrome
      still doing real work, so it runs on from the heading instead */
   /* the rules flex equally on both sides, so the heading centres itself
-     without a text-align — it reads as a divider, not a page title */
+     without a text-align - it reads as a divider, not a page title */
   .sec-head{display:flex;align-items:center;gap:20px;margin-bottom:24px;}
   .sec-head::before,
   .sec-head::after{content:"";flex:1;height:1px;background:var(--line);}
@@ -499,7 +499,7 @@
     padding:2px 4px;margin:-2px -4px;
     text-decoration:underline dotted;text-underline-offset:3px;
   }
-  /* Phosphor "Info" (regular), inlined — the ring, stem and dot are one glyph,
+  /* Phosphor "Info" (regular), inlined - the ring, stem and dot are one glyph,
      so nothing can sit off-centre the way a bordered span wrapped around a
      monospace "i" did */
   .define-i{
@@ -550,8 +550,8 @@
   @media (prefers-reduced-motion:reduce){
     .rv,.rv-vis{opacity:1;transform:none;filter:none;transition:none;}
     .case-link,.case-link .icon,.contact-actions a,nav a,.define-t{transition:none;}
-    /* The header still tucks — it is a layout response to scroll direction,
-       not decoration — but it does it in one frame instead of sliding. */
+    /* The header still tucks - it is a layout response to scroll direction,
+       not decoration - but it does it in one frame instead of sliding. */
     nav{transition:none;}
     .tile img,.tile::after,.cap > *{transition:none;}
     html{scroll-behavior:auto;}
@@ -564,14 +564,14 @@
     h1 .convert.playing .cur svg{animation:none;}
     h1 .convert .cur{opacity:0;}
     .codefield,.codefield.playing,.codefield.playing .col{animation:none;opacity:0;}
-    /* The loader still runs under reduce — it is a loading screen, and hiding
+    /* The loader still runs under reduce - it is a loading screen, and hiding
        what the wait is for helps nobody. Its transitions come off, so the
        drum's landing, the collapse and the handoff all snap. */
     .wheel,.loader.landing .wheel,.loader.done,
     .loader .ln1.in,.loader .ln3.in{transition:none;}
   }
 
-  /* case-study link — solid pill, the same shape and geometry as the closing
+  /* case-study link - solid pill, the same shape and geometry as the closing
      CTA, so the page carries exactly one button form. Padding gives the 44px
      target here; the old version leaned on a 44px ring that no longer exists. */
   .case-link{
@@ -586,7 +586,7 @@
   .case-link:hover .icon{transform:translateX(3px);}
 
   /* ---- mockup panels ---- */
-  /* flat panel fill and no lift — the mockup is read, not clicked */
+  /* flat panel fill and no lift - the mockup is read, not clicked */
   /* ---- case FX canvases (abstract dithered illustrations) ---- */
   .fx-wrap{
     position:relative;width:100%;aspect-ratio:4/3;border-radius:var(--r-lg);overflow:hidden;
@@ -596,13 +596,13 @@
 
   /* ---- special project: text over a full-width video ---- */
   /* One column instead of the case's two, so the film gets the whole wrap.
-     No case link — there is no case study behind it; the film is the page. */
+     No case link - there is no case study behind it; the film is the page. */
   .case.wide{grid-template-columns:1fr;gap:40px;}
 
   /* The shell is .fx-wrap's: same radius, hairline and paper, so it reads as
      the fourth thumbnail in the set. Rests at 3:1 and morphs to the film's
      16:9 on play. Poster and video are both full 16:9 frames under
-     object-fit:cover, and the width never changes — so cover's scale stays
+     object-fit:cover, and the width never changes - so cover's scale stays
      fixed and the morph only *uncovers* the top and bottom of the frame,
      it never zooms. The height is tweened through --vid-h (set from JS);
      aspect-ratio itself does not interpolate reliably. */
@@ -648,7 +648,7 @@
      Halfway between the two is where a triangle reads as centred, which is
      15 units (.06em) back from where the glyph draws itself. */
   .vid-start .ring .icon{font-size:var(--t-sub);transform:translateX(-.06em);}
-  /* Solid ink on the paper field — the site's one button form, as on the
+  /* Solid ink on the paper field - the site's one button form, as on the
      case links. The pulse: two ink halos breathing out of it, half a beat
      apart. */
   .vid-start .ring::before,.vid-start .ring::after{
@@ -707,7 +707,7 @@
   .about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:64px;padding-top:var(--case-pad);}
   .about-grid p{color:var(--mut);font-size:var(--t-body);line-height:1.72;margin-bottom:18px;}
   .about-grid p strong{color:var(--ink);font-weight:600;}
-  /* inline prose link — ported verbatim from .facts a in case-viewryt.html */
+  /* inline prose link - ported verbatim from .facts a in case-viewryt.html */
   .about-grid p a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--tint) 55%, transparent);transition:border-color .25s,color .25s;}
   .about-grid p a:hover{color:var(--ink);border-bottom-color:var(--ink-3);}
   /* The skills taglist used to sit here; the column now holds the mark, framed
@@ -738,7 +738,7 @@
      tiles each contribute half, so any shared edge opens to a full --gap.
      `gap` would have been the obvious move but it resizes every track to
      (100vh - 13*gap)/14, and the void geometry the .cap padding below is built
-     from — verified collision-free across 13 viewports — assumes gapless
+     from - verified collision-free across 13 viewports - assumes gapless
      tracks. Padding leaves all of that arithmetic untouched.
 
      A tile is a toggle, not a link: it goes nowhere, it lights its group. As an
@@ -751,7 +751,7 @@
     border:0;background:none;font:inherit;color:inherit;cursor:pointer;
     -webkit-tap-highlight-color:transparent;
   }
-  /* `contain`, not `cover` — nothing is cropped, so the letterboxing is real
+  /* `contain`, not `cover` - nothing is cropped, so the letterboxing is real
      and the tile must stay transparent rather than be a grey plate, or every
      asset would sit in a visible box.
 
@@ -787,7 +787,7 @@
      void's own edges (cols 7-18 = the middle 50%, rows 5-9) rather than to the
      section, so the content box IS the hole. Centring on the section instead
      leaves the pitch 32px low and, worse, lets a 16ch heading grow past the
-     hole on narrower screens — at 1100px the void is 550px and the heading
+     hole on narrower screens - at 1100px the void is 550px and the heading
      wants 688px. */
   .cap{
     position:absolute;inset:0;z-index:4;
@@ -809,10 +809,10 @@
   }
   .pitch h2{max-width:16ch;margin:0 auto 30px;}
   /* 400, not 500: this em picks up --serif from the global `h2 em` rule, and
-     Redaction 35 ships only 400 and 700 — 500 was never a real weight here. */
+     Redaction 35 ships only 400 and 700 - 500 was never a real weight here. */
   .pitch h2 em{color:var(--ink-3);font-style:italic;font-weight:400;}
-  /* The group lines are sentences, not labels — the longest is 108 characters
-     against the pitch's 32 — so this is two steps down from the heading with a
+  /* The group lines are sentences, not labels - the longest is 108 characters
+     against the pitch's 32 - so this is two steps down from the heading with a
      prose line-height. At 40px/24ch that line is five lines, 230px, inside a
      321px void at 1440x900. --t-head would need eight and blow the hole. */
   .cap .now{
@@ -828,7 +828,7 @@
   /* .cap itself is inert so the tiles underneath stay hoverable; the buttons
      opt back in. */
   .contact-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;pointer-events:auto;}
-  /* no lift — the colour shift carries the affordance */
+  /* no lift - the colour shift carries the affordance */
   .contact-actions a{
     display:inline-flex;align-items:center;gap:10px;min-height:44px;
     text-decoration:none;font-size:var(--t-body);padding:12px 32px;border-radius:var(--r-pill);letter-spacing:.02em;
@@ -838,7 +838,7 @@
   .contact-actions .primary:hover{background:var(--ink-hover);}
   .contact-actions .ghost{border:1px solid var(--line-2);color:var(--ink);}
   .contact-actions .ghost:hover{border-color:var(--ink-3);color:var(--ink-2);}
-  /* The lockup alone, centred — and hidden. It sits out of flow at the very
+  /* The lockup alone, centred - and hidden. It sits out of flow at the very
      bottom of #content, UNDER the last stretch of the closing grid, so the
      page ends on the grid's edge and the mark only shows when the overscroll
      stretch lifts the grid off it. No hairline: the grid's edge is the rule. */
@@ -850,7 +850,7 @@
     padding:38px 0;
   }
   /* 32px, chosen by eye against the rendered page, not derived from the type
-     scale — and it deliberately sits below it. The name's cap height is 0.256
+     scale - and it deliberately sits below it. The name's cap height is 0.256
      of the lockup's own height, so 32 renders the cap at 8.2px, equivalent to
      roughly 11px of type: just under the 12px --t-label floor. That is the
      point. At the 51px the scale argues for, the name reads as a line of copy
@@ -887,7 +887,7 @@
   @media (max-width:820px){
     /* Portrait: 12 x 18 units, tiles only in the top and bottom thirds, so the
        hole runs the full width and the headline is not squeezed between
-       columns. Rows 7-12 are empty, which centres the void on the section — the
+       columns. Rows 7-12 are empty, which centres the void on the section - the
        caption is centred on the section too, so the two have to agree or the
        headline lands on top of a tile. */
     .field{grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(18,1fr);}
@@ -909,7 +909,7 @@
        measures 431px against 356px of available width at 400 and 276 at
        320, so it wraps no matter what. Left to itself it broke mid-phrase
        ("…for performance / marketing"). Promoting each claim to its own
-       line makes the separator redundant — the break now does its job — and
+       line makes the separator redundant - the break now does its job - and
        .nb keeps "performance marketing" whole above, so all three lines
        land on meaning boundaries. Also stable: 3 lines at 400, 375 and 320
        alike, where the inline version flips from 2 to 3 between 400 and
@@ -921,7 +921,7 @@
     .cap h2{font-size:var(--t-sub-md);}
     .cap .now{font-size:var(--t-sub);}
     .case h3{font-size:var(--t-sub);}
-    /* 3:1 at phone width is a 110px letterbox — the button would fill it.
+    /* 3:1 at phone width is a 110px letterbox - the button would fill it.
        2:1 keeps the ring of ads readable around a smaller button. */
     .vid,.vid canvas.fx{aspect-ratio:2/1;}
     .vid-start .ring{width:64px;height:64px;}
@@ -932,7 +932,7 @@
   @media (max-width:560px){
   }
 </style>
-<!-- Microsoft Clarity — visits, heatmaps and session recordings for heyrav.in -->
+<!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -961,7 +961,7 @@
 
 <script>
 /* =============================================================
-   Pre-home loader — an iOS-picker drum of services that comes to rest on
+   Pre-home loader - an iOS-picker drum of services that comes to rest on
    "designs that", completing the real headline.
 
    It runs here, inline and before the three.js tag below, because that is
@@ -996,7 +996,7 @@ const MIN_W = 400;
 let skipped = '';
 if(!FORCE){
   /* A deep link is a request for a specific place on the page, not for the
-     front door — do not make it sit through an introduction. */
+     front door - do not make it sit through an introduction. */
   if(location.hash)                                        skipped = 'deep-link';
   else if(seen)                                            skipped = 'seen-this-tab';
   else if(!matchMedia('(min-width:' + MIN_W + 'px)').matches) skipped = 'narrow';
@@ -1033,7 +1033,7 @@ const DUR = 5000, LOOPS = 3;
 const PEAK = 0.80, RISE = 1.7, ENDV = 0.26, FALL = 2.0;   /* velocity shape */
 const ANGLE = 20, ROWS = 5, PERSP = 900, FADE = 2.4;      /* drum geometry */
 const FOCUS = 0.86, HOLD = 0.92;
-/* If the main script never runs — a parse error, a blocked CDN — the veil has
+/* If the main script never runs - a parse error, a blocked CDN - the veil has
    to lift anyway. A loading screen that can trap the page is worse than none. */
 const READY_MAX = 6000;
 
@@ -1099,7 +1099,7 @@ function measure(){
      headline gives "designs that". It also happens to be the longest item, so
      nothing overhangs on the way past; if the copy ever changes so it is not,
      a longer word overhangs this box symmetrically rather than the landing
-     going crooked — the right way round to fail. */
+     going crooked - the right way round to fail. */
   wheelW = widths[widths.length - 1];
 }
 
@@ -1111,7 +1111,7 @@ function apply(){
   wheel.style.setProperty('--rows', ROWS);
   wheel.style.setProperty('--persp', PERSP + 'px');
   /* the unit has to be baked in: translateZ() takes a length, and a bare
-     number invalidates the whole transform list — every row then collapses
+     number invalidates the whole transform list - every row then collapses
      onto the centre and the drum renders as one illegible pile */
   wheel.style.setProperty('--radius', rad.toFixed(2) + 'px');
   buildStrip();
@@ -1123,7 +1123,7 @@ function render(p, prog){
   /* Over the last stretch the drum stops being a drum and becomes a line of
      type. The final item is the end of the strip, so there is nothing below it
      to balance the tail still showing above and it lands lopsided. Blend the
-     drum's falloff toward a hard focus — centre row only.
+     drum's falloff toward a hard focus - centre row only.
      Raising the exponent instead is not enough: the neighbour sits one ANGLE
      off centre, cos .9397, and even at exponent 62 that is opacity .021, which
      on white paper is a legible grey ghost. Blending to a 0/1 target reaches
@@ -1139,7 +1139,7 @@ function render(p, prog){
     const c = Math.cos(th * Math.PI / 180);
     nodes[i].style.transform = `rotateX(${(-th).toFixed(2)}deg) translateZ(var(--radius))`;
     /* opacity falls with a power of the cosine, so a row dims as it turns away
-       and only the centre row is at full ink — this is the drum's fade now
+       and only the centre row is at full ink - this is the drum's fade now
        that there is no mask */
     const drum = Math.max(0, Math.pow(c, FADE));
     nodes[i].style.opacity = (drum + ((i === near ? 1 : 0) - drum) * k).toFixed(3);
@@ -1172,7 +1172,7 @@ function tick(now){
 function finish(){
   done = true;
   /* Order matters. The drum collapses first, and the two lines it was never
-     holding fade in *while* that space is closing — start them together and
+     holding fade in *while* that space is closing - start them together and
      they appear at the stranded five-row spacing before travelling, which
      reads as a layout bug rather than a landing. The veil only lifts once the
      collapse has settled, so the crossfade is between two identical headlines
@@ -1213,7 +1213,7 @@ raf = requestAnimationFrame(tick);
 window.__loaderInfo = { skipped:false, MIN_W, DUR,
   /* t0, so a harness can time the run itself. Everything else here is relative
      to it, and a probe that only starts at DOMContentLoaded cannot see the
-     start — under SwiftShader that is ~2.9s after the drum began turning. */
+     start - under SwiftShader that is ~2.9s after the drum began turning. */
   get t0(){ return t0; },
   get ready(){ return ready; }, get readyAt(){ return readyAt; },
   get done(){ return done; }, get pos(){ return pos; },
@@ -1253,8 +1253,8 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
       <!-- ViewRyt -->
       <article class="case" id="viewryt">
         <div class="case-info rv">
-          <h3>ViewRyt — a redesign for 3X conversion</h3>
-          <p>A <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-d2c">D2C<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-d2c" role="tooltip" hidden>Direct-to-consumer — a brand that sells straight to the buyer through its own site and ads, with no retailer or marketplace in between, so the landing page is the entire storefront.</span></span> supplement landing page for the US market was losing money on ads. I rebuilt it with <strong>identical copy</strong>, so design was the only variable — and turned it profitable.</p>
+          <h3>ViewRyt - a redesign for 3X conversion</h3>
+          <p>A <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-d2c">D2C<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-d2c" role="tooltip" hidden>Direct-to-consumer - a brand that sells straight to the buyer through its own site and ads, with no retailer or marketplace in between, so the landing page is the entire storefront.</span></span> supplement landing page for the US market was losing money on ads. I rebuilt it with <strong>identical copy</strong>, so design was the only variable - and turned it profitable.</p>
           <a class="case-link" href="case-viewryt.html" aria-label="View the ViewRyt case study">Explore Case Study<svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
@@ -1267,8 +1267,8 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
       <!-- Dentomate -->
       <article class="case flip" id="dentomate">
         <div class="case-info rv">
-          <h3>Dentomate — killing the "WhatsApp tax" for Indian dental clinics</h3>
-          <p>A platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month "WhatsApp tax" Indian dental clinics pay to message patients — and bring them back automatically.</p>
+          <h3>Dentomate - killing the "WhatsApp tax" for Indian dental clinics</h3>
+          <p>A platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month "WhatsApp tax" Indian dental clinics pay to message patients - and bring them back automatically.</p>
           <a class="case-link" href="case-dentomate.html" aria-label="View the Dentomate case study">Explore Case Study<svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
@@ -1281,7 +1281,7 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
       <!-- IRBS -->
       <article class="case" id="irbs">
         <div class="case-info rv">
-          <h3>IRBS — room booking for a 7,000-student campus</h3>
+          <h3>IRBS - room booking for a 7,000-student campus</h3>
           <p>A <strong>three-step room-booking flow</strong> I researched and designed for IIT Guwahati's <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-onestop">OneStop<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-onestop" role="tooltip" hidden>OneStop IITG is a centralized mobile application developed by the Students' Web Committee to assist the IIT Guwahati community with daily campus life. It consolidates essential services into a single platform, offering features like academic timetables, bus and ferry schedules, room bookings and a lost-and-found portal.</span></span> app, replacing a broken legacy portal. Live for campus students since September 2023.</p>
           <a class="case-link" href="case-irbs.html" aria-label="View the IRBS case study">Explore Case Study<svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a>
         </div>
@@ -1292,10 +1292,10 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
         </div>
       </article>
 
-      <!-- TAE Ad Studio — special project, film instead of a case study -->
+      <!-- TAE Ad Studio - special project, film instead of a case study -->
       <article class="case wide" id="ad-studio">
         <div class="case-info rv">
-          <h3>TAE Ad Studio — from one brief to every market</h3>
+          <h3>TAE Ad Studio - from one brief to every market</h3>
           <p>An app concept I <strong>ideated and built</strong> that grew into an agentic content engine. It reads performance data and makes on-brand ads that convert. The app helps conceptualize, makes variants, translates for different geographies and learns from every round of feedback.</p>
         </div>
         <div class="case-visual rv rv-vis rv-d1">
@@ -1337,8 +1337,8 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
       </div>
       <div class="about-grid">
         <div class="rv">
-          <p>I am a curiosity-driven human — <strong>always learning,</strong> always expanding horizons. I grew up in the beautiful city of <strong>Udaipur,</strong> admiring and learning art. Then I did my engineering at <strong>IIT Guwahati,</strong> got introduced to design as a subject, and have been obsessed ever since. At Transformative Ventures I fine-tuned those skills on marketing and <strong>everything D2C ecom.</strong></p>
-          <p>I prototype in code, ship the real thing, then instrument it — because a design isn't finished when it looks right, it's finished when the numbers improve experience. My biggest win was when <strong>a customer mentioned she felt hungry</strong> looking at an ad I'd made. (Full story on a call :)</p>
+          <p>I am a curiosity-driven human - <strong>always learning,</strong> always expanding horizons. I grew up in the beautiful city of <strong>Udaipur,</strong> admiring and learning art. Then I did my engineering at <strong>IIT Guwahati,</strong> got introduced to design as a subject, and have been obsessed ever since. At Transformative Ventures I fine-tuned those skills on marketing and <strong>everything D2C ecom.</strong></p>
+          <p>I prototype in code, ship the real thing, then instrument it - because a design isn't finished when it looks right, it's finished when the numbers improve experience. My biggest win was when <strong>a customer mentioned she felt hungry</strong> looking at an ad I'd made. (Full story on a call :)</p>
           <p>On the side I keep experimenting, like the <a href="components.html">component lab</a>.</p>
         </div>
         <figure class="about-frame rv rv-d1">
@@ -1348,7 +1348,7 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
     </div>
   </section>
 
-  <!-- ================= CONTACT — the closing grid =================
+  <!-- ================= CONTACT - the closing grid =================
        Filled by buildGrid() at the bottom of the page script: fifteen tiles
        and the pitch that lives in the hole between them. -->
   <section id="contact" class="gridsec" aria-label="Selected work and contact"></section>
@@ -1369,7 +1369,7 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* =============================================================
-   Northern-lights hero — layered fbm curtains on white paper.
+   Northern-lights hero - layered fbm curtains on white paper.
 
    Resting state is plain paper: uReveal is 0 and main() bails out
    before any noise is sampled, so the default page costs a compare
@@ -1382,7 +1382,7 @@ window.__loaderInfo = { skipped:false, MIN_W, DUR,
 ============================================================= */
 const canvas = document.getElementById('gl');
 /* The shader background is an enhancement, not the page. WebGLRenderer throws
-   when no context can be created (blocked, no GPU, driver blacklist) — and this
+   when no context can be created (blocked, no GPU, driver blacklist) - and this
    is one script, so an uncaught throw here would take the scroll reveals,
    count-ups, case studies and glossary with it and leave every .rv at opacity:0,
    i.e. a blank page. Stub the renderer instead: everything downstream builds
@@ -1436,7 +1436,7 @@ const float DRIFT  = 0.57;
 const float INTENS = 0.51;
 const float AGAMMA = 1.11;
 const float GRAIN  = 0.058;
-/* ripple — see ripple() below for what each of these does */
+/* ripple - see ripple() below for what each of these does */
 const float RIP_AMP   = 0.15;   /* peak displacement of the field       */
 const float RIP_RINGS = 26.0;   /* crests per unit radius               */
 const float RIP_SPEED = 9.0;    /* < RIP_RINGS, or the crests run ahead */
@@ -1515,17 +1515,17 @@ float gCrest = 0.0;
    are touched head to head: not one lobe but a TRAIN of concentric
    crests leaving the origin together, led by a single bright contact
    ring, dying out behind so the field settles instead of shimmering.
-   The old version was one sin() lobe riding the edge — it read as a
+   The old version was one sin() lobe riding the edge - it read as a
    wipe because there was only ever one crest on screen at a time. */
 void ripple(vec2 uv){
   vec2  d = (uv - uRevOrigin) * vec2(uRes.x/uRes.y, 1.0);
   /* +epsilon: d is exactly zero at the origin pixel and d/length(d)
-     would be NaN there — the same trap as atan(0,0). */
+     would be NaN there - the same trap as atan(0,0). */
   float r = length(d) + 1e-6;
 
   /* Distance to the farthest corner FROM THIS ORIGIN, in the same
      aspect-corrected space as r. The old code used length(vec2(aspect,1))
-     — the full diagonal — but from a roughly centred origin r only ever
+     - the full diagonal - but from a roughly centred origin r only ever
      reaches half of that, so the front hit the last corner at 38% of the
      ramp and the remaining 62% of the 1.4s was dead time. That, not the
      wave shape, is why the reveal felt like it fizzled. */
@@ -1541,7 +1541,7 @@ void ripple(vec2 uv){
   /* Phase advances with the front, so crests keep being emitted for as
      long as the front is moving and stop dead when it stops. Because
      RIP_RINGS > RIP_SPEED the crests travel outward slower than the
-     front — they trail it, which is what makes it read as a wake
+     front - they trail it, which is what makes it read as a wake
      rather than a moving stripe. */
   float rings = sin(band*RIP_RINGS - front*RIP_SPEED)
               * exp(-max(band, 0.0)*RIP_TRAIL);
@@ -1623,7 +1623,7 @@ let targetScroll = 0, smoothScroll = 0, lastT = 0;
 const forcedScroll = parseFloat(new URLSearchParams(location.search).get('s'));
 function readScroll(){
   /* The runway is one viewport, so progress is measured over its whole
-     height, NOT `offsetHeight - innerHeight` — that denominator is the
+     height, NOT `offsetHeight - innerHeight` - that denominator is the
      distance a taller-than-screen runway scrolls before its bottom edge
      arrives, and at exactly 100vh it is 0, which would pin p at 0 and
      freeze the headline fully opaque over the content forever.
@@ -1655,14 +1655,14 @@ if(frozenReveal) reveal = Math.min(Math.max(forcedReveal, 0), 1);
 
 const trigger = document.getElementById('trigger');
 /* The word is now a navigation control, not a toggle, so it carries no
-   aria-pressed — a scroll has no on/off state to announce.
+   aria-pressed - a scroll has no on/off state to announce.
 
    The aurora-curtain reveal this used to fire is PARKED, not deleted: the
    shader, its uniforms and the revealDir/reveal ramp in the render loop are
    all still here and still driveable via ?reveal=0.35, because the
    animation is being rebuilt as an interactive component in the lab. With
    nothing setting revealDir to 1 any more, the curtain never plays on this
-   page — that is intended. Delete the shader only once the lab owns it. */
+   page - that is intended. Delete the shader only once the lab owns it. */
 trigger.addEventListener('click', () => {
   stopHint();
   /* Uses the CSS html{scroll-behavior:smooth} rather than a hand-rolled
@@ -1674,7 +1674,7 @@ trigger.addEventListener('click', () => {
 
 /* The hint, on a 5s interval: the word has to advertise itself, but only
    until it has been taken up. The first click clears the interval for the
-   rest of the session — a hint that keeps hinting after you have obeyed it
+   rest of the session - a hint that keeps hinting after you have obeyed it
    is just noise. .playing is removed on a timer rather than on
    animationend because three animations finish at different times and the
    longest (1.84s) is the one that owns the class.
@@ -1726,7 +1726,7 @@ function buildCodeField(){
     /* Travel is a fraction of the column, which is 2x the viewport, so these
        are large numbers: 25-60% is already 400-1000px. It used to be 60-150%,
        which drained the lit band out of frame inside the first half of the
-       pass — measured 7.45% ink at 250ms down to 0.70% by the end. The field
+       pass - measured 7.45% ink at 250ms down to 0.70% by the end. The field
        has to still be raining when the tear finishes. */
     const y0 = -(rndInt(40) + 15), y1 = y0 + 25 + rndInt(35);
     let prev = '';
@@ -1741,7 +1741,7 @@ function buildCodeField(){
     col.style.cssText = `--y0:${y0}%;--y1:${y1}%;--d:${rndInt(1960)};`
                       + `--t0:${t0.toFixed(2)}%;--t1:${t1.toFixed(2)}%`;
     /* white-space:pre, so newlines are the line breaks and textContent needs
-       no escaping — the glyph set contains & and < */
+       no escaping - the glyph set contains & and < */
     col.textContent = glyphs.join('\n');
     out.push(col);
   }
@@ -1753,7 +1753,7 @@ const idle = window.requestIdleCallback || (f => setTimeout(f, 1));
 
 /* The next pass is rolled and laid out in the gap, never inside the tick.
    34,000 glyphs is ~400ms of text layout, and paying that at the moment
-   .playing goes on drops the opening frames of a 1.96s animation — which is
+   .playing goes on drops the opening frames of a 1.96s animation - which is
    the whole hint, since the tear is only the first 1.36s of it. */
 function primeCodeField(){
   /* with a deadline: the hero's rAF loop never leaves the browser genuinely
@@ -1793,7 +1793,7 @@ if(!reduceMotion){
   primeCodeField();
   /* HINT_LEAD is measured from the moment the word is on screen and clickable,
      not from navigation. Under the loader the first pass would otherwise play
-     behind an opaque veil and be spent before anyone could see it — the exact
+     behind an opaque veil and be spent before anyone could see it - the exact
      failure this lead time was added to fix. Resolves immediately when the
      loader is skipped, so nothing changes on a phone or a second visit. */
   (window.__loaderVeil || Promise.resolve()).then(() => {
@@ -1827,7 +1827,7 @@ function frame(){
      that takes as long as the thing it undoes feels stuck. */
   if(revealDir !== 0 && !frozenReveal){
     const dur = revealDir === 1 ? REVEAL_DUR : REVEAL_DUR * 0.7;
-    /* revealDir is deliberately NOT cleared on arrival — it is the record
+    /* revealDir is deliberately NOT cleared on arrival - it is the record
        of which way the last click pointed, and the toggle reads it. */
     reveal = revealDir === 1
       ? Math.min(1, reveal + dt/dur)
@@ -1841,7 +1841,7 @@ function frame(){
      it. It starts at 0.2 rather than immediately because a headline that
      begins dissolving on the first pixel of scroll reads as a glitch.
      80px, not 150: the runway is one viewport now, and the content above
-     it travels a full 100vh in the same span — the hero only has to move
+     it travels a full 100vh in the same span - the hero only has to move
      slower than that to register as parallax, and a larger offset just
      races the thing it is supposed to be sitting behind. */
   const p = smoothScroll;
@@ -1864,7 +1864,7 @@ frame();
    This is the real gate behind the veil's progress floor: the type it is
    about to hand the headline to, and the hero it is about to uncover, both
    have to exist first. Two rAFs because the first render() above is only
-   *issued* synchronously — the frame it drew reaches the screen on the next
+   *issued* synchronously - the frame it drew reaches the screen on the next
    paint, and uncovering before that shows a blank canvas. */
 if(window.__loaderReady){
   Promise.all([
@@ -1880,7 +1880,7 @@ addEventListener('resize', () => {
 });
 
 /* =============================================================
-   Section motion — scroll reveals
+   Section motion - scroll reveals
    (cheap CSS/JS, matches the hero's easing language)
 ============================================================= */
 const io = new IntersectionObserver((entries) => {
@@ -1896,7 +1896,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
    pin the current height in --vid-h, flip to .morph, then move --vid-h to the
    16:9 height so the height transition carries it. On transitionend the pin
    comes off and .open's aspect-ratio holds it, so it stays fluid on resize.
-   preload="none" — 14 MB is fetched on the click, not on page load. */
+   preload="none" - 14 MB is fetched on the click, not on page load. */
 (function(){
   const box = document.querySelector('.vid');
   if(!box) return;
@@ -1916,7 +1916,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
   };
   const play = () => video.play().catch(err => {
     // a browser that refuses sound even on a click still gets the film.
-    // Only that refusal — a pause() landing before play() settles rejects
+    // Only that refusal - a pause() landing before play() settles rejects
     // with AbortError, and retrying that would un-pause the visitor.
     if(err.name !== 'NotAllowedError') return;
     video.muted = true; sync(); return video.play().catch(() => {});
@@ -1997,7 +1997,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
   /* the term can sit anywhere in a line, so nudge the box back inside the text
      column once it is measurable rather than guessing an anchor side. Clamped to
-     .wrap rather than the viewport, since that is where all the text lives —
+     .wrap rather than the viewport, since that is where all the text lives -
      and to its content box, so the box keeps the same gutter as the prose
      instead of running flush to the screen edge on narrow viewports. */
   const fit = box => {
@@ -2034,13 +2034,13 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
 })();
 
 /* =============================================================
-   Case FX — the dithered illustrations, as particle fields.
+   Case FX - the dithered illustrations, as particle fields.
 
    The three SDFs below are the same ones this page used to draw
    straight to the canvas. They now render into an offscreen target
    every frame, and each particle samples that target in its vertex
-   shader, so the original motion — the eye's blink and gaze, the
-   jaw opening and closing, the room blocks rising — plays through
+   shader, so the original motion - the eye's blink and gaze, the
+   jaw opening and closing, the room blocks rising - plays through
    untouched while the field forms and disperses around it.
 
    Every number in P was tuned in particles.html and pasted back.
@@ -2086,7 +2086,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     hoverColMix: 0.56, hoverColR: 0.53, hoverAlpha: 0.6,
     hoverMode: 'attract', hoverR: 0.59, hoverS: 0.01,
     /* Cursor follow, in seconds per stage (see the loop). Was a flat
-       ease:0.35 per frame — a 39ms time constant, so the field tracked
+       ease:0.35 per frame - a 39ms time constant, so the field tracked
        every twitch of the mouse and leapt back to centre on leave. */
     parallax: 1, ptrTau: 0.16, hovTau: 0.22,
     blinkAmt: 1, blinkSpeed: 0.4, blinkPow: 15,
@@ -2118,7 +2118,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
       float bay=Bayer8(gl_FragCoord.xy/grain)-.5;
       /* uLevels was a hard 5 (so /4.). Five steps, minus the top one that
          smoothsteps to white and is then dropped as paper, left about four
-         usable ink levels for the whole illustration — which is why the
+         usable ink levels for the whole illustration - which is why the
          shading read flat no matter how the light was aimed. Raising this
          is the actual lever on tonal range. */
       float q=clamp(floor(lum*uLevels+bay)/(uLevels-1.),0.,1.);
@@ -2175,7 +2175,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
           vec3 hv=normalize(l-rd);
           lum+=pow(max(dot(n,hv),0.),70.)*1.2;
           lum=clamp(lum,0.,1.);
-          /* eyelid mask — lids sweep in and blank the covered eyeball */
+          /* eyelid mask - lids sweep in and blank the covered eyeball */
           float b=pow(abs(sin(t*uBlinkSpeed)),uBlinkPow)*uBlinkAmt;
           float lidY=pos.y+.16*pos.x*pos.x;
           float top=mix(1.08,-.05,b), bot=mix(-1.08,-.15,b);
@@ -2192,7 +2192,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         gl_FragColor=vec4(dith(lum,hit),hit>.5?lum:1.);  /* alpha = UNDITHERED lum, for particle shading */
       }`;
 
-  /* Dentomate's dental cast — index.html:862-926, verbatim except uZoom.
+  /* Dentomate's dental cast - index.html:862-926, verbatim except uZoom.
      Baked at t=0: the sway rot(.55*sin(0)) is identity so the arch faces
      front, and `open` sits at its .3 midpoint, a clean open bite. */
   const TOOTH = `
@@ -2263,7 +2263,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         gl_FragColor=vec4(dith(lum,hit),hit>.5?lum:1.);  /* alpha = UNDITHERED lum, for particle shading */
       }`;
 
-  /* IRBS' isometric room grid — index.html:928-970, verbatim except uZoom.
+  /* IRBS' isometric room grid - index.html:928-970, verbatim except uZoom.
      Baked at t=0, where the orbit angle is .55 and every block height
      bH() is frozen mid-cycle, so the grid shows a mix of occupancies. */
   const ROOMS = `
@@ -2298,7 +2298,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         vec3 ta=vec3(.3,0.,.3);
         float orb=.55+t*.05;
         /* The original (.8 out, 3.6 up) is a 77deg near-plan view, which
-           foreshortens the block height almost to nothing — taller towers
+           foreshortens the block height almost to nothing - taller towers
            just grow sideways and merge instead of reading as height.
            Pulling the camera down and out is what actually makes them
            read as buildings. */
@@ -2313,7 +2313,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
           /* Light rebuilt from azimuth/elevation instead of the fixed
              (.6,.9,.4). That vector is dominated by its y term, so the
              tops lit and all four sides landed on nearly the same value
-             — which is most of why the block faces read flat. Dropping
+             - which is most of why the block faces read flat. Dropping
              the elevation separates the sides. */
           float ce=cos(uLightEl);
           vec3 l=normalize(vec3(ce*cos(uLightAz),sin(uLightEl),ce*sin(uLightAz)));
@@ -2337,7 +2337,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
              separate three mutually perpendicular faces: the top's value
              is sin(elevation) while a side's is cos(elevation)*sin(az),
              and those collide at some azimuth no matter where the sun is
-             put — which is exactly why the tops and one wall were landing
+             put - which is exactly why the tops and one wall were landing
              on the same tone. Weighting by |n.x| / |n.z| / n.y instead
              gives each face its own value independent of sun position,
              the way isometric illustration shades a box. The weights sum
@@ -2357,7 +2357,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
      (0:51, the ring of ads) with the green backdrop cut away to paper and
      the ads graded to ink, prepared offline into ring.webp. The bake maps it
      onto a canvas-shaped target with object-fit:cover maths, then sways it a
-     degree or two about the centre — the film's own ring turns, and this is
+     degree or two about the centre - the film's own ring turns, and this is
      that motion, small enough that the cover crop never shows an edge. */
   const ADS = `
       uniform sampler2D uImg;
@@ -2377,7 +2377,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
   /* Per-source framing. The originals render into wide case-card canvases,
      where uv.x spans further than uv.y; a square bake would crop them, so
      each gets its own zoom. `lid` marks the one source the eyelid blink
-     applies to — the other two have no lids to sweep.
+     applies to - the other two have no lids to sweep.
 
      `ofs` recentres the subject. Every one of these SDFs sits low in its
      own frame (measured ink gaps were 22-28% above vs ~3% below, so the
@@ -2464,7 +2464,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
       void main(){
         /* uBake is re-rendered from the source SDF every frame, so this is
            the LIVE illustration, not a frozen still. Sampling it here is
-           what keeps the mouth opening and the room blocks rising — the
+           what keeps the mouth opening and the room blocks rising - the
            particles inherit the original animation instead of replacing
            it. Declared as locals so the colour maths below is unchanged. */
         vec4 tex = texture2D(uBake, aUV);
@@ -2472,14 +2472,14 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         vec3  aColor = tex.rgb;
         /* Shade from the UNDITHERED luminance the bake carries in alpha,
            not from the dithered rgb. Ordered dither scatters neighbouring
-           pixels across tone levels on purpose — it encodes tone as dot
+           pixels across tone levels on purpose - it encodes tone as dot
            DENSITY, to be averaged by the eye. One particle samples one
            pixel, so reading rgb gives it dither noise rather than shading,
            and the field averages out to a flat grey. tex.a is the smooth
            value, so lightness now tracks the actual lighting. rgb still
            drives the silhouette below, keeping the stippled edge. */
         float aInk   = 1. - mix(luma, tex.a, uShadeClean);
-        /* paper carries no particle — park it off-clip. As the shape moves,
+        /* paper carries no particle - park it off-clip. As the shape moves,
            particles switch between parked and visible, which is how the
            animation reads across a fixed lattice. */
         if(luma >= uLumaMax){
@@ -2504,22 +2504,22 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
            The wander above is scaled by (1-s), so it dies off exactly as
            the image forms and a settled eye sits perfectly still. This
            term is scaled by s instead, so it only exists once particles
-           are AT their places — it keeps the formed eye alive without
+           are AT their places - it keeps the formed eye alive without
            moving anything off target. Amplitude is in world units and
            SPAN is 2.4, so useful values are small. */
         float ph = aSeed*6.2831853;
         float it = uTime*uIdleSpeed;
         vec3 idle;
-        if(uIdleMode == 0){        /* drift — slow, uncorrelated wander */
+        if(uIdleMode == 0){        /* drift - slow, uncorrelated wander */
           idle = vec3(sin(it*.61 + ph*6.1), cos(it*.47 + ph*4.3), sin(it*.38 + ph*9.7));
-        } else if(uIdleMode == 1){ /* jitter — fast, grainy, per-particle */
+        } else if(uIdleMode == 1){ /* jitter - fast, grainy, per-particle */
           idle = vec3(sin(it*3.7 + ph*11.), cos(it*4.3 + ph*7.), sin(it*3.1 + ph*13.));
-        } else if(uIdleMode == 2){ /* breathe — radial pulse from centre */
+        } else if(uIdleMode == 2){ /* breathe - radial pulse from centre */
           vec2 d = aTarget.xy/max(length(aTarget.xy), 1e-4);
           idle = vec3(d*sin(it*.9 - length(aTarget.xy)*2.2), 0.);
-        } else if(uIdleMode == 3){ /* orbit — each particle circles its spot */
+        } else if(uIdleMode == 3){ /* orbit - each particle circles its spot */
           idle = vec3(cos(it*1.3 + ph), sin(it*1.3 + ph), 0.);
-        } else {                   /* flow — neighbours move together */
+        } else {                   /* flow - neighbours move together */
           float a = sin(aTarget.x*3.1 + it*.5) + cos(aTarget.y*2.7 - it*.4);
           idle = vec3(cos(a*3.1), sin(a*2.7), sin(a));
         }
@@ -2540,7 +2540,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         /* born rising into place, dying drifting on out the other side */
         p.y += (life < .5 ? -1. : 1.)*(1. - env)*uLifeRise*uLifeMix*uDrift;
 
-        /* hover — uPointerW is the cursor projected onto the z=0 plane in
+        /* hover - uPointerW is the cursor projected onto the z=0 plane in
            world units, so uHoverR is a real radius rather than a screen
            fraction and stays honest when the window is resized. */
         if(uHoverMode > 0){
@@ -2604,7 +2604,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
            highlights stay as faint as they are in the source */
         vAlpha = mix(uAlphaS, 1., s)*mix(uAlphaInk, 1., sqrt(aInk));
 
-        /* blink — the lid mask from index.html:842-846. Particles the lids
+        /* blink - the lid mask from index.html:842-846. Particles the lids
            sweep over fade out instead of being painted paper white, which
            lands the same way on a white ground. aLid is the sentinel 999
            for shadow/background particles, which the lids never touched in
@@ -2761,7 +2761,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     /* radii are fixed; the STRENGTH of every cursor effect starts at zero
        and is driven from o.hov in the loop. They must not start at their P
        values: uPointer rests at the centre of the field, so a non-zero
-       strength paints a gradient there with no cursor present — and under
+       strength paints a gradient there with no cursor present - and under
        reduced motion the loop never runs to correct it. */
     u.uHoverR.value = P.hoverR;       u.uHoverColR.value = P.hoverColR;
     u.uHoverS.value = 0;              u.uParallax.value = 0;
@@ -2777,7 +2777,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     const pts = new THREE.Points(makeGeo(src.img ? lattice(A) : SQUARE), mat);
     scene.add(pts);
 
-    /* The image source is not drawable until its texture lands — before
+    /* The image source is not drawable until its texture lands - before
        that it samples black, which would flash a solid ink slab. It also
        answers to the film player: once .vid opens, the field disperses
        and the loop lets it go. */
@@ -2873,7 +2873,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     let last = performance.now();
     (function loop(){
       const now = performance.now();
-      /* frame-rate independent easing — a flat per-frame factor stalls
+      /* frame-rate independent easing - a flat per-frame factor stalls
          badly on slow hardware, where the field barely moves */
       const dt = Math.min((now-last)/1000, 0.1); last = now;
       /* Two exponential stages in series = a critically damped follow:
@@ -2900,7 +2900,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
         u.uPointer.value.lerp(o.ptrMid, kp);
         /* Gate every cursor-driven effect on actually being over the card.
            uPointer rests at (0,0), which is the CENTRE of the field, so an
-           ungated hover term sits at full strength there forever — that is
+           ungated hover term sits at full strength there forever - that is
            what painted a permanent rainbow blob in the middle of all three
            illustrations. Resting state has to be the monochrome base. */
         o.hovMid += ((o.over ? 1 : 0) - o.hovMid)*kh;
@@ -2917,7 +2917,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
 })();
 
 /* ====================================================================
-   CLOSING GRID  —  the section that replaces the old centred footer.
+   CLOSING GRID  -  the section that replaces the old centred footer.
    Self-contained IIFE: its names are the same ones grid.html uses, and a
    bare top-level `const` here would share the global lexical scope with
    everything above.
@@ -2933,13 +2933,13 @@ const ARROW  = `<svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path
 
    The grade is solved, not eyeballed. CSS applies the chain as
    out = clamp((L*b - 128)*c + 128), so b/c per asset were fitted against that
-   asset's real 256-bin grayscale histogram — with the clamp in the loop, not a
+   asset's real 256-bin grayscale histogram - with the clamp in the loop, not a
    linear model, because the two flat-colour logos clip hard at 255 and a linear
    fit mispredicts their output mean by ~40 levels.
 
    Target mean 168 / sd 52, bounded to b <= 3.0 and c <= 1.6. The unbounded fit
    hits the target exactly (mean spread 0.5) by prescribing b 4.37 / c 3.00 for
-   the Sahyog logo and b 3.01 / c 2.95 for Torq's — which blows both flat marks
+   the Sahyog logo and b 3.01 / c 2.95 for Torq's - which blows both flat marks
    to pure white. That matches the numbers by deleting the artwork, so it is
    rejected. Bounded result, measured:
      mean 56.4-225.5 (spread 169.0)  ->  137.7-168.3 (spread 30.6)
@@ -2970,7 +2970,7 @@ const GROUP = {
 };
 
 /* slug, then [col, colSpan, row, rowSpan] on the 24x14 desktop field and on the
-   12x18 portrait field. A null portrait slot drops the tile on small screens —
+   12x18 portrait field. A null portrait slot drops the tile on small screens -
    fifteen tiles do not fit on a phone without turning to mush.
 
    The void is cols 7-18 / rows 5-9 desktop and rows 7-12 full width portrait;
@@ -2978,7 +2978,7 @@ const GROUP = {
    because `contain` turns a mismatch into letterboxing.
 
    Torq onboarding (431x900, the tallest thing in the set) takes cols 3-6 /
-   rows 4-11 — 57% of the viewport height, hugging the left edge of the hole.
+   rows 4-11 - 57% of the viewport height, hugging the left edge of the hole.
 
    Under `contain` only the *limiting* axis changes what you see, so growing a
    tile on its other axis buys nothing. Rows are the limit below the hole (row 10
@@ -3008,7 +3008,7 @@ const area = ([c,cs,r,rs]) => `grid-area:${r}/${c}/span ${rs}/span ${cs};`;
    with a discrete transfer, because feTurbulence randomises the alpha channel
    too and half the grain would otherwise punch straight through. RGB is
    compressed to .275-.725 so the noise sits either side of overlay's neutral
-   point — overlay treats 128 as a no-op, so the raw 0..255 spread would read as
+   point - overlay treats 128 as a no-op, so the raw 0..255 spread would read as
    static printed over the work rather than as a grain. */
 const svgURL = s => `url("data:image/svg+xml,${encodeURIComponent(s)}")`;
 const FILM =
@@ -3073,7 +3073,7 @@ const clear = () => {
 /* pointerover/out rather than enter/leave: these bubble, so one pair of
    listeners covers every tile, and moving straight from one tile to its
    neighbour does not flash the pitch back in between them. Leaving a tile for
-   the empty void does clear — otherwise the contact buttons would stay hidden
+   the empty void does clear - otherwise the contact buttons would stay hidden
    and unreachable the moment you tried to walk the pointer over to them.
 
    Touch is excluded from both. A touch pointer is destroyed on lift, so it
@@ -3090,7 +3090,7 @@ field.addEventListener('pointerout', e => {
 });
 
 /* Tap/click is the touch stand-in for hover: it latches a group on, and the
-   same group again — or anywhere in the empty field — turns it off. */
+   same group again - or anywhere in the empty field - turns it off. */
 sec.addEventListener('click', e => {
   const t = e.target.closest('.tile');
   const k = t && t.dataset.key;
@@ -3105,7 +3105,7 @@ tiles.forEach(t => {
 })();
 
 /* ====================================================================
-   OVERSCROLL STRETCH  —  the bottom of the page is on a rubber band
+   OVERSCROLL STRETCH  -  the bottom of the page is on a rubber band
    At the end of the document, further wheel input stops being scroll and
    becomes pull. The pull is eased through the iOS rubber-band curve, so
    each extra notch moves it less and it can never pass MAX; when the wheel
@@ -3119,7 +3119,7 @@ tiles.forEach(t => {
   if(!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
 
   const MAX = 140;            /* px, the asymptote of the stretch          */
-  const K = 0.55;             /* rubber-band coefficient — the iOS constant */
+  const K = 0.55;             /* rubber-band coefficient - the iOS constant */
   const STIFF = 170, ZETA = 0.62;   /* spring: stiffness, damping ratio    */
   const DAMP = 2*ZETA*Math.sqrt(STIFF);
   const QUIET = 110;          /* ms without wheel input = released          */
@@ -3164,7 +3164,7 @@ tiles.forEach(t => {
 })();
 
 /* ====================================================================
-   HEADER  —  pinned for the first 5%, then tucks away
+   HEADER  -  pinned for the first 5%, then tucks away
    Visible while the reader is still at the top of the document. Past the
    5% mark it hides on a downward scroll and comes straight back on an
    upward one, so the bar is never covering what you are reading but is
@@ -3174,7 +3174,7 @@ tiles.forEach(t => {
   const nav = document.querySelector('nav');
   if(!nav) return;
   const PIN = 0.05;     /* fraction of the document that stays pinned */
-  const DEADZONE = 6;   /* px — trackpad jitter must not flip the bar */
+  const DEADZONE = 6;   /* px - trackpad jitter must not flip the bar */
   let last = window.scrollY;
   let queued = false;
 
@@ -3185,7 +3185,7 @@ tiles.forEach(t => {
        changes and would flap the bar against the stop. */
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const y = Math.min(Math.max(window.scrollY, 0), Math.max(max, 0));
-    /* measured every frame rather than cached — these pages grow as images
+    /* measured every frame rather than cached - these pages grow as images
        decode, and a stale height puts the 5% mark in the wrong place */
     const pin = document.documentElement.scrollHeight * PIN;
     const delta = y - last;

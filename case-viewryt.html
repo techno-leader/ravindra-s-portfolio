@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ViewRyt — Case Study · Ravindra Pratap</title>
+<title>ViewRyt - Case Study · Ravindra Pratap</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16.png">
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
@@ -25,7 +25,7 @@
         url(https://cdn.jsdelivr.net/fontsource/fonts/redaction-35@latest/latin-400-italic.woff) format("woff");
   }
   :root{
-    /* Monochrome ramp. Every step is a true neutral — colour on this site is
+    /* Monochrome ramp. Every step is a true neutral - colour on this site is
        spent only where it carries meaning: the aurora hero and the pointer
        gradient on the case illustrations. Lightness is inherited from the
        lavender palette this replaced (matched in OKLab), so the page keeps its
@@ -38,16 +38,16 @@
     --line:#ececec;
     --paper:#ffffff;
     /* Surfaces. Three steps rather than one because the wireframe bars sit on
-       the figure background — collapse them and the bars disappear into it. */
+       the figure background - collapse them and the bars disappear into it. */
     --surface:#fafafa;   /* figure background */
     --surface-2:#f4f4f4; /* wireframe bars    */
     --surface-3:#efefef; /* progress rails    */
-    /* The grey the translucent marks are struck from — dot grid, link
+    /* The grey the translucent marks are struck from - dot grid, link
        underline, annotation chip. Kept as real alpha rather than flattened
        against paper so it stays a tint over any surface. */
     --tint:#939393;
     /* Selection is the third and last place colour is allowed. Not picked by
-       eye and not read off the GLSL constants either — the aurora's CA/CB/CC
+       eye and not read off the GLSL constants either - the aurora's CA/CB/CC
        stops are green/cyan/magenta, but the field as it actually renders is
        a mint at hue 180 (sampled: 535,647 coloured pixels, mean #b0fded).
        This is that mean pushed to oklch(0.95 0.07 180), the lightest in-gamut
@@ -55,7 +55,7 @@
        neutral. */
     --sel:#bbfff0;
 
-    /* radius scale — four steps plus one structural value for device frames */
+    /* radius scale - four steps plus one structural value for device frames */
     --r-sm:8px;
     --r-md:14px;
     --r-lg:20px;
@@ -65,7 +65,7 @@
     /* the only elevation on the page: things that float above the text */
     --shadow-pop:0 18px 40px -22px rgba(22,22,22,.28);
 
-    /* type scale — five steps, nothing between them. 18px is the floor for
+    /* type scale - five steps, nothing between them. 18px is the floor for
        anything the reader is meant to read, annotations and callouts included.
        Uppercase mono labels sit outside this scale: they are chrome, not copy. */
     --t-body:18px;
@@ -74,7 +74,7 @@
     --t-sub-lg:40px;
     --t-head:56px;
     --t-head-lg:64px;
-    --t-label:12px;   /* mono labels — the one size every one of them uses */
+    --t-label:12px;   /* mono labels - the one size every one of them uses */
     /* Display weight. Was a literal 600 in ~25 places and shouted next to
        Onest; 450 is a genuine instance of the 400..600 variable range,
        not a synthesised in-between. */
@@ -96,7 +96,7 @@
   ::selection{background:var(--sel);}
 
   /* "Comet": the tail is the bar's own width, so the fade stretches as you
-     scroll — near the top it is a short dark nib, at the bottom a long sweep.
+     scroll - near the top it is a short dark nib, at the bottom a long sweep.
      A fixed-length tail (the other candidate) reads as a constant-size object
      sliding across, which fights the idea that the bar measures the page. */
   .progress{
@@ -105,7 +105,7 @@
   }
 
   /* Opaque, not a wash. The bar used to be a --paper gradient fading to
-     nothing, which only works while whatever passes under it is also white —
+     nothing, which only works while whatever passes under it is also white -
      over a figure or a dark shot the copy showed through. It is now a real
      surface closed with the same hairline every other divider on the page
      uses, so content scrolls UNDER the header instead of bleeding through it.
@@ -122,19 +122,19 @@
     transition:transform .32s cubic-bezier(.22,1,.36,1);
   }
   /* Pinned for the first 5% of the document, then tucks on a downward scroll
-     and returns on an upward one — driven by the header IIFE at the foot of
+     and returns on an upward one - driven by the header IIFE at the foot of
      the page. -100% takes the border with it, so nothing is left hanging at
      the top edge. */
   nav.is-tucked{transform:translateY(-100%);}
   /* A tucked bar must never strand keyboard focus off-screen. */
   nav:focus-within{transform:translateY(0);}
-  /* opacity:1 overrides `nav a`'s .65 — the logo is an <a> here (it links
+  /* opacity:1 overrides `nav a`'s .65 - the logo is an <a> here (it links
      home) but it is identity, not a nav item to be de-emphasised, and a
      black silhouette at 65% just reads as a printing fault. */
   nav .logo{font-weight:600;text-decoration:none;color:var(--ink);opacity:1;}
   nav .logo img{display:block;height:28px;width:auto;}
   nav .links{display:flex;gap:26px;}
-  /* 44px minimum touch target — the padding is on the link, not the bar */
+  /* 44px minimum touch target - the padding is on the link, not the bar */
   nav a{
     color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
     display:inline-flex;align-items:center;min-height:44px;
@@ -194,7 +194,7 @@
     padding:2px 4px;margin:-2px -4px;
     text-decoration:underline dotted;text-underline-offset:3px;
   }
-  /* Phosphor "Info" (regular), inlined — the ring, stem and dot are one glyph,
+  /* Phosphor "Info" (regular), inlined - the ring, stem and dot are one glyph,
      so nothing can sit off-centre the way a bordered span wrapped around a
      monospace "i" did */
   .define-i{
@@ -214,7 +214,7 @@
   }
   .define-box[hidden]{display:none;}
 
-  /* D-RED: Onest italic, not Redaction — the pull quote was the one place the
+  /* D-RED: Onest italic, not Redaction - the pull quote was the one place the
      serif ran a whole block instead of an accent; the side rule went with it. */
   .pull{
     font-family:var(--sans);font-style:italic;font-weight:400;
@@ -223,7 +223,7 @@
   }
 
   .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
-  /* cards are read, not clicked — flat surface, hairline border, no hover state */
+  /* cards are read, not clicked - flat surface, hairline border, no hover state */
   .card{
     border:1px solid var(--line);border-radius:var(--r-md);padding:20px;
     background:var(--paper);
@@ -243,7 +243,7 @@
   figure.product-shot{margin:0;padding:0;border:none;background:none;border-radius:var(--r-md);}
   .product-shot img{width:100%;height:auto;display:block;}
 
-  /* the Meta creatives that ran against this page — three square ads at one
+  /* the Meta creatives that ran against this page - three square ads at one
      size, so none of them reads as the hero. They are evidence, not artwork:
      the inner radius steps down one level from the figure's own. */
   /* no surface box: the ads already carry their own edges and colour, so a
@@ -255,7 +255,7 @@
   }
   .ads img{flex:1 1 0;min-width:0;width:100%;height:auto;display:block;border-radius:var(--r-md);}
   /* the caption is an answer to "what am I looking at", not a label the page
-     needs to assert — so it waits to be asked. It keeps its space at opacity 0,
+     needs to assert - so it waits to be asked. It keeps its space at opacity 0,
      so revealing it never moves the ads. The general-sibling combinator works
      because figcaption is the last child after every img. */
   .ads figcaption{
@@ -266,13 +266,13 @@
   .ads.cap-on figcaption{opacity:1;}
   /* the hover rule MUST be gated on a real pointer. A touch browser leaves a
      sticky :hover on the last element tapped, so ungated it held the caption
-     open after the tap that was supposed to close it — the toggle appeared
+     open after the tap that was supposed to close it - the toggle appeared
      dead when the class was in fact flipping correctly. */
   @media (hover: hover){
     .ads img:hover ~ figcaption{opacity:1;}
   }
 
-  /* three figures at one size — the conversion rate leads on colour alone,
+  /* three figures at one size - the conversion rate leads on colour alone,
      so no number is scaled up to argue for itself */
   .impact{
     border-top:1px solid var(--line);margin:50px 0 20px;padding:44px 0 0;
@@ -296,8 +296,8 @@
   .case-nav b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
   .case-nav .next{text-align:right;}
   /* The footer is now one thing: the lockup, signing the page off and
-     doubling as the way home. The three mono spans it replaced — copyright,
-     "Back to portfolio", and the project tag — are gone deliberately; the
+     doubling as the way home. The three mono spans it replaced - copyright,
+     "Back to portfolio", and the project tag - are gone deliberately; the
      back-link's job is absorbed by the lockup, and the other two were chrome.
      (index.html is the exception and keeps a © on the right.) */
   footer{
@@ -305,7 +305,7 @@
     display:flex;align-items:center;
   }
   /* 32px, chosen by eye against the rendered page, not derived from the type
-     scale — and it deliberately sits below it. The name's cap height is 0.256
+     scale - and it deliberately sits below it. The name's cap height is 0.256
      of the lockup's own height, so 32 renders the cap at 8.2px, equivalent to
      roughly 11px of type: just under the 12px --t-label floor. That is the
      point. At the 51px the scale argues for, the name reads as a line of copy
@@ -316,7 +316,7 @@
     display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
     opacity:1;transition:opacity .3s;
   }
-  /* pure black artwork — it dims, it cannot recolour */
+  /* pure black artwork - it dims, it cannot recolour */
   footer .sig:hover{opacity:.6;}
   footer .sig img{display:block;height:32px;width:auto;}
 
@@ -333,7 +333,7 @@
   /* notes are stacked so only the one that owns the current stretch is present;
      the links sit under the stack rather than in it */
   .ann-rail{grid-column:1;grid-row:1;padding-right:48px;text-align:right;display:grid;}
-  /* same quiet frame as the evidence reels — no bezel, no shadow */
+  /* same quiet frame as the evidence reels - no bezel, no shadow */
   .phone{
     position:relative;width:300px;flex:none;margin:0;padding:0;
     border:2px solid var(--line);border-radius:var(--r-device);background:var(--paper);box-shadow:none;
@@ -366,7 +366,7 @@
   /* JS parks one of these at the scroll offset where each beat takes over, so a
      long pinned run still snaps. Shared by the evidence reels and the phone walk-through. */
   .snap-stop{position:absolute;left:0;width:1px;height:1px;scroll-snap-align:start;}
-  /* text column, then the frame — heading and callouts share the left edge */
+  /* text column, then the frame - heading and callouts share the left edge */
   .ev-stage{
     position:sticky;top:0;height:100vh;
     display:grid;grid-template-columns:minmax(250px,330px) auto;grid-template-rows:auto;
@@ -393,7 +393,7 @@
   /* one specimen per screen, so every fault gets the same share of attention */
   .ev-slide{height:80vh;display:flex;flex-direction:column;justify-content:center;gap:14px;overflow:hidden;}
   .ev-slide img{display:block;width:100%;height:auto;flex:0 0 auto;}
-  /* filler so a short specimen never floats in an empty screen — it reads as the
+  /* filler so a short specimen never floats in an empty screen - it reads as the
      rest of the page continuing, and stays quiet enough to ignore. Collapses to
      nothing when the image already fills the slide. */
   .wire{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;
@@ -436,7 +436,7 @@
     .ev-cap{flex-direction:row;align-items:baseline;text-align:left;gap:12px;}
     .ev-cap b{font-size:var(--t-sub);}
     .ev-shots{grid-column:1;grid-row:2;height:52vh;}
-    /* keep the slide just taller than the frame, as on desktop — otherwise most
+    /* keep the slide just taller than the frame, as on desktop - otherwise most
        of the scroll is spent looking at filler */
     .ev-slide{height:56vh;}
     .shot .pbar{right:-10px;}
@@ -459,8 +459,8 @@
     .ev-cap{transition:none;}
     .ann{transition:none;}
     .define-t,.case-nav a,.facts a,.ads figcaption{transition:none;}
-    /* The header still tucks — it is a layout response to scroll direction,
-       not decoration — but it does it in one frame instead of sliding. */
+    /* The header still tucks - it is a layout response to scroll direction,
+       not decoration - but it does it in one frame instead of sliding. */
     nav{transition:none;}
     footer .sig{transition:none;}
     html{scroll-behavior:auto;scroll-snap-type:none;}
@@ -495,12 +495,12 @@
     .facts{grid-template-columns:1fr;gap:20px;}
     .cards{grid-template-columns:1fr;}
     figure{padding:20px;}
-    /* four 1:1 ads in a 276px column are ~57px each — unreadable. Stack them. */
+    /* four 1:1 ads in a 276px column are ~57px each - unreadable. Stack them. */
     .ads img{flex:1 1 100%;}
     .case-nav{grid-template-columns:1fr;}
   }
 </style>
-<!-- Microsoft Clarity — visits, heatmaps and session recordings for heyrav.in -->
+<!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -513,7 +513,7 @@
 <div class="progress" id="progress"></div>
 
 <nav>
-  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap — home" width="202" height="280"></a>
+  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap - home" width="202" height="280"></a>
   <div class="links">
     <a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
   </div>
@@ -526,8 +526,8 @@
     <p class="lede rv rv-d1">At The Ayurveda Experience (TAE) we run performance marketing driven ads and long form sales pages. This is an example of landing page CRO redesign I did for ViewRyt an eye supplement by TAE.</p>
     <div class="facts rv rv-d2">
       <div><small>Team</small><b>1 Designer (me) · 1 Copywriter</b></div>
-      <div><small>Brand</small><b><a href="https://theayurvedaexperience.com" target="_blank" rel="noopener noreferrer">The Ayurveda Experience</a> — 2.1M customers, 25+ countries</b></div>
-      <div><small>Product</small><b>ViewRyt — eye supplement</b></div>
+      <div><small>Brand</small><b><a href="https://theayurvedaexperience.com" target="_blank" rel="noopener noreferrer">The Ayurveda Experience</a> - 2.1M customers, 25+ countries</b></div>
+      <div><small>Product</small><b>ViewRyt - eye supplement</b></div>
     </div>
   </div>
 </header>
@@ -559,7 +559,7 @@
           <h2>The old pages converted below 1.5%.</h2>
         </div>
         <div class="rv rv-d1">
-          <p>ViewRyt carries the full <strong>AREDS 2 formula</strong> — the NIH clinical standard shown to reduce advanced <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-amd">AMD<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-amd" role="tooltip" hidden>Age-related Macular Degeneration (AMD) is a common eye disease that damages the macula, the central part of the retina responsible for sharp, straight-ahead vision.</span></span> risk by 25%. A genuinely strong product.</p>
+          <p>ViewRyt carries the full <strong>AREDS 2 formula</strong> - the NIH clinical standard shown to reduce advanced <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-amd">AMD<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-amd" role="tooltip" hidden>Age-related Macular Degeneration (AMD) is a common eye disease that damages the macula, the central part of the retina responsible for sharp, straight-ahead vision.</span></span> risk by 25%. A genuinely strong product.</p>
           <div class="pull">The product wasn't the problem. The page's decision architecture was.</div>
         </div>
       </div>
@@ -567,8 +567,8 @@
         <!-- order mirrors the reel captions below: the cards name the findings,
              the reel then walks them in the same sequence -->
         <div class="card"><i>Finding 01</i><b>Improper hierarchy</b><p>A single heading size throughout, body type larger than the subhead, and all attention pulled to one photo.</p></div>
-        <div class="card"><i>Finding 02</i><b>Cognitive overload</b><p>Dense information hit visitors before the first CTA — thinking hard before caring at all.</p></div>
-        <div class="card"><i>Finding 03</i><b>Poor targeting</b><p>The imagery represented the target audience but never connected emotionally — it read as synthetic stock, not lived experience.</p></div>
+        <div class="card"><i>Finding 02</i><b>Cognitive overload</b><p>Dense information hit visitors before the first CTA - thinking hard before caring at all.</p></div>
+        <div class="card"><i>Finding 03</i><b>Poor targeting</b><p>The imagery represented the target audience but never connected emotionally - it read as synthetic stock, not lived experience.</p></div>
         <div class="card"><i>Finding 04</i><b>Style inconsistency</b><p>Comic illustration sat beside photography, shadows appeared at random, and the color palette had no through-line.</p></div>
       </div>
     </div>
@@ -578,7 +578,7 @@
           <div class="ev-gut l">
             <!-- data-thru lets one line carry every specimen of a fault -->
             <div class="co" data-shot="0">
-              <span>Nothing in the type scale separates a claim from a caption — the body copy even reads larger than the subhead above it.</span>
+              <span>Nothing in the type scale separates a claim from a caption - the body copy even reads larger than the subhead above it.</span>
             </div>
             <div class="co" data-shot="1">
               <span>The heatmap puts 55% of attention on the photo and only 5% on the subhead carrying the promise.</span>
@@ -636,7 +636,7 @@
           <div class="cards" style="grid-template-columns:1fr;">
             <!-- order mirrors the Improvements reel captions: principle 01 is
                  what improvement 01 shows, and so on down -->
-            <div class="card plain"><i>Principle 01</i><p>Hook emotionally, then educate — never the reverse.</p></div>
+            <div class="card plain"><i>Principle 01</i><p>Hook emotionally, then educate - never the reverse.</p></div>
             <div class="card plain"><i>Principle 02</i><p>Design the moment of choice, not just the layout around it.</p></div>
             <div class="card plain"><i>Principle 03</i><p>Establish authority before making a single claim.</p></div>
             <div class="card plain"><i>Principle 04</i><p>Detail arrives exactly when the visitor is ready for it.</p></div>
@@ -730,8 +730,8 @@
           <div class="phone">
             <div class="screen">
               <div class="feed" id="feed">
-                <img src="assets/viewryt/redesign-a.jpg" alt="ViewRyt NLP8 redesign — top half of the live landing page">
-                <img src="assets/viewryt/redesign-b.jpg" alt="ViewRyt NLP8 redesign — bottom half of the live landing page">
+                <img src="assets/viewryt/redesign-a.jpg" alt="ViewRyt NLP8 redesign - top half of the live landing page">
+                <img src="assets/viewryt/redesign-b.jpg" alt="ViewRyt NLP8 redesign - bottom half of the live landing page">
               </div>
             </div>
             <div class="pbar"><i id="pfill"></i></div>
@@ -745,11 +745,11 @@
           </div>
           <div class="ann" data-from=".34" data-to=".64">
             <i>Evidence</i><b>The AREDS-2 study leads, ingredients follow</b>
-            <p>NIH, 10 years, 4,203 participants — then each nutrient card answers "why it matters." Authority arrives before any brand talk.</p>
+            <p>NIH, 10 years, 4,203 participants - then each nutrient card answers "why it matters." Authority arrives before any brand talk.</p>
           </div>
           <div class="ann" data-from=".64" data-to=".836">
             <i>Reveal</i><b>The product is the conclusion</b>
-            <p>ViewRyt only appears once the argument is complete — entering as the obvious answer, with expert endorsements beside it.</p>
+            <p>ViewRyt only appears once the argument is complete - entering as the obvious answer, with expert endorsements beside it.</p>
           </div>
           <div class="ann" data-from=".836" data-to="1.01">
             <i>Close</i><b>The CTA is a zone, not a button</b>
@@ -765,7 +765,7 @@
     <div class="wrap">
       <div class="sec-label rv">Results</div>
       <h2 class="rv">From losing money on every visit <em>to profitable.</em></h2>
-      <p class="rv rv-d1">Identical copy, identical product, identical traffic source — only the design changed. The page crossed from spending more than it returned to returning more than it spent. And the compounding effect: Meta's algorithm answered that performance by pushing far more budget through the new page than the old one ever earned.</p>
+      <p class="rv rv-d1">Identical copy, identical product, identical traffic source - only the design changed. The page crossed from spending more than it returned to returning more than it spent. And the compounding effect: Meta's algorithm answered that performance by pushing far more budget through the new page than the old one ever earned.</p>
       <div class="impact rv">
         <div class="lead"><b data-count="3.2" data-dec="1" data-suf="X">0.0X</b><span>Conversion rate</span></div>
         <div><b data-count="4.2" data-dec="1" data-suf="X">0.0X</b><span>Earnings per visitor</span></div>
@@ -798,11 +798,11 @@
 
   <div class="wrap">
     <div class="case-nav rv">
-      <a href="case-irbs.html"><small><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg> Previous case</small><b>IRBS — room booking at IIT Guwahati</b></a>
-      <a class="next" href="case-dentomate.html"><small>Next case <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></small><b>Dentomate — killing the WhatsApp tax</b></a>
+      <a href="case-irbs.html"><small><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg> Previous case</small><b>IRBS - room booking at IIT Guwahati</b></a>
+      <a class="next" href="case-dentomate.html"><small>Next case <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></small><b>Dentomate - killing the WhatsApp tax</b></a>
     </div>
     <footer>
-      <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap — home" width="387" height="125"></a>
+      <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap - home" width="387" height="125"></a>
     </footer>
   </div>
 </main>
@@ -869,7 +869,7 @@
     });
   }
   /* stops only move when the span does, so they are placed on load and resize
-     rather than on every scroll frame — rewriting a snap target mid-scroll can
+     rather than on every scroll frame - rewriting a snap target mid-scroll can
      make the browser re-snap under the reader */
   function relayout(){ place(sc.offsetHeight - innerHeight); update(); }
   addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
@@ -890,7 +890,7 @@ function countUp(el){
   const dec = parseInt(el.dataset.dec || 0, 10);
   const pre = el.dataset.pre || '';
   const suf = el.dataset.suf || '';
-  /* no count animation for readers who asked for less motion — show the figure */
+  /* no count animation for readers who asked for less motion - show the figure */
   if(REDUCED.matches){ el.textContent = pre + target.toFixed(dec) + suf; return; }
   const dur = 1500, t0 = performance.now();
   (function tick(now){
@@ -1014,7 +1014,7 @@ function evidenceReel(sc){
       }
       return num / den;
     };
-    /* summed, not maxed — across a seam the two specimens each half-fill the
+    /* summed, not maxed - across a seam the two specimens each half-fill the
        frame, and the line they share should not dip as it passes */
     const covOf = ([a, b]) => { let t = 0; for(let s = a; s <= b; s++) t += cover(s); return Math.min(t, 1); };
 
@@ -1046,7 +1046,7 @@ function evidenceReel(sc){
       else c.style.transform = 'translateY(' + (off + y - half) + 'px)';
     });
     /* two callouts can be on screen together during a handoff and both hit the
-       same clamp — nudge them apart so they never stack */
+       same clamp - nudge them apart so they never stack */
     placed.sort((a, b) => a.y - b.y);
     for(let i = 1; i < placed.length; i++){
       const need = placed[i-1].y + placed[i-1].half + 18 + placed[i].half;
@@ -1076,7 +1076,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
 
   /* the term can sit anywhere in a line, so nudge the box back inside the text
      column once it is measurable rather than guessing an anchor side. Clamped to
-     .wrap rather than the viewport, since that is where all the text lives —
+     .wrap rather than the viewport, since that is where all the text lives -
      and to its content box, so the box keeps the same gutter as the prose
      instead of running flush to the screen edge on narrow viewports. */
   const fit = box => {
@@ -1114,7 +1114,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
 
 /* ad-strip caption: hover reveals it on a pointer, tap toggles it on touch.
    The CSS hover rule does the desktop half; this only adds the touch half, so
-   it is gated on (hover:none) — otherwise a desktop click would pin the caption
+   it is gated on (hover:none) - otherwise a desktop click would pin the caption
    open and the pointer would no longer be what controls it. */
 (() => {
   const fig = document.querySelector('.ads');
@@ -1126,7 +1126,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
 })();
 
 /* ====================================================================
-   HEADER  —  pinned for the first 5%, then tucks away
+   HEADER  -  pinned for the first 5%, then tucks away
    Visible while the reader is still at the top of the document. Past the
    5% mark it hides on a downward scroll and comes straight back on an
    upward one, so the bar is never covering what you are reading but is
@@ -1136,7 +1136,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
   const nav = document.querySelector('nav');
   if(!nav) return;
   const PIN = 0.05;     /* fraction of the document that stays pinned */
-  const DEADZONE = 6;   /* px — trackpad jitter must not flip the bar */
+  const DEADZONE = 6;   /* px - trackpad jitter must not flip the bar */
   let last = window.scrollY;
   let queued = false;
 
@@ -1147,7 +1147,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
        changes and would flap the bar against the stop. */
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const y = Math.min(Math.max(window.scrollY, 0), Math.max(max, 0));
-    /* measured every frame rather than cached — these pages grow as images
+    /* measured every frame rather than cached - these pages grow as images
        decode, and a stale height puts the 5% mark in the wrong place */
     const pin = document.documentElement.scrollHeight * PIN;
     const delta = y - last;

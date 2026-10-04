@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Components — one a day · Ravindra Pratap</title>
+<title>Components - one a day · Ravindra Pratap</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16.png">
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
@@ -59,7 +59,7 @@
   .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
 
   /* ---------- site chrome ----------
-     The lab had no header and no footer — it was reachable only from one line
+     The lab had no header and no footer - it was reachable only from one line
      of About prose and had no way back. Both are ported from the cluster, but
      built out of THIS page's tokens (--ink #0d0d10, --line #e8e8ec, Inter),
      not case-viewryt's: the lab is a deliberately separate monochrome system
@@ -74,7 +74,7 @@
     transition:transform .32s var(--ease-out);
   }
   /* Pinned for the first 5% of the document, then tucks on a downward scroll
-     and returns on an upward one — see the header IIFE at the foot of the
+     and returns on an upward one - see the header IIFE at the foot of the
      page. -100% takes the border with it. */
   nav.is-tucked{transform:translateY(-100%);}
   /* A tucked bar must never strand keyboard focus off-screen. */
@@ -82,7 +82,7 @@
   nav .logo{font-weight:600;text-decoration:none;color:var(--ink);opacity:1;}
   nav .logo img{display:block;height:28px;width:auto;}
   nav .links{display:flex;gap:26px;}
-  /* 44px minimum touch target — the padding is on the link, not the bar */
+  /* 44px minimum touch target - the padding is on the link, not the bar */
   nav a{
     color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
     display:inline-flex;align-items:center;min-height:44px;
@@ -90,7 +90,7 @@
   nav a:hover{opacity:1;}
 
   /* 32px, matching the cluster pages. Set by eye, not by the scale: the name's
-     cap is 0.256 of the lockup's height, so this renders it at 8.2px — under
+     cap is 0.256 of the lockup's height, so this renders it at 8.2px - under
      the 12px floor, on purpose, so the lockup reads as one mark rather than as
      a line of type. */
   footer{
@@ -145,7 +145,7 @@
   .frame::before{ /* hairline that survives the scale-up, unlike a border */
     content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
     /* corner-shape does NOT inherit, so `border-radius:inherit` alone left this
-       hairline tracing a *round* 20px arc over a squircle-clipped card — two
+       hairline tracing a *round* 20px arc over a squircle-clipped card - two
        different curves at every corner, which read as a double outline. */
     border-radius:inherit;corner-shape:inherit;
     box-shadow:inset 0 0 0 1px var(--line);
@@ -171,7 +171,7 @@
 
   /* the only place colour appears at rest-adjacent state: a real focus ring,
      drawn as a masked gradient border so it is a ring and not a glow.
-     it lives on the tile, not inside the frame — the frame clips its own
+     it lives on the tile, not inside the frame - the frame clips its own
      overflow, which would eat an offset ring entirely. */
   .frame:focus-visible{outline:none;}
   .tile:has(.frame:focus-visible) .ring{opacity:1;}
@@ -206,7 +206,7 @@
     /* visibility is animatable but discrete: it flips to hidden only at the
        END of the fade out, and back to visible at the START of the fade in.
        that is what takes the faded-out control out of the tab order and the
-       a11y tree — opacity:0 alone leaves it focusable, so a keyboard user
+       a11y tree - opacity:0 alone leaves it focusable, so a keyboard user
        lands on an invisible button. */
     transition:opacity .26s var(--ease-out),transform .38s var(--ease-out),
                visibility 0s linear .26s;
@@ -214,7 +214,7 @@
   [data-stage="gallery"] .back{visibility:visible;transition-delay:0s,0s,0s;}
   [data-stage="stack"] .back{opacity:0;transform:translateX(-8px);pointer-events:none;visibility:hidden;}
 
-  /* round controls. the pill is deliberately a true circle/pill — only the
+  /* round controls. the pill is deliberately a true circle/pill - only the
      image surfaces are squircles. */
   .back{
     display:inline-flex;align-items:center;justify-content:center;
@@ -264,7 +264,7 @@
   .back:focus-visible::after,.cta:focus-visible::after{opacity:1;}
 
   /* the deck: one square footprint, cards stacked sideways. each card behind
-     steps right and shrinks, so only its right edge reads — the toast-stack
+     steps right and shrinks, so only its right edge reads - the toast-stack
      falloff, laid on its side. */
   [data-stage="stack"] .gal{
     position:relative;display:block;
@@ -282,7 +282,7 @@
   }
   /* the cards sit to the RIGHT of the deck box, so the stack is wider than
      .gal by 2 slivers. once the deck stops being 400px and starts filling the
-     screen, that surplus runs off the viewport and scrolls the page — so below
+     screen, that surplus runs off the viewport and scrolls the page - so below
      this breakpoint the deck gives the spread its room back. */
   @media (max-width:760px){
     [data-stage="stack"] .gal{width:min(400px,calc(100% - 88px));--gap:30px;}
@@ -301,7 +301,7 @@
     transition:transform .55s var(--ease-out),opacity .45s var(--ease-out);
   }
   /* three cards read at a time. the fourth stays mounted rather than removed
-     so it still has a box to fly from when the deck deals out — but it is
+     so it still has a box to fly from when the deck deals out - but it is
      parked directly behind card 2, not one step further out: opacity:0 still
      takes part in layout, so at its own index it silently widened the page's
      scrollWidth past the viewport on small screens. */
@@ -313,7 +313,7 @@
     cursor:pointer;
     box-shadow:0 1px 2px rgba(13,13,16,.05),0 6px 16px -4px rgba(13,13,16,.10);
   }
-  /* the cards behind are blank stock — only the top one carries a drawing.
+  /* the cards behind are blank stock - only the top one carries a drawing.
      dropping the image rather than the card keeps the hairline edge, and the
      fade back in rides the morph as the deck deals out. */
   [data-stage="stack"] .tile:not([data-lead]) .frame{background:var(--paper);}
@@ -376,7 +376,7 @@
   .ctl svg{width:18px;height:18px;fill:currentColor;flex:none;}
   .lb-close{position:absolute;top:22px;right:22px;background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px var(--line);}
 
-  /* zoom readout — the track only takes colour while the image is engaged */
+  /* zoom readout - the track only takes colour while the image is engaged */
   .zoom{
     display:flex;align-items:center;gap:10px;padding:0 14px 0 12px;
     min-height:44px;font-family:ui-monospace,Menlo,monospace;
@@ -402,7 +402,7 @@
   }
   .shelf-l{display:flex;align-items:center;gap:12px;min-width:0;}
 
-  /* undo is a peer of the bin, not of the CTA — same paper-and-hairline
+  /* undo is a peer of the bin, not of the CTA - same paper-and-hairline
      treatment and the same 44px target, just carrying a label as well. */
   .undo{
     display:inline-flex;align-items:center;gap:8px;
@@ -467,7 +467,7 @@
      content needs gets distributed into the AUTO row tracks. the delete
      animates this container's height DOWN (751 -> 497), so for the whole
      animation it is taller than its content and the rows are pulled ~85px
-     apart, converging only at the end — on top of a FLIP that was measured
+     apart, converging only at the end - on top of a FLIP that was measured
      against the settled layout. that rubber-band is what read as a zoom.
      undo animates the height UP, is never taller than its content, and so was
      always clean. `start` parks the slack at the bottom instead, which is where
@@ -480,7 +480,7 @@
     overflow:hidden;cursor:pointer;
     -webkit-tap-highlight-color:transparent;outline:none;isolation:isolate;
   }
-  .ph::before{ /* same hairline as 001 — and the same corner-shape:inherit,
+  .ph::before{ /* same hairline as 001 - and the same corner-shape:inherit,
                   or it traces a round arc over a squircle and doubles up */
     content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
     border-radius:inherit;corner-shape:inherit;
@@ -491,7 +491,7 @@
   .ph img{
     width:100%;height:100%;display:block;object-fit:cover;opacity:0;
     /* monochrome, always. selection is carried by the border and the tick, not
-       by colour and not by a zoom — the photo itself never moves. */
+       by colour and not by a zoom - the photo itself never moves. */
     filter:grayscale(1);
     transition:opacity .5s var(--ease-out);
   }
@@ -568,7 +568,7 @@
     .frame img{transform:none !important;}
   }
 </style>
-<!-- Microsoft Clarity — visits, heatmaps and session recordings for heyrav.in -->
+<!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -580,7 +580,7 @@
 <body>
 
 <nav>
-  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap — home" width="202" height="280"></a>
+  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap - home" width="202" height="280"></a>
   <div class="links">
     <a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
   </div>
@@ -683,7 +683,7 @@
       </div>
 
       <!-- six cells, three rows, all in the markup. deleting a pair does not
-           fetch a new row — the rows below simply rise into the space, which
+           fetch a new row - the rows below simply rise into the space, which
            is the "next line jumps in" read without any of it being faked.
            dropped from ten: the two duplicate UI screens and the second
            product shot and second logo, so no two tiles read as the same
@@ -742,7 +742,7 @@
   </section>
 
   <footer>
-    <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap — home" width="387" height="125"></a>
+    <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap - home" width="387" height="125"></a>
   </footer>
 
 </div>
@@ -796,7 +796,7 @@
       img.decode().then(ready, ready);
       // chrome defers decode() indefinitely while the document is not being
       // rendered (background tab, prerender), so it can never be the only way
-      // out of the skeleton — the image is already loaded by this point.
+      // out of the skeleton - the image is already loaded by this point.
       setTimeout(ready, 500);
     }
 
@@ -814,7 +814,7 @@
      in place. instead: measure, switch the mode, measure again, then lift the
      tiles out of flow onto inline left/top/width/height and animate the two
      sets of rects into each other. baking the scale into width/height rather
-     than into a transform matters — a square becoming a 2.3:1 panorama under
+     than into a transform matters - a square becoming a 2.3:1 panorama under
      a non-uniform scale would visibly squash the drawing, whereas resizing the
      box lets object-fit re-crop it correctly on every frame. */
   var stage = document.getElementById('stage'),
@@ -837,7 +837,7 @@
   syncStage();
 
   /* the deck is translate + scale only, so it stays axis-aligned and a measured
-     rect is exactly the visual box in both stages — no correction needed. */
+     rect is exactly the visual box in both stages - no correction needed. */
   function geom() {
     return tiles.map(function (t) { return t.getBoundingClientRect(); });
   }
@@ -897,7 +897,7 @@
         gal.style.height = '';
         gal.style.marginBottom = '';
         tiles.forEach(function (x) {
-          // never removeAttribute('style') — --ar/--i/--sgn live there too
+          // never removeAttribute('style') - --ar/--i/--sgn live there too
           x.style.left = x.style.top = x.style.width = x.style.height = '';
         });
         stage.classList.remove('morphing');
@@ -1188,7 +1188,7 @@
     bin.dataset.n = String(n);
     binN.textContent = String(n);
     bin.disabled = n === 0;
-    // a live selection outranks the receipt — you are told what the bin will do
+    // a live selection outranks the receipt - you are told what the bin will do
     // next, and only fall back to what it just did
     count.textContent = n ? n + ' selected'
                       : trash ? trash.length + ' deleted'
@@ -1206,7 +1206,7 @@
   /* ---- the field ----------------------------------------------------------
      the fragments are solid ink, not cut-outs of the photograph. the tile
      divides on its grid, the grid goes black, the black travels. that is one
-     `fillStyle` and a `fillRect` per fragment — no offscreen flatten, no
+     `fillStyle` and a `fillRect` per fragment - no offscreen flatten, no
      source rect, no per-fragment resample of a bitmap being scaled down ~2x
      with a kernel blind to its neighbours, which is what the whole handover
      seam was. it costs a fraction of the per-frame work and it removes the
@@ -1214,12 +1214,12 @@
 
      the conversion is what sells it, so it is not a cut. `fin` fades the ink
      in and the photo out on one shared clock, and by the time it is halfway
-     the nearest fragments have already left — you watch the image darken
+     the nearest fragments have already left - you watch the image darken
      while its bin-side corner is already crumbling off it. ---------------- */
   /* CELL is the grain, in CSS px. picked by measuring, not by eye: total fill
      area is the tile whatever the cell, so cost is per-call overhead and tracks
-     the fragment count. at the worst case this component can reach — all six
-     tiles selected — 10px is 3000 fragments / 0.69ms and 6px is 8118 / 2.11ms,
+     the fragment count. at the worst case this component can reach - all six
+     tiles selected - 10px is 3000 fragments / 0.69ms and 6px is 8118 / 2.11ms,
      still 13% of a 60fps budget. 4px would be 17934 / 5.65ms and that is where
      it stops being free. */
   var CELL = 6, DUR = 760, SPREAD = 520, FADE = 220;
@@ -1244,7 +1244,7 @@
 
         // drop fragments the corner would have clipped, or the field paints
         // square corners the tile never had. the tile is corner-shape:squircle,
-        // which is the superellipse at exponent 4 — testing against a plain
+        // which is the superellipse at exponent 4 - testing against a plain
         // circle here cut visible arcs out of all four corners.
         var qx = Math.max(rad - cx, cx - (Wd - rad), 0) / rad;
         var qy = Math.max(rad - cy, cy - (Hd - rad), 0) / rad;
@@ -1273,7 +1273,7 @@
 
   /* smoothstep, not a cubic ease-out. measured: under `1-(1-p)^3` a fragment is
      87% of the way to the bin by the time half its clock has run, so the field
-     snaps over and then sits there shrinking — 70% of the duration was dead
+     snaps over and then sits there shrinking - 70% of the duration was dead
      time. an ease-in-out keeps the scatter readable and the arrival late. */
   function ease(p) { return p * p * (3 - 2 * p); }
 
@@ -1301,7 +1301,7 @@
     cv.height = Math.round(origin.height * dpr);
     cv.classList.add('on');
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    // one colour for the whole field, set once — the token, not a literal
+    // one colour for the whole field, set once - the token, not a literal
     ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--ink').trim() || '#161616';
 
     function paint(now) {
@@ -1332,7 +1332,7 @@
         var bump = Math.sin(Math.PI * Math.pow(raw, 0.6));
         bx += p.jx * bump; by += p.jy * bump;
 
-        // shrink on the raw clock, not the eased one — tying it to `t` made the
+        // shrink on the raw clock, not the eased one - tying it to `t` made the
         // fragment lose 80% of its area in the first fifth of the flight
         var s = 1 - 0.68 * raw;
         ctx.globalAlpha = fin * (raw < 0.76 ? 1 : (1 - raw) / 0.24);
@@ -1356,7 +1356,7 @@
     var start = performance.now(), bites = 0;
     (function frame(ts) {
       var st = paint(ts - start);
-      // the lid opens on the first fragment to arrive, not on the click — it is
+      // the lid opens on the first fragment to arrive, not on the click - it is
       // answering the particles, same as the pulse
       if (st.done > 0) bin.classList.add('open');
       if (st.done / ps.length > (bites === 0 ? 0.2 : 0.7) && bites < 2) {
@@ -1380,7 +1380,7 @@
     var first = keep.map(function (c) { return c.getBoundingClientRect(); });
     var h0 = photos.getBoundingClientRect().height;
 
-    // note where each one sat before anything moves — that index is what undo
+    // note where each one sat before anything moves - that index is what undo
     // puts it back into, so the order survives too, not just the photos
     var all = [].slice.call(photos.children);
     trash = sel.map(function (b) {
@@ -1395,7 +1395,7 @@
       /* identical to putBack()'s reflow, deliberately: same duration, no
          stagger, translate only. the user asked for the rows to close up "like
          they rearrange on undo", and the two are the same event in opposite
-         directions — a stagger on one and not the other made them read as two
+         directions - a stagger on one and not the other made them read as two
          different mechanics. */
       keep.forEach(function (c, i) {
         var a = first[i], b = c.getBoundingClientRect();
@@ -1421,7 +1421,7 @@
       requestAnimationFrame(function () { empty.classList.add('on'); });
     }
     // deleting disables the bin, and a focused disabled control drops focus to
-    // the body — so hand it somewhere real, but only if it was actually lost.
+    // the body - so hand it somewhere real, but only if it was actually lost.
     var a = document.activeElement;
     if (!a || a === document.body) {
       (keep.length ? keep[0].querySelector('.ph') : reset).focus();
@@ -1431,7 +1431,7 @@
   /* ---- undo: the same reflow, run backwards, with no field ----
      the photos are the very nodes that were deleted, still decoded, so putting
      them back is an insert and not a rebuild. deliberately no particles on the
-     way in (user's call) — reversing the disintegration would read as a second
+     way in (user's call) - reversing the disintegration would read as a second
      effect rather than as a correction, and undo should feel instant. */
   function putBack() {
     if (!trash || busy) return;
@@ -1470,10 +1470,10 @@
         photos.animate([{ height: h0 + 'px' }, { height: h1 + 'px' }],
                        { duration: 460, easing: EASE });
       }
-      // `backwards`, not `both` — the from-state covers the delay and then the
+      // `backwards`, not `both` - the from-state covers the delay and then the
       // stylesheet takes back over, so nothing stays pinned by a finished
       // animation (the bug that stranded 001's morph on its last keyframe).
-      /* opacity only — no scale. the returning tiles arrive while the others are
+      /* opacity only - no scale. the returning tiles arrive while the others are
          still shifting, so a scale here IS a scale during the rearrange, which
          is the thing the user ruled out. it also kept them out of step with the
          grid: every other box in this component moves by translation alone. */
@@ -1498,7 +1498,7 @@
     if (reduce.matches) { settle(sel); return; }
     busy = true;
     // let the border and the tick get out of the way first. short, because the
-    // ink fades in over the photo rather than replacing it — the two beats
+    // ink fades in over the photo rather than replacing it - the two beats
     // overlap and only the last frame of this one has to be clean.
     sel.forEach(function (b) { b.classList.add('going'); });
     setTimeout(function () { run(sel); }, 140);
@@ -1521,7 +1521,7 @@
 })();
 
 /* ====================================================================
-   HEADER  —  pinned for the first 5%, then tucks away
+   HEADER  -  pinned for the first 5%, then tucks away
    Visible while the reader is still at the top of the document. Past the
    5% mark it hides on a downward scroll and comes straight back on an
    upward one, so the bar is never covering what you are reading but is
@@ -1531,7 +1531,7 @@
   var nav = document.querySelector('nav');
   if(!nav) return;
   var PIN = 0.05;     /* fraction of the document that stays pinned */
-  var DEADZONE = 6;   /* px — trackpad jitter must not flip the bar */
+  var DEADZONE = 6;   /* px - trackpad jitter must not flip the bar */
   var last = window.scrollY;
   var queued = false;
 
@@ -1542,7 +1542,7 @@
        changes and would flap the bar against the stop. */
     var max = document.documentElement.scrollHeight - window.innerHeight;
     var y = Math.min(Math.max(window.scrollY, 0), Math.max(max, 0));
-    /* measured every frame rather than cached — these pages grow as images
+    /* measured every frame rather than cached - these pages grow as images
        decode, and a stale height puts the 5% mark in the wrong place */
     var pin = document.documentElement.scrollHeight * PIN;
     var delta = y - last;

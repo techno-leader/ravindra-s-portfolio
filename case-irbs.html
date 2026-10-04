@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>IRBS — Case Study · Ravindra Pratap</title>
+<title>IRBS - Case Study · Ravindra Pratap</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16.png">
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
@@ -25,7 +25,7 @@
         url(https://cdn.jsdelivr.net/fontsource/fonts/redaction-35@latest/latin-400-italic.woff) format("woff");
   }
   :root{
-    /* Monochrome ramp. Every step is a true neutral — colour on this site is
+    /* Monochrome ramp. Every step is a true neutral - colour on this site is
        spent only where it carries meaning: the aurora hero and the pointer
        gradient on the case illustrations. Lightness is inherited from the
        lavender palette this replaced (matched in OKLab), so the page keeps its
@@ -47,7 +47,7 @@
        surface. */
     --tint:#939393;
     /* Selection is the third and last place colour is allowed. Not picked by
-       eye and not read off the GLSL constants either — the aurora's CA/CB/CC
+       eye and not read off the GLSL constants either - the aurora's CA/CB/CC
        stops are green/cyan/magenta, but the field as it actually renders is
        a mint at hue 180 (sampled: 535,647 coloured pixels, mean #b0fded).
        This is that mean pushed to oklch(0.95 0.07 180), the lightest in-gamut
@@ -55,7 +55,7 @@
        neutral. */
     --sel:#bbfff0;
 
-    /* radius scale — every corner on the page resolves to one of these */
+    /* radius scale - every corner on the page resolves to one of these */
     --r-sm:8px;
     --r-md:14px;
     --r-lg:20px;
@@ -72,7 +72,7 @@
     --t-sub-lg:40px;
     --t-head:56px;
     --t-head-lg:64px;
-    --t-label:12px;   /* mono labels — the one size every one of them uses */
+    --t-label:12px;   /* mono labels - the one size every one of them uses */
     /* Display weight. Was a literal 600 in ~25 places and shouted next to
        Onest; 450 is a genuine instance of the 400..600 variable range,
        not a synthesised in-between. */
@@ -95,7 +95,7 @@
   .mono{font-family:var(--mono);}
 
   /* "Comet": the tail is the bar's own width, so the fade stretches as you
-     scroll — near the top it is a short dark nib, at the bottom a long sweep.
+     scroll - near the top it is a short dark nib, at the bottom a long sweep.
      A fixed-length tail (the other candidate) reads as a constant-size object
      sliding across, which fights the idea that the bar measures the page. */
   .progress{
@@ -104,7 +104,7 @@
   }
 
   /* Opaque, not a wash. The bar used to be a --paper gradient fading to
-     nothing, which only works while whatever passes under it is also white —
+     nothing, which only works while whatever passes under it is also white -
      over a figure or a dark shot the copy showed through. It is now a real
      surface closed with the same hairline every other divider on the page
      uses, so content scrolls UNDER the header instead of bleeding through it.
@@ -121,19 +121,19 @@
     transition:transform .32s cubic-bezier(.22,1,.36,1);
   }
   /* Pinned for the first 5% of the document, then tucks on a downward scroll
-     and returns on an upward one — driven by the header IIFE at the foot of
+     and returns on an upward one - driven by the header IIFE at the foot of
      the page. -100% takes the border with it, so nothing is left hanging at
      the top edge. */
   nav.is-tucked{transform:translateY(-100%);}
   /* A tucked bar must never strand keyboard focus off-screen. */
   nav:focus-within{transform:translateY(0);}
-  /* opacity:1 overrides `nav a`'s .65 — the logo is an <a> here (it links
+  /* opacity:1 overrides `nav a`'s .65 - the logo is an <a> here (it links
      home) but it is identity, not a nav item to be de-emphasised, and a
      black silhouette at 65% just reads as a printing fault. */
   nav .logo{font-weight:600;text-decoration:none;color:var(--ink);opacity:1;}
   nav .logo img{display:block;height:28px;width:auto;}
   nav .links{display:flex;gap:26px;}
-  /* 44px minimum touch target — the padding is on the link, not the bar */
+  /* 44px minimum touch target - the padding is on the link, not the bar */
   nav a{
     color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
     display:inline-flex;align-items:center;min-height:44px;
@@ -155,7 +155,7 @@
   #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;
        animation:orbdrift 14s ease-in-out infinite alternate;}
   @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
-  /* stepped at 1180/900/640 rather than clamp() — a clamp lands on off-scale sizes */
+  /* stepped at 1180/900/640 rather than clamp() - a clamp lands on off-scale sizes */
   h1{
     font-family:var(--sans);
     font-size:var(--t-head-lg);line-height:1.05;letter-spacing:-0.035em;font-weight:var(--w-head);
@@ -194,7 +194,7 @@
     padding:2px 4px;margin:-2px -4px;
     text-decoration:underline dotted;text-underline-offset:3px;
   }
-  /* Phosphor "Info" (regular), inlined — the ring, stem and dot are one glyph,
+  /* Phosphor "Info" (regular), inlined - the ring, stem and dot are one glyph,
      so nothing can sit off-centre the way a bordered span wrapped around a
      monospace "i" did */
   .define-i{
@@ -214,7 +214,7 @@
   }
   .define-box[hidden]{display:none;}
 
-  /* D-RED: Onest italic, not Redaction — the pull quote was the one place the
+  /* D-RED: Onest italic, not Redaction - the pull quote was the one place the
      serif ran a whole block instead of an accent; the side rule went with it. */
   .pull{
     font-family:var(--sans);font-style:italic;font-weight:400;
@@ -225,7 +225,7 @@
 
   .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0 20px;}
   .cards.four{grid-template-columns:repeat(4,1fr);}
-  /* cards are read, not clicked — flat surface, hairline border, no hover state */
+  /* cards are read, not clicked - flat surface, hairline border, no hover state */
   .card{
     border:1px solid var(--line);border-radius:var(--r-md);padding:20px;
     background:var(--paper);
@@ -243,13 +243,13 @@
   .step div b{display:block;font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;margin-bottom:10px;letter-spacing:-.015em;}
   .step div p{font-size:var(--t-body);line-height:1.6;margin:0;}
 
-  /* interview verbatims — a lighter register than .pull, since several run in sequence */
+  /* interview verbatims - a lighter register than .pull, since several run in sequence */
   .quotes{margin:26px 0;}
   .quote{padding:20px 0;border-top:1px solid var(--line);}
   .quote p{font-family:var(--sans);font-style:italic;color:var(--ink);font-size:var(--t-body);line-height:1.6;margin:0 0 10px;max-width:56ch;}
   .quote i{font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--mut);text-transform:uppercase;}
 
-  /* information-architecture tree — proves "lives inside OneStop" without a screenshot */
+  /* information-architecture tree - proves "lives inside OneStop" without a screenshot */
   .ia-tree{border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;background:var(--surface);}
   .ia-path{display:flex;align-items:center;flex-wrap:wrap;gap:0;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;margin-bottom:22px;}
   .ia-path span:not(:last-child)::after{content:"/";margin:0 10px;color:var(--line);}
@@ -258,7 +258,7 @@
   .ia-leaf{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 10px;background:var(--paper);font-size:var(--t-body);color:var(--ink-body);text-align:center;}
 
   /* ---------------- figures ---------------- */
-  /* flat panel fill — the dot grid and gradient were decoration competing with the artwork */
+  /* flat panel fill - the dot grid and gradient were decoration competing with the artwork */
   figure{
     position:relative;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:38px 0;
     background:var(--surface);
@@ -276,7 +276,7 @@
   .fig-grid figure{margin:0;}
 
   /* ---------------- metrics ---------------- */
-  /* equal columns at one number size — no figure is scaled up to argue for itself */
+  /* equal columns at one number size - no figure is scaled up to argue for itself */
   .impact{
     border-top:1px solid var(--line);margin:50px 0 20px;padding:44px 0 0;
     display:grid;grid-template-columns:repeat(3,1fr);gap:34px;align-items:start;
@@ -300,8 +300,8 @@
   .case-nav b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
   .case-nav .next{text-align:right;}
   /* The footer is now one thing: the lockup, signing the page off and
-     doubling as the way home. The three mono spans it replaced — copyright,
-     "Back to portfolio", and the project tag — are gone deliberately; the
+     doubling as the way home. The three mono spans it replaced - copyright,
+     "Back to portfolio", and the project tag - are gone deliberately; the
      back-link's job is absorbed by the lockup, and the other two were chrome.
      (index.html is the exception and keeps a © on the right.) */
   footer{
@@ -309,7 +309,7 @@
     display:flex;align-items:center;
   }
   /* 32px, chosen by eye against the rendered page, not derived from the type
-     scale — and it deliberately sits below it. The name's cap height is 0.256
+     scale - and it deliberately sits below it. The name's cap height is 0.256
      of the lockup's own height, so 32 renders the cap at 8.2px, equivalent to
      roughly 11px of type: just under the 12px --t-label floor. That is the
      point. At the 51px the scale argues for, the name reads as a line of copy
@@ -320,13 +320,13 @@
     display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
     opacity:1;transition:opacity .3s;
   }
-  /* pure black artwork — it dims, it cannot recolour */
+  /* pure black artwork - it dims, it cannot recolour */
   footer .sig:hover{opacity:.6;}
   footer .sig img{display:block;height:32px;width:auto;}
 
   /* ---------------- evidence reel ---------------- */
   /* one pinned frame, the hi-fi screens running through it as a single specimen
-     reel — ported from case-viewryt.html. Screens here are dark UI, so .shot
+     reel - ported from case-viewryt.html. Screens here are dark UI, so .shot
      takes the ink-inv/mut-inv pair instead of ViewRyt's paper surface. */
   .evidence{display:block;margin-top:44px;}
   .ev-scrolly{position:relative;height:200vh;}
@@ -377,8 +377,8 @@
   @media (prefers-reduced-motion:reduce){
     .rv{opacity:1;transform:none;filter:none;transition:none;}
     .define-t,.case-nav a,nav a,footer .sig{transition:none;}
-    /* The header still tucks — it is a layout response to scroll direction,
-       not decoration — but it does it in one frame instead of sliding. */
+    /* The header still tucks - it is a layout response to scroll direction,
+       not decoration - but it does it in one frame instead of sliding. */
     nav{transition:none;}
     #orb{animation:none;}
     .co,.ev-cap{transition:none;}
@@ -428,7 +428,7 @@
     .case-nav{grid-template-columns:1fr;}
   }
 </style>
-<!-- Microsoft Clarity — visits, heatmaps and session recordings for heyrav.in -->
+<!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -441,7 +441,7 @@
 <div class="progress" id="progress"></div>
 
 <nav>
-  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap — home" width="202" height="280"></a>
+  <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap - home" width="202" height="280"></a>
   <div class="links">
     <a href="index.html#work">Work</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a>
   </div>
@@ -451,9 +451,9 @@
   <canvas id="orb" width="520" height="520"></canvas>
   <div class="wrap">
     <h1 class="rv">Booking a room shouldn't feel like <em>filing a petition.</em></h1>
-    <p class="lede rv rv-d1">IRBS — the Integrated Room Booking System inside IIT Guwahati's OneStop app. Designed for a campus of 7,000+ students where 200+ people run club life out of NEW SAC every single day.</p>
+    <p class="lede rv rv-d1">IRBS - the Integrated Room Booking System inside IIT Guwahati's OneStop app. Designed for a campus of 7,000+ students where 200+ people run club life out of NEW SAC every single day.</p>
     <div class="facts rv rv-d2">
-      <div><small>Role</small><b>Design Lead — Students' Web Committee</b></div>
+      <div><small>Role</small><b>Design Lead - Students' Web Committee</b></div>
       <div><small>Team</small><b>1 designer · 3 developers</b></div>
       <div><small>Status</small><b>Live since Sept 2023</b></div>
     </div>
@@ -470,16 +470,16 @@
           <h2>Campus students don't get proper rooms for meetings &amp; practice sessions.</h2>
         </div>
         <div class="rv rv-d1">
-          <p><span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-sac">NEW SAC<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-sac" role="tooltip" hidden>The New Students' Activity Centre at IIT Guwahati — the building that houses the club rooms, common rooms and board rooms that campus extracurriculars run out of.</span></span> is the beating heart of extracurriculars at IITG — music, dance, coding, art, robotics. But reserving its club rooms, common rooms and board rooms ran on a legacy web portal almost nobody could find, let alone use.</p>
+          <p><span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-sac">NEW SAC<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-sac" role="tooltip" hidden>The New Students' Activity Centre at IIT Guwahati - the building that houses the club rooms, common rooms and board rooms that campus extracurriculars run out of.</span></span> is the beating heart of extracurriculars at IITG - music, dance, coding, art, robotics. But reserving its club rooms, common rooms and board rooms ran on a legacy web portal almost nobody could find, let alone use.</p>
           <p><strong>No time restrictions, confusing UI, and near-zero admin control</strong> meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.</p>
-          <div class="pull">"The conference hall was booked for a whole week — without permission."
+          <div class="pull">"The conference hall was booked for a whole week - without permission."
             <span class="mono">Incident that kicked off the redesign</span>
           </div>
         </div>
       </div>
       <figure class="rv">
-        <img class="flat" src="assets/irbs/legacy-portal.jpg" alt="Legacy booking portal — a full week blocked by one event" />
-        <figcaption>Before — legacy portal, one event blocking an entire week</figcaption>
+        <img class="flat" src="assets/irbs/legacy-portal.jpg" alt="Legacy booking portal - a full week blocked by one event" />
+        <figcaption>Before - legacy portal, one event blocking an entire week</figcaption>
       </figure>
     </div>
   </section>
@@ -491,13 +491,13 @@
       <h2 class="rv">Four kinds of rooms, <em>one queue of frustrated clubs.</em></h2>
       <div class="cards four rv rv-d1">
         <div class="card"><i>Type A</i><b>Club rooms</b><p>Small focused meetings and equipment storage for individual clubs.</p></div>
-        <div class="card"><i>Type B</i><b>Common rooms</b><p>Large gatherings of 25+ people — yoga sessions, events, rehearsals.</p></div>
+        <div class="card"><i>Type B</i><b>Common rooms</b><p>Large gatherings of 25+ people - yoga sessions, events, rehearsals.</p></div>
         <div class="card"><i>Type C</i><b>Board rooms</b><p>Administrative and high-level meetings with the institute.</p></div>
         <div class="card"><i>Type D</i><b>Room-less clubs</b><p>Clubs with no room of their own, fully dependent on availability.</p></div>
       </div>
       <figure class="rv">
         <img class="flat" src="assets/irbs/new-sac.jpg" alt="NEW SAC building at IIT Guwahati" style="max-height:440px;object-fit:cover;width:100%;" />
-        <figcaption>NEW SAC — Students' Activity Centre, IIT Guwahati</figcaption>
+        <figcaption>NEW SAC - Students' Activity Centre, IIT Guwahati</figcaption>
       </figure>
     </div>
   </section>
@@ -509,14 +509,14 @@
       <div class="cols">
         <div class="rv">
           <h2>One workaround explains <em>most of what broke.</em></h2>
-          <p>Every symptom students reported — hoarded rooms, empty common rooms, clubs practising outdoors — traced back to a single administrative shortcut, not a UI problem.</p>
+          <p>Every symptom students reported - hoarded rooms, empty common rooms, clubs practising outdoors - traced back to a single administrative shortcut, not a UI problem.</p>
         </div>
         <div class="rv rv-d1">
           <div class="steps">
-            <div class="step"><div><b>No notifications</b><p>The legacy portal never told a secretary or the VP that a request existed — it just sat, unopened.</p></div></div>
-            <div class="step"><div><b>Calls and mails to the VP</b><p>With nothing to ping them, students chased permission directly — enough volume that it crowded out academics.</p></div></div>
+            <div class="step"><div><b>No notifications</b><p>The legacy portal never told a secretary or the VP that a request existed - it just sat, unopened.</p></div></div>
+            <div class="step"><div><b>Calls and mails to the VP</b><p>With nothing to ping them, students chased permission directly - enough volume that it crowded out academics.</p></div></div>
             <div class="step"><div><b>Every permission set to auto-approve</b><p>The only way to stop the calls and mails was to remove the approval step for everyone, by default.</p></div></div>
-            <div class="step"><div><b>First to apply keeps the room</b><p>With no gate left, submission order — not actual need — decided who got the keys.</p></div></div>
+            <div class="step"><div><b>First to apply keeps the room</b><p>With no gate left, submission order - not actual need - decided who got the keys.</p></div></div>
             <div class="step"><div><b>Priority use loses every time</b><p>Common rooms sat booked-and-empty for weeks, some clubs rehearsed outdoors, and inter-college tech competitions suffered for it.</p></div></div>
           </div>
         </div>
@@ -531,13 +531,13 @@
       <div class="cols">
         <div class="rv">
           <h2>Eleven interviews, <em>three findings.</em></h2>
-          <p>I interviewed <strong>the VP, an ex-VP, 3 club secretaries and a spread of general students</strong> about how they actually got rooms — their current practices, their experience with the old portal, and the workarounds they'd invented.</p>
+          <p>I interviewed <strong>the VP, an ex-VP, 3 club secretaries and a spread of general students</strong> about how they actually got rooms - their current practices, their experience with the old portal, and the workarounds they'd invented.</p>
         </div>
         <div class="rv rv-d1">
           <div class="cards" style="grid-template-columns:1fr;">
-            <div class="card"><i>Finding 01</i><b>Discoverability</b><p>Students relied on word of mouth — most didn't know the portal existed. <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-onestop">OneStop<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-onestop" role="tooltip" hidden>OneStop IITG is a centralized mobile application developed by the Students' Web Committee to assist the IIT Guwahati community with daily campus life. It consolidates essential services into a single platform, offering features like academic timetables, bus and ferry schedules, room bookings and a lost-and-found portal.</span></span>, however, was already opened daily by everyone.</p></div>
+            <div class="card"><i>Finding 01</i><b>Discoverability</b><p>Students relied on word of mouth - most didn't know the portal existed. <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-onestop">OneStop<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-onestop" role="tooltip" hidden>OneStop IITG is a centralized mobile application developed by the Students' Web Committee to assist the IIT Guwahati community with daily campus life. It consolidates essential services into a single platform, offering features like academic timetables, bus and ferry schedules, room bookings and a lost-and-found portal.</span></span>, however, was already opened daily by everyone.</p></div>
             <div class="card"><i>Finding 02</i><b>Functionality</b><p>The old UI caused booking errors, offered no way to reject a request with a reason, and let incomplete forms through.</p></div>
-            <div class="card"><i>Finding 03</i><b>Events &amp; fests</b><p>Peak periods created resource conflicts that needed hierarchical access — some requests simply matter more during a fest.</p></div>
+            <div class="card"><i>Finding 03</i><b>Events &amp; fests</b><p>Peak periods created resource conflicts that needed hierarchical access - some requests simply matter more during a fest.</p></div>
           </div>
         </div>
       </div>
@@ -552,7 +552,7 @@
       <figure class="rv">
         <img class="ph" src="assets/irbs/whatsapp-1.webp" alt="The Gymkhana WhatsApp group: a secretary is told to look for a room in another board, and replies that most tech clubs are short of space ahead of Inter IIT Tech Meet" />
         <img class="ph" src="assets/irbs/whatsapp-2.webp" alt="The same group two months later: a secretary asks whether the yoga room is free from nine to twelve, and is answered by another secretary guessing that Alcher is using it" />
-        <figcaption>The group the portal lost to — secretaries brokering rooms by hand</figcaption>
+        <figcaption>The group the portal lost to - secretaries brokering rooms by hand</figcaption>
       </figure>
     </div>
   </section>
@@ -567,7 +567,7 @@
           <p>Instead of another portal to forget, IRBS lives inside the app every IITG student already opens daily. Booking takes three steps; approval is transparent.</p>
           <div class="steps">
             <div class="step"><div><b>Select a room</b><p>Browse club, common and board rooms with live availability.</p></div></div>
-            <div class="step"><div><b>Choose a time slot</b><p>Calendar view shows existing bookings — no more blind requests.</p></div></div>
+            <div class="step"><div><b>Choose a time slot</b><p>Calendar view shows existing bookings - no more blind requests.</p></div></div>
             <div class="step"><div><b>State the purpose</b><p>A stated reason travels with every request, so approvers decide fast.</p></div></div>
           </div>
         </div>
@@ -589,13 +589,13 @@
         </div>
       </div>
       <div class="cards rv">
-        <div class="card"><i>For approvers</i><b>Accept / reject with a reason</b><p>Secretaries get notified on every request and must state a reason to reject — killing the silent-limbo problem.</p></div>
+        <div class="card"><i>For approvers</i><b>Accept / reject with a reason</b><p>Secretaries get notified on every request and must state a reason to reject - killing the silent-limbo problem.</p></div>
         <div class="card"><i>For frequent users</i><b>Default permissions</b><p>Trusted users earn automated acceptance; hierarchy handles high-demand fest periods.</p></div>
       </div>
-      <p class="rv">Living inside OneStop means inheriting its system rather than authoring one. Nothing here was chosen — the palette, the typeface, the 8px scale and the 24×24 icon size all arrived with the host app, and text contrast holds WCAG AAA on every background already in use.</p>
+      <p class="rv">Living inside OneStop means inheriting its system rather than authoring one. Nothing here was chosen - the palette, the typeface, the 8px scale and the 24×24 icon size all arrived with the host app, and text contrast holds WCAG AAA on every background already in use.</p>
       <figure class="dark rv">
         <img src="assets/irbs/onestop-system.webp" alt="OneStop's design system: seven palette swatches from #001B3E through #FFFFFF, a Montserrat specimen in Regular, Medium and SemiBold, and a spacing spec showing an 80px avatar beside a 24px icon" />
-        <figcaption>Inherited whole — OneStop's palette, typeface and 8px scale</figcaption>
+        <figcaption>Inherited whole - OneStop's palette, typeface and 8px scale</figcaption>
       </figure>
 
       <!-- no .rv here, as in case-viewryt.html: the reveal's translateY(36px)
@@ -605,19 +605,19 @@
         <div class="ev-scrolly">
           <div class="ev-stage">
             <div class="ev-gut">
-              <div class="co" data-shot="0"><span>Requests, pinned rooms and common rooms live on one screen — nothing needs a second app open beside it.</span></div>
-              <div class="co" data-shot="1"><span>A real calendar, not a blind request — students see every existing booking before choosing a slot.</span></div>
-              <div class="co" data-shot="2"><span>Status is colour-coded — pending, approved, rejected — so a secretary never has to open a request to know where it stands.</span></div>
+              <div class="co" data-shot="0"><span>Requests, pinned rooms and common rooms live on one screen - nothing needs a second app open beside it.</span></div>
+              <div class="co" data-shot="1"><span>A real calendar, not a blind request - students see every existing booking before choosing a slot.</span></div>
+              <div class="co" data-shot="2"><span>Status is colour-coded - pending, approved, rejected - so a secretary never has to open a request to know where it stands.</span></div>
               <div class="co" data-shot="3"><span>Pinned rooms surface first; the rest are grouped by the same room types laid out in Context.</span></div>
-              <div class="co" data-shot="4"><span>Every field a secretary needs to decide fast — name, designation, date, time, purpose — travels with the request.</span></div>
+              <div class="co" data-shot="4"><span>Every field a secretary needs to decide fast - name, designation, date, time, purpose - travels with the request.</span></div>
             </div>
             <div class="ev-shots">
               <figure class="shot dark">
                 <div class="ev-screen">
                   <div class="ev-feed">
-                    <img data-fault="0" src="assets/irbs/ev-01-home.jpg" alt="IRBS home — requests, pinned rooms and common rooms">
+                    <img data-fault="0" src="assets/irbs/ev-01-home.jpg" alt="IRBS home - requests, pinned rooms and common rooms">
                     <img data-fault="1" src="assets/irbs/ev-02-calendar.jpg" alt="Yoga Room slot calendar showing an existing booking">
-                    <img data-fault="2" src="assets/irbs/ev-03-history.jpg" alt="Booking history — colour-coded pending, approved and rejected requests">
+                    <img data-fault="2" src="assets/irbs/ev-03-history.jpg" alt="Booking history - colour-coded pending, approved and rejected requests">
                     <img data-fault="3" src="assets/irbs/ev-04-roomlist.jpg" alt="Room list grouped by pinned, common and club rooms">
                     <img data-fault="4" src="assets/irbs/ev-05-request.jpg" alt="Booking request form for the Yoga Room">
                   </div>
@@ -647,18 +647,18 @@
           <h2>Wireframes, walkthroughs, <em>and a humbling beta.</em></h2>
         </div>
         <div class="rv rv-d1">
-          <p>We tested multiple layouts with <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-cw">cognitive walkthroughs<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-cw" role="tooltip" hidden>A usability method where evaluators step through a task exactly as a first-time user would, asking at each step whether the next action is obvious and whether its result is understood.</span></span> before writing code — split testing layouts against each other and watching where participants actually hesitated.</p>
+          <p>We tested multiple layouts with <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-cw">cognitive walkthroughs<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-cw" role="tooltip" hidden>A usability method where evaluators step through a task exactly as a first-time user would, asking at each step whether the next action is obvious and whether its result is understood.</span></span> before writing code - split testing layouts against each other and watching where participants actually hesitated.</p>
         </div>
       </div>
       <div class="cards rv rv-d1">
-        <div class="card"><i>Finding 01</i><b>Icons earned their place</b><p>Layouts pairing text with icons outperformed text-only ones — participants scanned them faster.</p></div>
+        <div class="card"><i>Finding 01</i><b>Icons earned their place</b><p>Layouts pairing text with icons outperformed text-only ones - participants scanned them faster.</p></div>
         <div class="card"><i>Finding 02</i><b>The carousel went unnoticed</b><p>Participants couldn't tell a horizontal carousel was scrollable, and never interacted with it.</p></div>
         <div class="card"><i>Finding 03</i><b>One filled button, not two</b><p>A filled primary against an outlined secondary beat two filled buttons, which caused hesitation and mis-taps.</p></div>
         <div class="card"><i>Finding 04</i><b>Colour did the sorting</b><p>Colour-coding request status let participants read it at a glance, without opening anything.</p></div>
       </div>
       <div class="fig-grid rv">
-        <figure class="dark"><img src="assets/irbs/wireframe-a.webp" alt="Wireframe of the layout that put cards and filter chips in horizontal carousels" /><figcaption>Layout A — horizontal carousels</figcaption></figure>
-        <figure class="dark"><img src="assets/irbs/wireframe-b.webp" alt="Wireframe of the layout that laid every card out in a visible grid" /><figcaption>Layout B — everything in view</figcaption></figure>
+        <figure class="dark"><img src="assets/irbs/wireframe-a.webp" alt="Wireframe of the layout that put cards and filter chips in horizontal carousels" /><figcaption>Layout A - horizontal carousels</figcaption></figure>
+        <figure class="dark"><img src="assets/irbs/wireframe-b.webp" alt="Wireframe of the layout that laid every card out in a visible grid" /><figcaption>Layout B - everything in view</figcaption></figure>
       </div>
     </div>
   </section>
@@ -667,7 +667,7 @@
   <section>
     <div class="wrap">
       <div class="sec-label rv">Impact</div>
-      <h2 class="rv">Live since September 2023 — <em>and still how rooms get booked.</em></h2>
+      <h2 class="rv">Live since September 2023 - <em>and still how rooms get booked.</em></h2>
       <div class="impact rv rv-d1">
         <div class="lead"><b data-count="15" data-suf="+">0</b><span>Clubs onboarded</span></div>
         <div><b data-count="200" data-suf="+">0</b><span>Students served daily</span></div>
@@ -675,18 +675,18 @@
       </div>
       <figure class="dark rv">
         <img class="ph" src="assets/irbs/calendar-live.png" alt="Live bookings in the Yoga Room calendar" />
-        <figcaption>Real usage — a week in the Yoga Room</figcaption>
+        <figcaption>Real usage - a week in the Yoga Room</figcaption>
       </figure>
     </div>
   </section>
 
   <div class="wrap">
     <div class="case-nav rv">
-      <a href="case-dentomate.html"><small><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg> Previous case</small><b>Dentomate — killing the WhatsApp tax</b></a>
-      <a class="next" href="case-viewryt.html"><small>Next case <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></small><b>ViewRyt — design's ROI, proven</b></a>
+      <a href="case-dentomate.html"><small><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg> Previous case</small><b>Dentomate - killing the WhatsApp tax</b></a>
+      <a class="next" href="case-viewryt.html"><small>Next case <svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></small><b>ViewRyt - design's ROI, proven</b></a>
     </div>
     <footer>
-      <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap — home" width="387" height="125"></a>
+      <a class="sig" href="index.html"><img src="assets/brand/lockup.webp" alt="Ravindra Pratap - home" width="387" height="125"></a>
     </footer>
   </div>
 </main>
@@ -856,7 +856,7 @@ function evidenceReel(sc){
       }
       return num / den;
     };
-    /* summed, not maxed — across a seam the two specimens each half-fill the
+    /* summed, not maxed - across a seam the two specimens each half-fill the
        frame, and the line they share should not dip as it passes */
     const covOf = ([a, b]) => { let t = 0; for(let s = a; s <= b; s++) t += cover(s); return Math.min(t, 1); };
 
@@ -888,7 +888,7 @@ function evidenceReel(sc){
       else c.style.transform = 'translateY(' + (off + y - half) + 'px)';
     });
     /* two callouts can be on screen together during a handoff and both hit the
-       same clamp — nudge them apart so they never stack */
+       same clamp - nudge them apart so they never stack */
     placed.sort((a, b) => a.y - b.y);
     for(let i = 1; i < placed.length; i++){
       const need = placed[i-1].y + placed[i-1].half + 18 + placed[i].half;
@@ -953,7 +953,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
 })();
 
 /* ====================================================================
-   HEADER  —  pinned for the first 5%, then tucks away
+   HEADER  -  pinned for the first 5%, then tucks away
    Visible while the reader is still at the top of the document. Past the
    5% mark it hides on a downward scroll and comes straight back on an
    upward one, so the bar is never covering what you are reading but is
@@ -963,7 +963,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
   const nav = document.querySelector('nav');
   if(!nav) return;
   const PIN = 0.05;     /* fraction of the document that stays pinned */
-  const DEADZONE = 6;   /* px — trackpad jitter must not flip the bar */
+  const DEADZONE = 6;   /* px - trackpad jitter must not flip the bar */
   let last = window.scrollY;
   let queued = false;
 
@@ -974,7 +974,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
        changes and would flap the bar against the stop. */
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const y = Math.min(Math.max(window.scrollY, 0), Math.max(max, 0));
-    /* measured every frame rather than cached — these pages grow as images
+    /* measured every frame rather than cached - these pages grow as images
        decode, and a stale height puts the 5% mark in the wrong place */
     const pin = document.documentElement.scrollHeight * PIN;
     const delta = y - last;
