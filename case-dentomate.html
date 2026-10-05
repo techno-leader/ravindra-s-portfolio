@@ -492,8 +492,8 @@
   figure.jr-card{position:static;padding:0;border:0;background:none;border-radius:0;overflow:visible;
     align-items:flex-start;justify-content:flex-start;}
   figcaption.jr-cap{position:static;font-family:var(--sans);letter-spacing:0;text-transform:none;color:var(--ink);}
-  .jr-img{height:min(62vh,600px);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);}
-  .jr-img img{display:block;height:100%;width:auto;}
+  .jr-img{height:min(62vh,600px);padding:20px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);}
+  .jr-img img{display:block;height:100%;width:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper);}
   .jr-cap{display:flex;flex-direction:column;gap:6px;max-width:420px;}
   .jr-cap i{font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
   .jr-cap b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);letter-spacing:-.015em;line-height:1.2;}
@@ -505,7 +505,7 @@
 
   /* product beats, after interfere.com: text left, the real screen running
      off the right edge of the viewport, one pin on the part that matters */
-  .beat{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:start;padding:72px 0;border-top:1px solid var(--line);}
+  .beat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:56px;align-items:start;padding:72px 0;border-top:1px solid var(--line);}
   /* grid items default to min-width:auto, and a 1100px screenshot would prop
      the column open on a phone */
   .beat > *{min-width:0;}
@@ -515,13 +515,6 @@
   .caps{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);}
   .caps ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin:0;padding:0;}
   .caps li{font-size:var(--t-body);color:var(--ink-2);}
-  /* bleed: the column reaches past the wrap to the viewport's right edge */
-  .beat-ui{margin-right:calc((min(100vw, 1080px) - 88px - 100vw) / 2);}
-  .crop{position:relative;height:var(--h,460px);overflow:hidden;border:1px solid var(--line);border-right:0;
-    border-radius:var(--r-lg) 0 0 var(--r-lg);background:var(--surface);
-    -webkit-mask:linear-gradient(180deg,var(--ink) 78%,transparent);mask:linear-gradient(180deg,var(--ink) 78%,transparent);}
-  .shot-in{position:relative;width:var(--w,900px);transform:translate(var(--tx,0px),var(--ty,0px));}
-  .shot-in img{display:block;width:100%;height:auto;}
   /* numbered dot on the screen; its note sits in the text column (.keys), so
      nothing is laid over the UI it explains */
   .pin,.keys .k{display:grid;place-items:center;width:22px;height:22px;border-radius:var(--r-pill);
@@ -534,15 +527,14 @@
   /* ViewRyt's phone: no bezel, no shadow, a 2px hairline on the device radius */
   .phones{display:flex;gap:32px;align-items:flex-start;}
   figure.phone{position:relative;width:260px;flex:none;margin:0;padding:0;overflow:visible;
-    border:2px solid var(--line);border-radius:var(--r-device);background:var(--paper);box-shadow:none;}
-  .phone .screen{border-radius:calc(var(--r-device) - 2px);overflow:hidden;}
+    border:2px solid var(--line);border-radius:var(--r-lg);background:var(--paper);box-shadow:none;}
+  .phone .screen{border-radius:calc(var(--r-lg) - 2px);overflow:hidden;}
   .phone .screen img{display:block;width:100%;height:auto;}
   .phone + .phone{margin-top:56px;}
 
 
   @media (max-width:900px){
     .beat{grid-template-columns:minmax(0,1fr);gap:32px;padding:56px 0;}
-    .crop{height:360px;}
     .loop{flex-wrap:wrap;}
     .loop-node{flex:1 1 40%;}
     .loop-arrow{display:none;}
@@ -552,11 +544,10 @@
     .jr-track{flex-direction:column;gap:56px;transform:none!important;padding:0 44px;}
     .jr-card{opacity:1;}
     .jr-img{height:auto;max-width:100%;}
-    .jr-img img{width:100%;height:auto;max-height:70vh;object-fit:contain;}
+    .jr-img img{width:100%;height:auto;max-height:66vh;object-fit:contain;}
     .jr-bar{display:none;}
   }
   @media (max-width:640px){
-    .beat-ui{margin-right:-22px;}
     .jr-track{padding:0 22px;}
     .caps ul{grid-template-columns:1fr;}
     .phones{gap:14px;}
@@ -571,12 +562,10 @@
     .jr-bar{display:none;}
   }
 
-  /* research: each annotated artifact large, its numbered notes beside it */
+  /* research rows: artifact on its mat, numbered notes beside it */
   .ann-row{display:grid;grid-template-columns:1.7fr 1fr;gap:48px;align-items:center;margin-top:48px;}
-  .ann-row.form-row{grid-template-columns:minmax(0,300px) 1fr;}
+  .ann-row.form-row{grid-template-columns:minmax(0,320px) 1fr;}
   figure.ann-fig{position:static;margin:0;padding:0;border:0;background:none;display:block;overflow:visible;}
-  .ann-img{position:relative;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;}
-  .ann-img img{display:block;width:100%;height:auto;}
   .ann-notes .num{display:block;font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
   .ann-notes .keys{margin:14px 0 0;}
   .ann-notes .keys li{align-items:flex-start;line-height:1.45;}
@@ -593,6 +582,59 @@
     .ann-row.form-row figure{max-width:260px;}
   }
   @media (prefers-reduced-motion:reduce){ .vid canvas.fx{transition:none;} }
+
+  /* one mat for every screenshot on the page: surface, hairline, 24px all round,
+     and the screen inside on its own hairline. Pins are placed on .shot, so
+     their percentages are percentages of the image. */
+  .mat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;}
+  .shot{position:relative;}
+  .shot > img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper);}
+
+  /* growth: the app's analytics screen rebuilt in HTML. Its colours are the
+     app's, named here and used nowhere else on the page. */
+  :root{--app-blue:#2563eb;--app-green:#10b981;--app-red:#ef4444;--app-orange:#f97316;--app-amber:#eab308;
+    --app-indigo:#6366f1;--app-bg:#f8fafc;--app-line:#e5e7eb;--app-ink:#111827;--app-mut:#6b7280;}
+  .app-ui{display:grid;gap:12px;padding:14px;background:var(--app-bg);border:1px solid var(--line);border-radius:var(--r-sm);
+    font-family:var(--sans);color:var(--app-ink);}
+  .au-row3{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:12px;}
+  .au-row2{display:grid;grid-template-columns:1fr 1.25fr;gap:12px;}
+  .au-card{position:relative;background:var(--paper);border:1px solid var(--app-line);border-radius:var(--r-md);padding:14px;min-width:0;}
+  /* dots live in their card, top-right, so they follow it when the cards stack */
+  .pin.au-pin{left:auto;top:-11px;right:-11px;margin:0;}
+  .au-card > b{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;margin-bottom:10px;}
+  .au-blue{background:var(--app-blue);border-color:var(--app-blue);color:var(--paper);}
+  .au-blue > b{justify-content:center;}
+  .au-split{display:grid;grid-template-columns:1fr 1fr;text-align:center;}
+  .au-split > div + div{border-left:1px solid color-mix(in srgb, var(--paper) 30%, transparent);}
+  .au-split strong{display:block;font-size:28px;font-weight:600;line-height:1.1;}
+  .au-split small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;opacity:.85;margin-top:4px;}
+  .au-risk{display:flex;align-items:center;gap:12px;}
+  .au-donut{flex:none;width:56px;height:56px;border-radius:var(--r-pill);
+    background:conic-gradient(var(--app-red) 0 34%, var(--app-orange) 0 89%, var(--app-amber) 0 100%);
+    -webkit-mask:radial-gradient(circle, transparent 46%, var(--ink) 47%);mask:radial-gradient(circle, transparent 46%, var(--ink) 47%);}
+  .au-risk ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:10px;color:var(--app-mut);white-space:nowrap;}
+  .au-risk li{display:flex;align-items:center;gap:6px;}
+  .au-risk i,.au-key i{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--app-green);}
+  .au-risk i.r{background:var(--app-red);} .au-risk i.o{background:var(--app-orange);} .au-risk i.y{background:var(--app-amber);}
+  .au-ai .icon{color:var(--app-blue);}
+  .au-card p{font-size:12px;line-height:1.45;color:var(--app-mut);margin:0 0 10px;}
+  .au-n{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;margin-right:6px;border-radius:var(--r-pill);
+    background:color-mix(in srgb, var(--app-blue) 12%, var(--paper));color:var(--app-blue);font-size:11px;font-weight:600;}
+  .au-btn{display:inline-block;font-size:11px;font-weight:600;color:var(--paper);background:var(--app-blue);padding:5px 10px;border-radius:var(--r-sm);}
+  .au-key{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--app-mut);margin:-4px 0 8px;}
+  .au-key i.rt{margin-left:8px;background:var(--app-blue);}
+  .au-chart{display:flex;align-items:flex-end;gap:10px;height:96px;padding-top:4px;border-bottom:1px solid var(--app-line);}
+  .au-col{position:relative;flex:1;height:100%;display:flex;flex-direction:column-reverse;}
+  .au-col i{display:block;height:var(--h);background:var(--app-indigo);border-radius:3px 3px 0 0;}
+  .au-chart.stacked .au-col i{background:var(--app-green);border-radius:0;}
+  .au-chart.stacked .au-col i.rt{background:var(--app-blue);}
+  .au-chart.stacked .au-col i:last-of-type{border-radius:3px 3px 0 0;}
+  .au-col em{position:absolute;top:100%;left:0;right:0;text-align:center;font-style:normal;font-size:9px;color:var(--app-mut);margin-top:4px;}
+  .au-row2 .au-card{padding-bottom:24px;}
+  @media (max-width:640px){
+    .mat{padding:14px;}
+    .au-row3,.au-row2{grid-template-columns:1fr;}
+  }
 </style>
 <!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
@@ -620,7 +662,7 @@
     <p class="lede rv rv-d1">Dentomate is practice software I designed and built for Indian dental clinics. It keeps patient records, sends prescriptions on WhatsApp and reminds patients when their next visit is due, so clinics stop losing the patients they already have.</p>
     <div class="facts rv rv-d2">
       <div><small>Role</small><b>Founder - design, build, GTM</b></div>
-      <div><small>Live</small><b>34 clinics, 30 doctors</b></div>
+      <div><small>Stage</small><b>Early, 34 clinics and growing</b></div>
       <div><small>Built for</small><b>Indian dental clinics</b></div>
       <div><small>Works on</small><b>Phone, tablet, desktop</b></div>
     </div>
@@ -698,8 +740,8 @@
       </div>
       <div class="ann-row rv">
         <figure class="ann-fig">
-          <div class="ann-img"><img src="assets/dentomate/attempts/01-register.jpg" alt="A clinic's handwritten register with columns for patient, work, lab sent and received, call, mobile, lab, cementation date and warranty. Names and numbers blurred." width="1400" height="1050">
-            <span class="pin" style="--x:46.6%;--y:12.4%">1</span><span class="pin" style="--x:37.5%;--y:11.2%">2</span><span class="pin" style="--x:80%;--y:11.4%">3</span></div>
+          <div class="mat"><div class="shot"><img src="assets/dentomate/attempts/01-register.jpg" alt="A clinic's handwritten register with columns for patient, work, lab sent and received, call, mobile, lab, cementation date and warranty. Names and numbers blurred." width="1400" height="1050">
+            <span class="pin" style="--x:46.6%;--y:12.4%">1</span><span class="pin" style="--x:37.5%;--y:11.2%">2</span><span class="pin" style="--x:80%;--y:11.4%">3</span></div></div>
         </figure>
         <div class="ann-notes">
           <i class="num">The paper register</i>
@@ -712,8 +754,8 @@
       </div>
       <div class="ann-row form-row rv">
         <figure class="ann-fig form">
-          <div class="ann-img"><img src="assets/dentomate/attempts/strip-3-form.jpg" alt="The Google Form's tag list: JH, PH, ED, MB, DC, PY, FP, ORT, IMP, TRS" width="424" height="600">
-            <span class="pin" style="--x:6%;--y:27%">4</span><span class="pin" style="--x:6%;--y:50%">5</span></div>
+          <div class="mat"><div class="shot"><img src="assets/dentomate/attempts/strip-3-form.jpg" alt="The Google Form's tag list: JH, PH, ED, MB, DC, PY, FP, ORT, IMP, TRS" width="372" height="524">
+            <span class="pin" style="--x:3%;--y:23.5%">4</span><span class="pin" style="--x:3%;--y:42%">5</span></div></div>
         </figure>
         <div class="ann-notes">
           <i class="num">The Google Form</i>
@@ -767,11 +809,11 @@
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><span class="app-ph"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span></span><i>Start</i><b>Paper register</b><span class="why">Every visit, lab order and phone call written by hand. Nothing reminds anyone.</span></figcaption></figure>
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-2-sheet.jpg" alt="The 2021 patient spreadsheet: date, name, age, sex, phone and village. Personal details blurred." width="760" height="470"></div>
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/excel.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"></span><i>Try 01</i><b>A spreadsheet</b><span class="why">Searchable, but too slow for the front desk to keep up with during a working day.</span></figcaption></figure>
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-3-form.jpg" alt="The Google Form used to register each patient, with treatment tags as tick-boxes" width="424" height="600"></div>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-3-form.jpg" alt="The Google Form used to register each patient, with treatment tags as tick-boxes" width="372" height="524"></div>
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/forms.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/appsscript.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 02</i><b>Form, sheet and a script</b><span class="why">A Google Form per patient and an Apps Script sending WhatsApp messages. ₹1,500 a month, a developer for every fix, and no room for the treatment list.</span></figcaption></figure>
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-4-appsheet.jpg" alt="The AppSheet patient app built on the same sheet. Patient details blurred." width="290" height="500"></div>
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/appsheet.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 03</i><b>AppSheet</b><span class="why">A real app on the same sheet. Data entry got easier. The API bill and the developer stayed.</span></figcaption></figure>
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-5-prototype.jpg" alt="The first prototype's treatment plan: every treatment as a tick-box" width="667" height="520"></div>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-5-prototype.jpg" alt="The first prototype's treatment plan: every treatment as a tick-box" width="600" height="520"></div>
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Prototype</i><b>An app for one clinic</b><span class="why">Every treatment became a tick-box. Recording a visit dropped under a minute.</span></figcaption></figure>
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-6-today.jpg" alt="Dentomate today: the patient register grouped by day" width="1000" height="620"></div>
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Today</i><b>Dentomate</b><span class="why">Piloted with three dentists, now live in 34 clinics.</span></figcaption></figure>
@@ -795,9 +837,7 @@
           <p>Treatments are grouped the way dentists think about them: general, endodontics, surgery, prostho and ortho. The dentist taps, ticks the details and moves on. We tested it with dentists until a full patient entry took less than a minute.</p>
           <ol class="keys"><li><span class="k">1</span>Tap a tag to add a treatment</li><li><span class="k">2</span>Tick the details, done</li></ol>
           <div class="caps"><ul><li>Treatment tabs</li><li>Quick tags</li><li>Medical history</li><li>Doctor-only notes</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:672px;--tx:28px;--ty:28px">
-          <img src="assets/dentomate/product/01-treatments.png" alt="Treatment plan with tabs for General, Endodontics, Surgery and Extractions, Prostho and Implants, and quick-add tags" width="672" height="405">
-          <span class="pin" style="--x:7.5%;--y:25.5%">1</span><span class="pin" style="--x:6.8%;--y:59%">2</span></div></div></div>
+        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/01-treatments.png" alt="Treatment plan with tabs for General, Endodontics, Surgery and Extractions, Prostho and Implants, and quick-add tags" width="672" height="405"><span class="pin" style="--x:7.5%;--y:25.5%">1</span><span class="pin" style="--x:6.8%;--y:59%">2</span></div></div></div>
       </div>
 
       <div class="beat">
@@ -805,9 +845,7 @@
           <p>As the patient leaves, a PDF with the clinic's branding and the doctor's name goes to their WhatsApp, with care advice in the message. If they reply, the front desk answers from the same screen.</p>
           <ol class="keys"><li><span class="k">1</span>Prescription attached, care advice included</li><li><span class="k">2</span>WhatsApp's reply window, counting down</li></ol>
           <div class="caps"><ul><li>Clinic branding</li><li>Doctor's name</li><li>1-0-1 dosage</li><li>Hindi and English</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop" style="--h:520px"><div class="shot-in" style="--w:1100px;--tx:-280px;--ty:-320px">
-          <img src="assets/dentomate/app-inbox.jpg" alt="The Dentomate inbox: a WhatsApp conversation about a prescription, with the reply window counting down above the message box" width="1600" height="1164">
-          <span class="pin" style="--x:66.5%;--y:50%">1</span><span class="pin" style="--x:54.5%;--y:88.5%">2</span></div></div></div>
+        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/02-prescription.jpg" alt="A WhatsApp conversation in Dentomate: the clinic's message with the prescription attached, the patient's reply, and the reply window counting down above the message box" width="715" height="814"><span class="pin" style="--x:29%;--y:32%">1</span><span class="pin" style="--x:4.5%;--y:83.5%">2</span></div></div></div>
       </div>
 
       <div class="beat">
@@ -815,19 +853,25 @@
           <p>Patients who are due for a visit are tagged in the list. The front desk selects them, sends one campaign, and sees Sent, Delivered and Read against every name. No API subscription, no developer.</p>
           <ol class="keys"><li><span class="k">1</span>Select who is due, send once</li><li><span class="k">2</span>Sent, Delivered, Read on every patient</li></ol>
           <div class="caps"><ul><li>Due for visit</li><li>7, 90, 180-day recalls</li><li>Hindi and English</li><li>One shared API</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:1100px;--tx:-200px;--ty:-80px">
-          <img src="assets/dentomate/app-whatsapp.jpg" alt="The WhatsApp patient list: each patient with Sent, Delivered or Read, tags like New patient and High value, and a New Campaign button" width="1600" height="978">
-          <span class="pin" style="--x:52%;--y:24.7%">1</span><span class="pin" style="--x:38.5%;--y:52%">2</span></div></div></div>
+        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/03-recall.jpg" alt="The WhatsApp patient list: each patient with Read or Delivered, tags like New patient, High value and Medical risk, and a New Campaign button" width="790" height="640"><span class="pin" style="--x:63%;--y:14.3%">1</span><span class="pin" style="--x:35.5%;--y:56%">2</span></div></div></div>
       </div>
 
       <div class="beat">
         <div class="beat-txt rv"><i class="num">04</i><h3>Nudges to grow the practice</h3>
-          <p>The dashboard goes past revenue. It shows which treatments earn the most, which patients carry medical risk, and whether new patients are coming back, then points the clinic at who to reach next.</p>
-          <ol class="keys"><li><span class="k">1</span>Insights flag the patients who need attention</li><li><span class="k">2</span>New and returning patients, side by side</li></ol>
+          <p>The dashboard goes past revenue. It shows which treatments earn the most, which patients carry medical risk, and whether new patients are coming back, then points the clinic at who to reach next. Figures shown are a representative clinic.</p>
+          <ol class="keys"><li><span class="k">1</span>Insights flag the patients who need attention</li><li><span class="k">2</span>Returning patients, month on month</li></ol>
           <div class="caps"><ul><li>Treatment value mix</li><li>Medical risk profile</li><li>Patient demographics</li><li>New vs returning</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:720px;--tx:28px;--ty:28px">
-          <img src="assets/dentomate/product/04-insights.png" alt="Dentomate insights: procedure value mix, medical risk profile, AI insights flagging 3 high-risk patients, patient demographics, and acquisition versus retention" width="1016" height="563">
-          <span class="pin" style="--x:68.5%;--y:8.5%">1</span><span class="pin" style="--x:52.5%;--y:53.5%">2</span></div></div></div>
+        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot app-ui" role="img" aria-label="Dentomate insights: 42 high-value and 118 routine procedures, a medical risk breakdown, an AI insight that 14 patients are due for RCT follow-up this week, patient age groups, and returning patients rising from 9 in April to 38 in September">
+            <div class="au-row3">
+              <div class="au-card au-blue"><b>Procedure Value Mix</b><div class="au-split"><div><strong>42</strong><small>High value<br>Ortho / Imp / RCT</small></div><div><strong>118</strong><small>Routine<br>Scale / Extract</small></div></div></div>
+              <div class="au-card"><b>Medical Risk Profile</b><div class="au-risk"><span class="au-donut"></span><ul><li><i class="r"></i>Diabetes 21</li><li><i class="o"></i>High BP 34</li><li><i class="y"></i>Kidney, liver 7</li></ul></div></div>
+              <div class="au-card"><b class="au-ai"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M197.58,129.06,146,110l-19-51.62a15.92,15.92,0,0,0-29.88,0L78,110l-51.62,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0L146,178l51.62-19a15.92,15.92,0,0,0,0-29.88ZM137,164.22a8,8,0,0,0-4.74,4.74L112,223.85,91.78,169A8,8,0,0,0,87,164.22L32.15,144,87,123.78A8,8,0,0,0,91.78,119L112,64.15,132.22,119a8,8,0,0,0,4.74,4.74L191.85,144ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z"/></svg>AI Insights</b><p><span class="au-n">14</span>patients are due for RCT follow-up this week.</p><span class="au-btn">Send recall</span><span class="pin au-pin">1</span></div>
+            </div>
+            <div class="au-row2">
+              <div class="au-card"><b>Patient Demographics</b><div class="au-chart"><span class="au-col"><i style="--h:37%"></i><em>0-18</em></span><span class="au-col"><i style="--h:100%"></i><em>19-35</em></span><span class="au-col"><i style="--h:76%"></i><em>36-50</em></span><span class="au-col"><i style="--h:52%"></i><em>51+</em></span></div></div>
+              <div class="au-card"><b>Acquisition vs Retention</b><span class="au-key"><i></i>New<i class="rt"></i>Returning</span><span class="pin au-pin">2</span><div class="au-chart stacked"><span class="au-col"><i class="rt" style="--h:13%"></i><i style="--h:33%"></i><em>Apr</em></span><span class="au-col"><i class="rt" style="--h:21%"></i><i style="--h:37%"></i><em>May</em></span><span class="au-col"><i class="rt" style="--h:28%"></i><i style="--h:36%"></i><em>Jun</em></span><span class="au-col"><i class="rt" style="--h:37%"></i><i style="--h:40%"></i><em>Jul</em></span><span class="au-col"><i class="rt" style="--h:46%"></i><i style="--h:39%"></i><em>Aug</em></span><span class="au-col"><i class="rt" style="--h:57%"></i><i style="--h:43%"></i><em>Sep</em></span></div></div>
+            </div>
+          </div></div></div>
       </div>
 
       <div class="beat">
@@ -835,9 +879,7 @@
           <p>Many dentists run more than one clinic. Dentomate keeps every branch under one account at no extra cost, and old registers and sheets can be imported, so no clinic starts from zero.</p>
           <ol class="keys"><li><span class="k">1</span>Pick the branch when the day starts</li></ol>
           <div class="caps"><ul><li>Multiple branches</li><li>No extra cost per clinic</li><li>Import old records</li><li>Doctor and staff roles</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop" style="--h:400px"><div class="shot-in" style="--w:599px;--tx:28px;--ty:28px">
-          <img src="assets/dentomate/product/05-clinics.png" alt="Select clinic location: Main Clinic and Branch Clinic" width="599" height="365">
-          <span class="pin" style="--x:7%;--y:44%">1</span></div></div></div>
+        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/05-clinics.png" alt="Select clinic location: Main Clinic and Branch Clinic" width="599" height="365"><span class="pin" style="--x:7%;--y:44%">1</span></div></div></div>
       </div>
 
       <div class="beat">
@@ -858,7 +900,7 @@
       <div class="sec-label rv">Results</div>
       <div class="cols">
         <div class="rv"><h2>From one dentist <em>to 34 clinics.</em></h2></div>
-        <div class="rv rv-d1"><p>Dentomate was piloted with three dentists before it opened up. In the pilot clinics, 30% more patients came back for a follow-up visit.</p></div>
+        <div class="rv rv-d1"><p>It is still early. Dentomate was piloted with three dentists before it opened up, and it is growing one clinic at a time. In the pilot clinics, 30% more patients came back for a follow-up visit.</p></div>
       </div>
       <div class="impact rv rv-d1">
         <div class="lead"><b data-count="34">0</b><span>Clinics live</span></div>
@@ -1119,25 +1161,32 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
 
 
-/* journey: pin the stage, slide the track sideways 1:1 with scroll, light the
-   card nearest the centre. Off below 900px and under reduced motion, where the
-   cards stack (CSS). */
+/* journey: pin the stage and slide the track sideways 1:1 with scroll until the
+   LAST card's right edge sits on the text column's right edge, then hold for a
+   beat before the page scrolls on. Travel is measured from that card, not from
+   the track's scrollWidth, which leaves out the trailing padding. The lit card
+   follows progress, so the last one is lit when the track arrives. Off below
+   900px and under reduced motion, where the cards stack (CSS). */
 (() => {
   const jr = document.querySelector('.jr');
   if(!jr) return;
-  const stage = jr.querySelector('.jr-stage'), track = jr.querySelector('.jr-track');
+  const track = jr.querySelector('.jr-track');
   const cards = [...track.querySelectorAll('.jr-card')];
   const bar = jr.querySelector('.jr-bar');
   const flat = () => matchMedia('(max-width:900px), (prefers-reduced-motion:reduce)').matches;
-  let travel = 0;
+  const HOLD = 0.35;            /* of a viewport: dwell on the last card */
+  let travel = 0, hold = 0;
   function layout(){
     if(flat()){ jr.style.height = ''; track.style.transform = ''; cards.forEach(c => c.classList.add('on')); return; }
-    /* line the first card up with the page's text column */
     const wrap = document.querySelector('.jr-sec .wrap');
-    const pad = wrap.getBoundingClientRect().left + parseFloat(getComputedStyle(wrap).paddingLeft);
-    jr.style.setProperty('--jr-pad', pad + 'px');
-    travel = Math.max(0, track.scrollWidth - innerWidth);
-    jr.style.height = (innerHeight + travel) + 'px';
+    const wr = wrap.getBoundingClientRect(), cs = getComputedStyle(wrap);
+    const left = wr.left + parseFloat(cs.paddingLeft), right = wr.right - parseFloat(cs.paddingRight);
+    jr.style.setProperty('--jr-pad', left + 'px');
+    track.style.transform = 'translateX(0)';
+    const last = cards[cards.length - 1];
+    travel = Math.max(0, last.getBoundingClientRect().right - right);
+    hold = innerHeight * HOLD;
+    jr.style.height = (innerHeight + travel + hold) + 'px';
     tick();
   }
   function tick(){
@@ -1146,14 +1195,11 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     const p = travel ? Math.min(1, Math.max(0, -r.top / travel)) : 0;
     track.style.transform = 'translateX(' + (-p * travel) + 'px)';
     bar.style.setProperty('--p', p);
-    const mid = innerWidth / 2;
-    let best = 0, bd = Infinity;
-    cards.forEach((c, i) => { const b = c.getBoundingClientRect(); const d = Math.abs(b.left + b.width / 2 - mid); if(d < bd){ bd = d; best = i; } });
-    cards.forEach((c, i) => c.classList.toggle('on', i === best));
+    const on = Math.min(cards.length - 1, Math.round(p * (cards.length - 1)));
+    cards.forEach((c, i) => c.classList.toggle('on', i === on));
   }
   addEventListener('scroll', tick, {passive:true});
   addEventListener('resize', layout);
-  /* images set the track's width, so lay out again as they arrive */
   track.querySelectorAll('img').forEach(im => im.complete || im.addEventListener('load', layout));
   addEventListener('load', layout);
   layout();
