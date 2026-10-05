@@ -492,7 +492,7 @@
   figure.jr-card{position:static;padding:0;border:0;background:none;border-radius:0;overflow:visible;
     align-items:flex-start;justify-content:flex-start;}
   figcaption.jr-cap{position:static;font-family:var(--sans);letter-spacing:0;text-transform:none;color:var(--ink);}
-  .jr-img{height:min(52vh,520px);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);}
+  .jr-img{height:min(62vh,600px);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);}
   .jr-img img{display:block;height:100%;width:auto;}
   .jr-cap{display:flex;flex-direction:column;gap:6px;max-width:420px;}
   .jr-cap i{font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
@@ -520,7 +520,7 @@
   .crop{position:relative;height:var(--h,460px);overflow:hidden;border:1px solid var(--line);border-right:0;
     border-radius:var(--r-lg) 0 0 var(--r-lg);background:var(--surface);
     -webkit-mask:linear-gradient(180deg,var(--ink) 78%,transparent);mask:linear-gradient(180deg,var(--ink) 78%,transparent);}
-  .shot-in{position:relative;width:var(--w,900px);margin:var(--m,0);}
+  .shot-in{position:relative;width:var(--w,900px);transform:translate(var(--tx,0px),var(--ty,0px));}
   .shot-in img{display:block;width:100%;height:auto;}
   /* numbered dot on the screen; its note sits in the text column (.keys), so
      nothing is laid over the UI it explains */
@@ -531,17 +531,14 @@
   .keys{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:12px;}
   .keys li{display:flex;align-items:center;gap:12px;font-size:var(--t-body);color:var(--ink);}
   .keys .k{flex:none;}
-  .phones{display:flex;gap:20px;}
-  .phones img{display:block;height:440px;width:auto;border:1px solid var(--line);border-radius:var(--r-device);}
+  /* ViewRyt's phone: no bezel, no shadow, a 2px hairline on the device radius */
+  .phones{display:flex;gap:32px;align-items:flex-start;}
+  figure.phone{position:relative;width:260px;flex:none;margin:0;padding:0;overflow:visible;
+    border:2px solid var(--line);border-radius:var(--r-device);background:var(--paper);box-shadow:none;}
+  .phone .screen{border-radius:calc(var(--r-device) - 2px);overflow:hidden;}
+  .phone .screen img{display:block;width:100%;height:auto;}
+  .phone + .phone{margin-top:56px;}
 
-  /* pricing: three message prices as bars, scaled to the most expensive */
-  .bars{margin-top:44px;display:grid;gap:22px;}
-  .bar{display:grid;grid-template-columns:minmax(220px,1fr) 2fr auto;gap:24px;align-items:center;}
-  .bar b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-body);}
-  .bar b small{display:block;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.06em;color:var(--mut);font-weight:400;margin-top:4px;}
-  .bar .track{height:10px;border-radius:var(--r-pill);background:var(--line);overflow:hidden;}
-  .bar .track i{display:block;height:100%;width:var(--w);min-width:4px;border-radius:inherit;background:var(--ink);}
-  .bar .price{font-family:var(--mono);font-size:var(--t-body);color:var(--ink);min-width:72px;text-align:right;}
 
   @media (max-width:900px){
     .beat{grid-template-columns:minmax(0,1fr);gap:32px;padding:56px 0;}
@@ -557,15 +554,14 @@
     .jr-img{height:auto;max-width:100%;}
     .jr-img img{width:100%;height:auto;max-height:70vh;object-fit:contain;}
     .jr-bar{display:none;}
-    .bar{grid-template-columns:1fr auto;}
-    .bar .track{grid-column:1 / -1;grid-row:2;}
   }
   @media (max-width:640px){
     .beat-ui{margin-right:-22px;}
     .jr-track{padding:0 22px;}
     .caps ul{grid-template-columns:1fr;}
-    .phones{gap:10px;}
-    .phones img{height:auto;width:calc((100% - 20px) / 3);border-radius:var(--r-lg);}
+    .phones{gap:14px;}
+    figure.phone{width:calc((100% - 14px) / 2);}
+    .phone + .phone{margin-top:32px;}
   }
   @media (prefers-reduced-motion:reduce){
     .jr{height:auto!important;}
@@ -574,6 +570,29 @@
     .jr-card{opacity:1;transition:none;}
     .jr-bar{display:none;}
   }
+
+  /* research: each annotated artifact large, its numbered notes beside it */
+  .ann-row{display:grid;grid-template-columns:1.7fr 1fr;gap:48px;align-items:center;margin-top:48px;}
+  .ann-row.form-row{grid-template-columns:minmax(0,300px) 1fr;}
+  figure.ann-fig{position:static;margin:0;padding:0;border:0;background:none;display:block;overflow:visible;}
+  .ann-img{position:relative;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;}
+  .ann-img img{display:block;width:100%;height:auto;}
+  .ann-notes .num{display:block;font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
+  .ann-notes .keys{margin:14px 0 0;}
+  .ann-notes .keys li{align-items:flex-start;line-height:1.45;}
+  .ann-notes .keys .k{margin-top:1px;}
+  /* the film's particle thumbnail, pinned at the resting 3:1 while the box grows */
+  .vid canvas.fx{position:absolute;left:0;top:50%;width:100%;aspect-ratio:3/1;transform:translateY(-50%);
+    display:block;transition:opacity .7s ease .15s;}
+  .vid.open canvas.fx{opacity:0;pointer-events:none;}
+  @media (max-width:900px){
+    .ann-row,.ann-row.form-row{grid-template-columns:1fr;gap:24px;}
+  }
+  @media (max-width:640px){
+    .vid canvas.fx{aspect-ratio:2/1;}
+    .ann-row.form-row figure{max-width:260px;}
+  }
+  @media (prefers-reduced-motion:reduce){ .vid canvas.fx{transition:none;} }
 </style>
 <!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
@@ -598,11 +617,11 @@
   <canvas id="orb" width="520" height="520"></canvas>
   <div class="wrap">
     <h1 class="rv">The patient who <em>never came back.</em></h1>
-    <p class="lede rv rv-d1">Practice software for Indian dental clinics. Records, prescriptions and recalls, with WhatsApp built in.</p>
+    <p class="lede rv rv-d1">Dentomate is practice software I designed and built for Indian dental clinics. It keeps patient records, sends prescriptions on WhatsApp and reminds patients when their next visit is due, so clinics stop losing the patients they already have.</p>
     <div class="facts rv rv-d2">
       <div><small>Role</small><b>Founder - design, build, GTM</b></div>
       <div><small>Live</small><b>34 clinics, 30 doctors</b></div>
-      <div><small>Pricing</small><b>₹0 / ₹399 / ₹799 a month</b></div>
+      <div><small>Built for</small><b>Indian dental clinics</b></div>
       <div><small>Works on</small><b>Phone, tablet, desktop</b></div>
     </div>
   </div>
@@ -614,7 +633,8 @@
     <div class="wrap">
       <figure class="film rv">
             <div class="vid is-paused">
-              <img class="vid-poster" src="assets/dentomate/film-poster.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+              <img class="vid-poster" src="assets/dentomate/film-poster.webp" alt="" width="1920" height="1080" decoding="async">
+              <canvas class="fx" data-fx="ads"></canvas>
               <video playsinline preload="none" aria-label="Dentomate product film, 35 seconds">
                 <source src="assets/dentomate/dentomate-film.mp4" type="video/mp4">
               </video>
@@ -646,7 +666,10 @@
       <div class="sec-label rv">The Problem</div>
       <div class="cols">
         <div class="rv"><h2>Paper registers <em>lose patients.</em></h2></div>
-        <div class="rv rv-d1"><p>No reminder, no second visit. The second visit is the profit.</p></div>
+        <div class="rv rv-d1">
+          <p>Most private dental clinics in India still record every visit in a paper register. Clinics that have gone digital usually keep an Excel sheet. Neither is a secure medical record, and both end the same way: the pages fill up, the register goes on a shelf, and nobody opens it again.</p>
+          <p>So nobody calls the patient back. A patient who needed a follow-up, a second sitting or a six-month cleaning simply does not return, and for a dental clinic <strong>the returning patient is where most of the revenue is.</strong></p>
+        </div>
       </div>
       <div class="loop rv" role="list">
         <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/></svg></span><b>Patient visits</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
@@ -657,25 +680,71 @@
     </div>
   </section>
 
+  <!-- RESEARCH -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">Research</div>
+      <div class="cols">
+        <div class="rv"><h2>Why clinics <em>stay on paper.</em></h2></div>
+        <div class="rv rv-d1">
+          <p>I started with a dentist I worked with: their register, their staff and their day at the chair. Then I ran demo calls with clinics that had already paid for software. Digital tools exist. Dentists don't use them for four reasons.</p>
+        </div>
+      </div>
+      <div class="cards rv">
+        <div class="card"><i>Finding 01</i><b>There is no time at the chair</b><p>A patient is waiting. Any tool that takes longer than writing in the register is dropped within days.</p></div>
+        <div class="card"><i>Finding 02</i><b>The staff are not technical</b><p>Records are kept by front-desk staff, and most of them have never used practice software.</p></div>
+        <div class="card"><i>Finding 03</i><b>Software is costly and generic</b><p>One dentist was paying ₹70,000 a year for Practo to run two clinics, on software built for general physicians.</p></div>
+        <div class="card"><i>Finding 04</i><b>Years of records already exist</b><p>No clinic starts from zero. Old registers and sheets have to come along, or the new tool is never adopted.</p></div>
+      </div>
+      <div class="ann-row rv">
+        <figure class="ann-fig">
+          <div class="ann-img"><img src="assets/dentomate/attempts/01-register.jpg" alt="A clinic's handwritten register with columns for patient, work, lab sent and received, call, mobile, lab, cementation date and warranty. Names and numbers blurred." width="1400" height="1050">
+            <span class="pin" style="--x:46.6%;--y:12.4%">1</span><span class="pin" style="--x:37.5%;--y:11.2%">2</span><span class="pin" style="--x:80%;--y:11.4%">3</span></div>
+        </figure>
+        <div class="ann-notes">
+          <i class="num">The paper register</i>
+          <ol class="keys">
+            <li><span class="k">1</span>A Call column, ticked by hand. Clinics already try to recall patients, when someone remembers.</li>
+            <li><span class="k">2</span>Lab work is sent and received on the same page as the patient.</li>
+            <li><span class="k">3</span>Crowns and dentures carry 7 to 10 year warranties that someone has to track.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="ann-row form-row rv">
+        <figure class="ann-fig form">
+          <div class="ann-img"><img src="assets/dentomate/attempts/strip-3-form.jpg" alt="The Google Form's tag list: JH, PH, ED, MB, DC, PY, FP, ORT, IMP, TRS" width="424" height="600">
+            <span class="pin" style="--x:6%;--y:27%">4</span><span class="pin" style="--x:6%;--y:50%">5</span></div>
+        </figure>
+        <div class="ann-notes">
+          <i class="num">The Google Form</i>
+          <ol class="keys" start="4">
+            <li><span class="k">4</span>One form served two clinics, Jhadol and Phalasia, told apart by a tag.</li>
+            <li><span class="k">5</span>Treatments squeezed into codes like ED, MB and ORT that only the staff understood.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- WHAT CLINICS USE TODAY -->
   <section>
     <div class="wrap">
       <div class="sec-label rv">What clinics use today</div>
       <div class="cols">
         <div class="rv"><h2>Six workarounds. <em>None does all three.</em></h2></div>
-        <div class="rv rv-d1"><p>Records, WhatsApp, and made for dentists. From my brother's clinic and from demo calls.</p></div>
+        <div class="rv rv-d1"><p>A clinic needs secure patient records, WhatsApp, because that is where Indian patients actually reply, and software made for dental work. Every option on the market covers one of the three at most.</p></div>
       </div>
       <div class="cmp-scroll rv">
         <table class="cmp">
-          <thead><tr><th></th><th>Patient records</th><th>WhatsApp</th><th>Made for dentists</th><th>Cost a month</th></tr></thead>
+          <thead><tr><th></th><th>Patient records</th><th>WhatsApp</th><th>Made for dentists</th><th>Cost to the clinic</th></tr></thead>
           <tbody>
             <tr><td>Paper register</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>lost when full</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
             <tr><td>Excel sheet</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>not a medical record</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
             <tr><td>Personal WhatsApp</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>number gets banned</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
-            <tr><td>WATI, AiSensy</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹1,500–3,200</td></tr>
-            <tr><td>Practo Ray</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>SMS only</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>made for physicians</small></span></td><td class="cost">₹999–3,999 a doctor</td></tr>
+            <tr><td>WATI, AiSensy</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹1,500–3,200 a month</td></tr>
+            <tr><td>Practo Ray</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>SMS only</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>made for physicians</small></span></td><td class="cost">₹70,000 a year, 2 clinics</td></tr>
             <tr><td>Foreign dental EMRs</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>dated</small></span></td><td class="cost">Varies</td></tr>
-            <tr class="us"><td>Dentomate</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>no API to buy</small></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td class="cost">₹0–799</td></tr>
+            <tr class="us"><td>Dentomate</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>no API to buy</small></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td class="cost">No extra cost per clinic</td></tr>
           </tbody>
         </table>
       </div>
@@ -688,92 +757,97 @@
       <div class="sec-label rv">How it was built</div>
       <div class="cols">
         <div class="rv"><h2>Three tries <em>before the app.</em></h2></div>
-        <div class="rv rv-d1"><p>It started in my brother's dental clinic. Each failure shaped the next version.</p></div>
+        <div class="rv rv-d1"><p>It started with one dentist's paper register. Before writing an app, we tried the cheapest tools available. Each one failed for a reason that ended up shaping Dentomate.</p></div>
       </div>
     </div>
     <div class="jr">
       <div class="jr-stage">
         <div class="jr-track">
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/01-register.jpg" alt="A clinic's handwritten patient register, names and phone numbers blurred" loading="lazy"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><span class="app-ph"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span></span><i>Start</i><b>Paper register</b><span class="why">Written down. Never called back.</span></figcaption></figure>
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/02-sheet-2021.jpg" alt="The clinic's 2021 patient spreadsheet, names, phone numbers and villages blurred" loading="lazy"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/excel.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"></span><i>Try 01</i><b>A spreadsheet</b><span class="why">Too slow for staff to keep up.</span></figcaption></figure>
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/03-google-form.jpg" alt="The Google Form used to register each patient, with one tick-box per treatment code" loading="lazy"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/forms.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/appsscript.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 02</i><b>Form, sheet and a script</b><span class="why">₹1,500 a month. A developer for every fix. No room for the treatment list.</span></figcaption></figure>
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/04-appsheet.jpg" alt="The AppSheet patient app built on the form's sheet, patient details blurred" loading="lazy"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/appsheet.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 03</i><b>AppSheet</b><span class="why">Data entry fixed. The API bill stayed.</span></figcaption></figure>
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/05-prototype-treatments.jpg" alt="The first prototype's treatment plan: every treatment as a tick-box" loading="lazy"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Prototype</i><b>An app for one clinic</b><span class="why">Treatments as tick-boxes. Under a minute.</span></figcaption></figure>
-          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/app-dashboard.jpg" alt="Dentomate today: the patient register grouped by day" loading="lazy"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Today</i><b>Dentomate</b><span class="why">Piloted with 3 dentists. Now in 34 clinics.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-1-register.jpg" alt="The paper register: serial number, work done, lab sent and received, and a hand-ticked call column. Names blurred." width="700" height="651"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><span class="app-ph"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span></span><i>Start</i><b>Paper register</b><span class="why">Every visit, lab order and phone call written by hand. Nothing reminds anyone.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-2-sheet.jpg" alt="The 2021 patient spreadsheet: date, name, age, sex, phone and village. Personal details blurred." width="760" height="470"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/excel.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"></span><i>Try 01</i><b>A spreadsheet</b><span class="why">Searchable, but too slow for the front desk to keep up with during a working day.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-3-form.jpg" alt="The Google Form used to register each patient, with treatment tags as tick-boxes" width="424" height="600"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/forms.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/appsscript.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 02</i><b>Form, sheet and a script</b><span class="why">A Google Form per patient and an Apps Script sending WhatsApp messages. ₹1,500 a month, a developer for every fix, and no room for the treatment list.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-4-appsheet.jpg" alt="The AppSheet patient app built on the same sheet. Patient details blurred." width="290" height="500"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/appsheet.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 03</i><b>AppSheet</b><span class="why">A real app on the same sheet. Data entry got easier. The API bill and the developer stayed.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-5-prototype.jpg" alt="The first prototype's treatment plan: every treatment as a tick-box" width="667" height="520"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Prototype</i><b>An app for one clinic</b><span class="why">Every treatment became a tick-box. Recording a visit dropped under a minute.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-6-today.jpg" alt="Dentomate today: the patient register grouped by day" width="1000" height="620"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Today</i><b>Dentomate</b><span class="why">Piloted with three dentists, now live in 34 clinics.</span></figcaption></figure>
         </div>
         <div class="jr-bar" aria-hidden="true"><i></i></div>
       </div>
     </div>
   </section>
 
-  <!-- THE PRODUCT - interfere-style beats on the real screens -->
+  <!-- THE PRODUCT - every feature on its real screen -->
   <section>
     <div class="wrap">
       <div class="sec-label rv">The Product</div>
       <div class="cols">
         <div class="rv"><h2>Built for the chair, <em>the desk and the patient's phone.</em></h2></div>
+        <div class="rv rv-d1"><p>Each part of the app answers one of the findings. The screens below are the shipped product.</p></div>
       </div>
 
       <div class="beat">
-        <div class="beat-txt rv"><i class="num">01</i><h3>Under a minute at the chair</h3><p>Pick treatments from tabs. No typing.</p>
+        <div class="beat-txt rv"><i class="num">01</i><h3>Under a minute at the chair</h3>
+          <p>Treatments are grouped the way dentists think about them: general, endodontics, surgery, prostho and ortho. The dentist taps, ticks the details and moves on. We tested it with dentists until a full patient entry took less than a minute.</p>
           <ol class="keys"><li><span class="k">1</span>Tap a tag to add a treatment</li><li><span class="k">2</span>Tick the details, done</li></ol>
           <div class="caps"><ul><li>Treatment tabs</li><li>Quick tags</li><li>Medical history</li><li>Doctor-only notes</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:672px;--m:28px 0 0 28px">
-          <img src="assets/dentomate/product/01-treatments.png" alt="Treatment plan with tabs for General, Endodontics, Surgery and Extractions, Prostho and Implants, and quick-add tags" loading="lazy">
+        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:672px;--tx:28px;--ty:28px">
+          <img src="assets/dentomate/product/01-treatments.png" alt="Treatment plan with tabs for General, Endodontics, Surgery and Extractions, Prostho and Implants, and quick-add tags" width="672" height="405">
           <span class="pin" style="--x:7.5%;--y:25.5%">1</span><span class="pin" style="--x:6.8%;--y:59%">2</span></div></div></div>
       </div>
 
       <div class="beat">
-        <div class="beat-txt rv"><i class="num">02</i><h3>The prescription reaches WhatsApp</h3><p>A branded PDF, sent minutes after the visit.</p>
-          <ol class="keys"><li><span class="k">1</span>Prescription attached, care advice included</li><li><span class="k">2</span>Free reply window, counting down</li></ol>
+        <div class="beat-txt rv"><i class="num">02</i><h3>The prescription reaches WhatsApp</h3>
+          <p>As the patient leaves, a PDF with the clinic's branding and the doctor's name goes to their WhatsApp, with care advice in the message. If they reply, the front desk answers from the same screen.</p>
+          <ol class="keys"><li><span class="k">1</span>Prescription attached, care advice included</li><li><span class="k">2</span>WhatsApp's reply window, counting down</li></ol>
           <div class="caps"><ul><li>Clinic branding</li><li>Doctor's name</li><li>1-0-1 dosage</li><li>Hindi and English</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop" style="--h:520px"><div class="shot-in" style="--w:1100px;--m:-320px 0 0 -280px">
-          <img src="assets/dentomate/app-inbox.jpg" alt="The Dentomate inbox: a WhatsApp conversation about a prescription, with the free reply window counting down above the message box" loading="lazy">
+        <div class="beat-ui rv rv-d1"><div class="crop" style="--h:520px"><div class="shot-in" style="--w:1100px;--tx:-280px;--ty:-320px">
+          <img src="assets/dentomate/app-inbox.jpg" alt="The Dentomate inbox: a WhatsApp conversation about a prescription, with the reply window counting down above the message box" width="1600" height="1164">
           <span class="pin" style="--x:66.5%;--y:50%">1</span><span class="pin" style="--x:54.5%;--y:88.5%">2</span></div></div></div>
       </div>
 
       <div class="beat">
-        <div class="beat-txt rv"><i class="num">03</i><h3>Recall everyone due in one click</h3><p>Due patients are flagged. One campaign reminds them all.</p>
+        <div class="beat-txt rv"><i class="num">03</i><h3>Recall everyone due in one click</h3>
+          <p>Patients who are due for a visit are tagged in the list. The front desk selects them, sends one campaign, and sees Sent, Delivered and Read against every name. No API subscription, no developer.</p>
           <ol class="keys"><li><span class="k">1</span>Select who is due, send once</li><li><span class="k">2</span>Sent, Delivered, Read on every patient</li></ol>
-          <div class="caps"><ul><li>Due for visit</li><li>Sent, Delivered, Read</li><li>7, 90, 180-day recalls</li><li>No API to buy</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:1100px;--m:-80px 0 0 -200px">
-          <img src="assets/dentomate/app-whatsapp.jpg" alt="The WhatsApp patient list: each patient with Sent, Delivered or Read, tags like New patient and High value, and a New Campaign button" loading="lazy">
-          <span class="pin" style="--x:52%;--y:24.7%">1</span>
-          <span class="pin" style="--x:38.5%;--y:52%">2</span></div></div></div>
+          <div class="caps"><ul><li>Due for visit</li><li>7, 90, 180-day recalls</li><li>Hindi and English</li><li>One shared API</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:1100px;--tx:-200px;--ty:-80px">
+          <img src="assets/dentomate/app-whatsapp.jpg" alt="The WhatsApp patient list: each patient with Sent, Delivered or Read, tags like New patient and High value, and a New Campaign button" width="1600" height="978">
+          <span class="pin" style="--x:52%;--y:24.7%">1</span><span class="pin" style="--x:38.5%;--y:52%">2</span></div></div></div>
       </div>
 
       <div class="beat">
-        <div class="beat-txt rv"><i class="num">04</i><h3>On whatever is at hand</h3><p>A web app. Phone at the chair, desktop at the desk.</p>
-          <div class="caps"><ul><li>No install</li><li>Phone, tablet, desktop</li><li>Data stored in India</li><li>Set up in 5 minutes</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="phones">
-          <img src="assets/dentomate/product/phone-patients.png" alt="Dentomate on a phone: today's patients" loading="lazy">
-          <img src="assets/dentomate/product/phone-whatsapp.png" alt="Dentomate on a phone: a prescription sent on WhatsApp" loading="lazy">
-          <img src="assets/dentomate/product/phone-analytics.png" alt="Dentomate on a phone: the month's numbers" loading="lazy"></div></div>
+        <div class="beat-txt rv"><i class="num">04</i><h3>Nudges to grow the practice</h3>
+          <p>The dashboard goes past revenue. It shows which treatments earn the most, which patients carry medical risk, and whether new patients are coming back, then points the clinic at who to reach next.</p>
+          <ol class="keys"><li><span class="k">1</span>Insights flag the patients who need attention</li><li><span class="k">2</span>New and returning patients, side by side</li></ol>
+          <div class="caps"><ul><li>Treatment value mix</li><li>Medical risk profile</li><li>Patient demographics</li><li>New vs returning</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:720px;--tx:28px;--ty:28px">
+          <img src="assets/dentomate/product/04-insights.png" alt="Dentomate insights: procedure value mix, medical risk profile, AI insights flagging 3 high-risk patients, patient demographics, and acquisition versus retention" width="1016" height="563">
+          <span class="pin" style="--x:68.5%;--y:8.5%">1</span><span class="pin" style="--x:52.5%;--y:53.5%">2</span></div></div></div>
       </div>
-    </div>
-  </section>
 
-  <!-- PRICING -->
-  <section>
-    <div class="wrap">
-      <div class="sec-label rv">Pricing</div>
-      <div class="cols">
-        <div class="rv"><h2>Gate the cost, <em>not the feature.</em></h2></div>
-        <div class="rv rv-d1"><p>Meta bills every WhatsApp message. Plans cap only the expensive one.</p></div>
+      <div class="beat">
+        <div class="beat-txt rv"><i class="num">05</i><h3>Every clinic under one account</h3>
+          <p>Many dentists run more than one clinic. Dentomate keeps every branch under one account at no extra cost, and old registers and sheets can be imported, so no clinic starts from zero.</p>
+          <ol class="keys"><li><span class="k">1</span>Pick the branch when the day starts</li></ol>
+          <div class="caps"><ul><li>Multiple branches</li><li>No extra cost per clinic</li><li>Import old records</li><li>Doctor and staff roles</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="crop" style="--h:400px"><div class="shot-in" style="--w:599px;--tx:28px;--ty:28px">
+          <img src="assets/dentomate/product/05-clinics.png" alt="Select clinic location: Main Clinic and Branch Clinic" width="599" height="365">
+          <span class="pin" style="--x:7%;--y:44%">1</span></div></div></div>
       </div>
-      <div class="bars rv">
-        <div class="bar"><b>Reply to a patient<small>Within 24 hours, first 1,000 a month</small></b><span class="track"><i style="--w:0%"></i></span><span class="price">₹0</span></div>
-        <div class="bar"><b>Prescription, reminder<small>Utility message</small></b><span class="track"><i style="--w:13.3%"></i></span><span class="price">₹0.12</span></div>
-        <div class="bar"><b>Recall campaign<small>Marketing message</small></b><span class="track"><i style="--w:100%"></i></span><span class="price">₹0.86</span></div>
-      </div>
-      <div class="pull rv">Everything for the patient in the chair is free. Paying raises the recall limit.
-        <span class="mono">₹0 / ₹399 / ₹799 a month</span>
+
+      <div class="beat">
+        <div class="beat-txt rv"><i class="num">06</i><h3>On whatever device is at hand</h3>
+          <p>It is a web app, so there is nothing to install. The doctor uses it on a phone at the chair, the front desk on a desktop, and both see the same records.</p>
+          <div class="caps"><ul><li>No install</li><li>Phone, tablet, desktop</li><li>Data stored in India</li><li>Set up in 5 minutes</li></ul></div></div>
+        <div class="beat-ui phones-ui rv rv-d1"><div class="phones">
+          <figure class="phone"><div class="screen"><img src="assets/dentomate/product/phone-patients.png" alt="Dentomate on a phone: today's patients" width="393" height="844"></div></figure>
+          <figure class="phone"><div class="screen"><img src="assets/dentomate/product/phone-whatsapp.png" alt="Dentomate on a phone: a prescription sent on WhatsApp" width="393" height="844"></div></figure>
+        </div></div>
       </div>
     </div>
   </section>
@@ -782,7 +856,10 @@
   <section>
     <div class="wrap">
       <div class="sec-label rv">Results</div>
-      <h2 class="rv">From one clinic <em>to 34.</em></h2>
+      <div class="cols">
+        <div class="rv"><h2>From one dentist <em>to 34 clinics.</em></h2></div>
+        <div class="rv rv-d1"><p>Dentomate was piloted with three dentists before it opened up. In the pilot clinics, 30% more patients came back for a follow-up visit.</p></div>
+      </div>
       <div class="impact rv rv-d1">
         <div class="lead"><b data-count="34">0</b><span>Clinics live</span></div>
         <div><b data-count="30">0</b><span>Doctors using it</span></div>
@@ -1080,6 +1157,669 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
   track.querySelectorAll('img').forEach(im => im.complete || im.addEventListener('load', layout));
   addEventListener('load', layout);
   layout();
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* Particle thumbnail for the film: index.html's case-FX engine, cut down to
+   its image source. Keep in step with index.html when that engine changes. */
+/* =============================================================
+   Case FX - the dithered illustrations, as particle fields.
+
+   The three SDFs below are the same ones this page used to draw
+   straight to the canvas. They now render into an offscreen target
+   every frame, and each particle samples that target in its vertex
+   shader, so the original motion - the eye's blink and gaze, the
+   jaw opening and closing, the room blocks rising - plays through
+   untouched while the field forms and disperses around it.
+
+   Every number in P was tuned in particles.html and pasted back.
+   Two deliberate departures from that export:
+     - `drive`/`manualForm` are dropped. 'manual' is the bench's
+       inspection mode; it pins the field at one fixed form, which
+       would leave all three cards frozen. The page runs the auto
+       cycle the four timings below were tuned for.
+     - `bakeZoom` is per-source (SRC.zoom), since the export can
+       only ever carry the one source it was captured on.
+============================================================= */
+(function(){
+  const canvases = document.querySelectorAll('canvas.fx');
+  if (!canvases.length || !window.THREE) return;
+
+  const SIZE = 512;        /* offscreen bake resolution, square      */
+  const SPAN = 2.4;        /* world units the baked frame maps onto  */
+  const FOV  = 45;
+  const LUMA_MAX = 0.985;  /* at or above this a sample is paper     */
+
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  const P = {
+    formStart: 0.905, formEnd: 1,
+    formSec: 2.4, holdMode: 'one full loop', animLoops: 1,
+    holdSec: 2.4, dispSec: 1.9, restSec: 0.4,
+    timeSpeed: 0.94,
+    grid: 384,
+    pt: 0.0063, scatter: 1.9, spread: 0.21, drift: 0.74, looseBoost: 0.72,
+    alphaS: 0.55, alphaInk: 0.42, edge: 0.05,
+    idleMode: 'breathe', idleAmt: 0.009, idleSpeed: 2.43, idleZ: 0.89,
+    lifeMix: 0.85, lifeRate: 0.7, lifeVary: 0.46,
+    lifeSize: 0.5, lifeRise: 0.005,
+    /* baseC is 0 on purpose: at rest the illustrations are neutral ink like
+       the rest of the page. Colour arrives only under the pointer, via the
+       gradient stops below. baseH is inert while baseC is 0. */
+    baseL: 0.47, baseC: 0, baseH: 296,
+    monoMix: 1, inkShade: 0.45, toneLevels: 5, shadeClean: 1,
+    bg: '#ffffff',
+    gaL: 0.855, gaC: 0.31, gaH: 229,
+    gbL: 0.62,  gbC: 0.2,  gbH: 32,
+    huePath: 'spectrum +', gradSrc: 'by ink',
+    hoverColMix: 0.56, hoverColR: 0.53, hoverAlpha: 0.6,
+    hoverMode: 'attract', hoverR: 0.59, hoverS: 0.01,
+    /* Cursor follow, in seconds per stage (see the loop). Was a flat
+       ease:0.35 per frame - a 39ms time constant, so the field tracked
+       every twitch of the mouse and leapt back to centre on leave. */
+    parallax: 1, ptrTau: 0.16, hovTau: 0.22,
+    blinkAmt: 1, blinkSpeed: 0.4, blinkPow: 15,
+    roomHeight: 1.9, camY: 2.3, camR: 2.9,
+    lightWrap: 0.58, lightGamma: 0.64,
+    lightEl: 1.1, lightAz: 0.89, lightAO: 1.07,
+    faceAmt: 1, faceX: 0.52, faceZ: 0.33
+  };
+
+  const IDLE  = ['drift','jitter','breathe','orbit','flow'];
+  const HOVER = ['none','repel','attract','swirl','lift'];
+  const GRAD  = ['from cursor','radial','angular','by ink'];
+  const HUEP  = ['short','long','spectrum +','spectrum -'];
+
+  const HEAD = `
+    precision highp float;
+    uniform float t; uniform vec2 r;
+    uniform float uLevels;
+    float Bayer2(vec2 a){a=floor(a);return fract(a.x/2.+a.y*a.y*.75);}
+    float Bayer4(vec2 a){return Bayer2(.5*a)*.25+Bayer2(a);}
+    float Bayer8(vec2 a){return Bayer4(.5*a)*.25+Bayer2(a);}
+    mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}
+    float hash(vec2 v){return fract(sin(dot(v,vec2(12.9898,78.233)))*43758.5453);}
+    float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
+    float sdBox(vec3 p,vec3 b){vec3 q=abs(p)-b;return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.);}
+    /* hero-matched ordered-dither quantisation: deep -> pale -> paper */
+    vec3 dith(float lum,float hit){
+      float grain=max(r.y/260.,1.6);
+      float bay=Bayer8(gl_FragCoord.xy/grain)-.5;
+      /* uLevels was a hard 5 (so /4.). Five steps, minus the top one that
+         smoothsteps to white and is then dropped as paper, left about four
+         usable ink levels for the whole illustration - which is why the
+         shading read flat no matter how the light was aimed. Raising this
+         is the actual lever on tonal range. */
+      float q=clamp(floor(lum*uLevels+bay)/(uLevels-1.),0.,1.);
+      vec3 col=mix(vec3(.545,.48,.93),vec3(.875,.855,.985),q);
+      col=mix(col,vec3(1.),smoothstep(.92,1.,q));
+      return mix(vec3(1.),col,clamp(hit,0.,1.));
+    }`;
+
+  const NORM = `
+    vec3 calcN(vec3 p){
+      vec2 e=vec2(.004,0.);
+      return normalize(vec3(map(p+e.xyy)-map(p-e.xyy),map(p+e.yxy)-map(p-e.yxy),map(p+e.yyx)-map(p-e.yyx)));
+    }`;
+
+  /* The fourth source is not an SDF: it is a still of the TAE Ad Studio film
+     (0:51, the ring of ads) with the green backdrop cut away to paper and
+     the ads graded to ink, prepared offline into ring.webp. The bake maps it
+     onto a canvas-shaped target with object-fit:cover maths, then sways it a
+     degree or two about the centre - the film's own ring turns, and this is
+     that motion, small enough that the cover crop never shows an edge. */
+  const ADS = `
+      uniform sampler2D uImg;
+      uniform float uZoom,uAsp,uReady;
+      void main(){
+        vec2 uv=gl_FragCoord.xy/r;
+        vec2 p=(uv-.5)*vec2(uAsp,1.);           /* units of bake height */
+        p=rot(.006*sin(t*.5))*p/uZoom;   /* text: a breath, not the ring's turn */
+        float srcA=16./9., k=max(uAsp/srcA,1.); /* cover: source height, in bake heights */
+        vec2 q=p/vec2(srcA*k,k)+.5;
+        float lum=texture2D(uImg,q).r;
+        if(uReady<.5||q.x<0.||q.x>1.||q.y<0.||q.y>1.) lum=1.;
+        float hit=1.-step(.97,lum);
+        gl_FragColor=vec4(dith(lum,hit),hit>.5?lum:1.);
+      }`;
+
+  /* Per-source framing. The originals render into wide case-card canvases,
+     where uv.x spans further than uv.y; a square bake would crop them, so
+     each gets its own zoom. `lid` marks the one source the eyelid blink
+     applies to - the other two have no lids to sweep.
+
+     `ofs` recentres the subject. Every one of these SDFs sits low in its
+     own frame (measured ink gaps were 22-28% above vs ~3% below, so the
+     illustration hung off the bottom of the card with a void over it).
+     A negative y pans the view down, which lifts the subject in frame.
+     The zooms are the originals scaled by 0.9, which magnifies the
+     subject ~11% so it fills the box rather than floating in it. */
+  const SRC = {
+    /* the film's "Built for dentists." frame, graded to ink on paper */
+    ads:   {frag:ADS,   zoom:1.04, ofs:[0, 0], period:4*Math.PI, img:'assets/dentomate/film-field.webp'}
+  };
+
+  const OKLCH = `
+    vec3 oklab2lrgb(vec3 lab){
+      float l_ = lab.x + 0.3963377774*lab.y + 0.2158037573*lab.z;
+      float m_ = lab.x - 0.1055613458*lab.y - 0.0638541728*lab.z;
+      float s_ = lab.x - 0.0894841775*lab.y - 1.2914855480*lab.z;
+      float l = l_*l_*l_, m = m_*m_*m_, s = s_*s_*s_;
+      return vec3(
+        4.0767416621*l - 3.3077115913*m + 0.2309699292*s,
+       -1.2684380046*l + 2.6097574011*m - 0.3413193965*s,
+       -0.0041960863*l - 0.7034186147*m + 1.7076147010*s);
+    }
+    vec3 lrgb2srgb(vec3 c){
+      c = max(c, vec3(0.));
+      vec3 lo = c*12.92;
+      vec3 hi = 1.055*pow(c, vec3(1./2.4)) - 0.055;
+      return mix(lo, hi, step(vec3(0.0031308), c));
+    }
+    vec3 oklch2rgb(vec3 lch){
+      float h = radians(lch.z);
+      vec3 lab = vec3(lch.x, lch.y*cos(h), lch.y*sin(h));
+      return clamp(lrgb2srgb(oklab2lrgb(lab)), 0., 1.);
+    }`;
+
+  function makeMat(){ return new THREE.ShaderMaterial({
+    /* Normal alpha blending, NOT additive. The Shopify reference is
+       additive because it sits on near-black; on white paper additive
+       blows every particle out to white. On a light ground the dots
+       have to darken, so alpha blending is the correct translation. */
+    transparent:true,
+    depthWrite:false,
+    blending:THREE.NormalBlending,
+    uniforms:{
+      uForm:{value:0}, uTime:{value:0}, uDrift:{value:1},
+      uBake:{value:null}, uLumaMax:{value:LUMA_MAX},
+      uIdleAmt:{value:0.014}, uIdleSpeed:{value:1}, uIdleZ:{value:0.5}, uIdleMode:{value:0},
+      uLifeMix:{value:0.5}, uLifeRate:{value:0.18}, uLifeVary:{value:0.6},
+      uLifeSize:{value:0.5}, uLifeRise:{value:0.05},
+      uSize:{value:0.0062}, uScale:{value:1},
+      uPointer:{value:new THREE.Vector2()}, uPointerW:{value:new THREE.Vector2()},
+      uSpread:{value:0.25}, uScatter:{value:1.7}, uLooseBoost:{value:0.9},
+      uAlphaS:{value:0.55}, uAlphaInk:{value:0.42}, uEdge:{value:0.05},
+      uParallax:{value:1},
+      uBlinkAmt:{value:1}, uBlinkSpeed:{value:0.4}, uBlinkPow:{value:20},
+      uHoverMode:{value:0}, uHoverR:{value:0.5}, uHoverS:{value:0.18},
+      uMonoMix:{value:1}, uInkShade:{value:0.55}, uShadeClean:{value:1},
+      uBase:{value:new THREE.Vector3(0.55,0.19,285)},
+      uHoverColMix:{value:1}, uHoverColR:{value:0.6}, uHoverAlpha:{value:0.6},
+      uGA:{value:new THREE.Vector3(0.62,0.20,20)},
+      uGB:{value:new THREE.Vector3(0.62,0.20,20)},
+      uHuePath:{value:2}, uGradSrc:{value:0}
+    },
+    vertexShader:`
+      attribute vec3 aTarget; attribute vec2 aUV; attribute float aSeed;
+      uniform sampler2D uBake; uniform float uLumaMax;
+      uniform float uForm,uTime,uDrift,uSize,uScale,uSpread,uScatter,uLooseBoost;
+      uniform float uIdleAmt,uIdleSpeed,uIdleZ;
+      uniform float uLifeMix,uLifeRate,uLifeVary,uLifeSize,uLifeRise;
+      uniform int uIdleMode;
+      uniform float uAlphaS,uAlphaInk,uParallax;
+      uniform float uHoverR,uHoverS;
+      uniform float uMonoMix,uInkShade,uHoverColMix,uHoverColR,uHoverAlpha;
+      uniform float uShadeClean;
+      uniform int uHoverMode,uHuePath,uGradSrc;
+      uniform vec3 uBase,uGA,uGB;
+      uniform vec2 uPointer,uPointerW;
+      varying vec3 vColor; varying float vAlpha;
+      `+OKLCH+`
+      void main(){
+        /* uBake is re-rendered from the source SDF every frame, so this is
+           the LIVE illustration, not a frozen still. Sampling it here is
+           what keeps the mouth opening and the room blocks rising - the
+           particles inherit the original animation instead of replacing
+           it. Declared as locals so the colour maths below is unchanged. */
+        vec4 tex = texture2D(uBake, aUV);
+        float luma = dot(tex.rgb, vec3(.2126, .7152, .0722));
+        vec3  aColor = tex.rgb;
+        /* Shade from the UNDITHERED luminance the bake carries in alpha,
+           not from the dithered rgb. Ordered dither scatters neighbouring
+           pixels across tone levels on purpose - it encodes tone as dot
+           DENSITY, to be averaged by the eye. One particle samples one
+           pixel, so reading rgb gives it dither noise rather than shading,
+           and the field averages out to a flat grey. tex.a is the smooth
+           value, so lightness now tracks the actual lighting. rgb still
+           drives the silhouette below, keeping the stippled edge. */
+        float aInk   = 1. - mix(luma, tex.a, uShadeClean);
+        /* paper carries no particle - park it off-clip. As the shape moves,
+           particles switch between parked and visible, which is how the
+           animation reads across a fixed lattice. */
+        if(luma >= uLumaMax){
+          gl_Position = vec4(2., 2., 2., 1.);
+          gl_PointSize = 0.;
+          return;
+        }
+
+        float e = uForm*uForm*(3.-2.*uForm);
+        /* per-particle stagger so the image assembles rather than snapping */
+        float s = clamp((e - aSeed*uSpread)/max(1.-uSpread, .001), 0., 1.);
+        s = s*s*(3.-2.*s);
+        vec3 p = mix(position*uScatter, aTarget, s);
+
+        float loose = (1.-s)*uDrift;
+        p.x += sin(uTime*.61 + aSeed*39.1)*.16*loose;
+        p.y += cos(uTime*.47 + aSeed*27.3)*.16*loose;
+        p.z += sin(uTime*.38 + aSeed*61.7)*.24*loose;
+        p.xy += uPointer*(.06 + .26*loose)*uParallax;
+
+        /* ---- idle motion -------------------------------------------
+           The wander above is scaled by (1-s), so it dies off exactly as
+           the image forms and a settled eye sits perfectly still. This
+           term is scaled by s instead, so it only exists once particles
+           are AT their places - it keeps the formed eye alive without
+           moving anything off target. Amplitude is in world units and
+           SPAN is 2.4, so useful values are small. */
+        float ph = aSeed*6.2831853;
+        float it = uTime*uIdleSpeed;
+        vec3 idle;
+        if(uIdleMode == 0){        /* drift - slow, uncorrelated wander */
+          idle = vec3(sin(it*.61 + ph*6.1), cos(it*.47 + ph*4.3), sin(it*.38 + ph*9.7));
+        } else if(uIdleMode == 1){ /* jitter - fast, grainy, per-particle */
+          idle = vec3(sin(it*3.7 + ph*11.), cos(it*4.3 + ph*7.), sin(it*3.1 + ph*13.));
+        } else if(uIdleMode == 2){ /* breathe - radial pulse from centre */
+          vec2 d = aTarget.xy/max(length(aTarget.xy), 1e-4);
+          idle = vec3(d*sin(it*.9 - length(aTarget.xy)*2.2), 0.);
+        } else if(uIdleMode == 3){ /* orbit - each particle circles its spot */
+          idle = vec3(cos(it*1.3 + ph), sin(it*1.3 + ph), 0.);
+        } else {                   /* flow - neighbours move together */
+          float a = sin(aTarget.x*3.1 + it*.5) + cos(aTarget.y*2.7 - it*.4);
+          idle = vec3(cos(a*3.1), sin(a*2.7), sin(a));
+        }
+        idle.z *= uIdleZ;
+        p += idle*uIdleAmt*s*uDrift;
+
+        /* ---- birth & death -----------------------------------------
+           Each particle runs its own loop: fade in, hold, fade out,
+           respawn. aSeed offsets the phase and a second derived random
+           varies the rate, so the field turns over continuously instead
+           of pulsing in unison. At uDrift 0 (reduced motion) the whole
+           envelope collapses to 1 so nothing flickers. */
+        float r2 = fract(aSeed*137.13);
+        float rate = uLifeRate*mix(1., .35 + 1.3*r2, uLifeVary);
+        float life = fract(uTime*rate + aSeed*7.13);
+        float env = smoothstep(0., .18, life)*smoothstep(1., .82, life);
+        float lifeE = mix(1., env, uLifeMix*uDrift);
+        /* born rising into place, dying drifting on out the other side */
+        p.y += (life < .5 ? -1. : 1.)*(1. - env)*uLifeRise*uLifeMix*uDrift;
+
+        /* hover - uPointerW is the cursor projected onto the z=0 plane in
+           world units, so uHoverR is a real radius rather than a screen
+           fraction and stays honest when the window is resized. */
+        if(uHoverMode > 0){
+          vec2 d = p.xy - uPointerW;
+          float dist = length(d);
+          vec2 dir = d/max(dist, 1e-4);
+          float infl = 1. - smoothstep(0., uHoverR, dist);
+          if(uHoverMode == 1)      p.xy += dir*infl*uHoverS;   /* repel  */
+          else if(uHoverMode == 2) p.xy -= dir*infl*uHoverS;   /* attract*/
+          else if(uHoverMode == 3) p.xy += vec2(-dir.y, dir.x)*infl*uHoverS; /* swirl */
+          else                     p.z  += infl*uHoverS;       /* lift   */
+        }
+
+        vec4 mv = modelViewMatrix*vec4(p,1.);
+        gl_Position = projectionMatrix*mv;
+        /* loose particles are drawn a touch larger so the cloud reads
+           as a cloud rather than dissolving into nothing */
+        gl_PointSize = uSize*(1. + uLooseBoost*(1.-s))*uScale/max(-mv.z, .001)
+                     * mix(1., .25 + .75*env, uLifeSize*uLifeMix*uDrift);
+
+        /* ---- colour ------------------------------------------------
+           Resting state is MONOCHROME: one picked OKLCH hue, with the
+           baked ink level moving only lightness (and a little chroma) so
+           the eye keeps its modelling instead of turning into a flat
+           silhouette. uMonoMix crossfades back to the original dither
+           ramp if you want the old look. */
+        float ink = clamp(aInk, 0., 1.);
+        float Le = clamp(uBase.x + uInkShade*(1.-uBase.x)*(1.-ink), 0., 1.);
+        float Ce = uBase.y*mix(1. - .55*uInkShade, 1., ink);
+        vec3 baseCol = mix(aColor, oklch2rgb(vec3(Le, Ce, uBase.z)), uMonoMix);
+
+        /* ---- hover gradient ----------------------------------------
+           Independent of uHoverMode, so colour can respond to the cursor
+           with no displacement at all. cInfl is 1 under the cursor and
+           falls to 0 at uHoverColR. */
+        vec2 dc = p.xy - uPointerW;
+        float dist2 = length(dc);
+        float cInfl = 1. - smoothstep(0., uHoverColR, dist2);
+        float g;
+        if(uGradSrc == 0)      g = clamp(dist2/max(uHoverColR, 1e-4), 0., 1.);
+        else if(uGradSrc == 1) g = clamp(length(aTarget.xy)/1.2, 0., 1.);
+        /* atan(0,0) is undefined, and the dead-centre pixel lands exactly
+           there, so nudge x off zero to keep that one particle out of NaN */
+        else if(uGradSrc == 2) g = atan(aTarget.y, aTarget.x + 1e-6)/6.2831853 + .5;
+        else                   g = ink;
+        /* Hue path. The shortest-path form alone can never sweep more than
+           180deg, which is why a 0 -> 359 pair used to travel 1deg instead
+           of the whole spectrum. Adding a full turn makes the sweep reach
+           360deg and beyond, so a real spectrum is now expressible. */
+        float dh = mod(uGB.z - uGA.z + 540., 360.) - 180.;
+        if(uHuePath == 1)      dh = dh > 0. ? dh - 360. : dh + 360.;
+        else if(uHuePath == 2) dh = dh + 360.;
+        else if(uHuePath == 3) dh = dh - 360.;
+        vec3 grad = oklch2rgb(vec3(
+          mix(uGA.x, uGB.x, g),
+          mix(uGA.y, uGB.y, g),
+          uGA.z + dh*g));
+        vColor = mix(baseCol, grad, cInfl*uHoverColMix);
+
+        /* ink drives opacity, so the pupil reads solid and the
+           highlights stay as faint as they are in the source */
+        vAlpha = mix(uAlphaS, 1., s)*mix(uAlphaInk, 1., sqrt(aInk));
+
+        /* blink - the lid mask from index.html:842-846. Particles the lids
+           sweep over fade out instead of being painted paper white, which
+           lands the same way on a white ground. aLid is the sentinel 999
+           for shadow/background particles, which the lids never touched in
+           the original either. Scaled by s so a scattered cloud does not
+           blink, and by uDrift so reduced-motion holds the eye open. */
+
+        /* Particles are 0.42-0.55 opaque over white paper, which dilutes
+           any colour toward the background. Lifting alpha under the cursor
+           is what actually lets the hover gradient read as saturated. */
+        vAlpha = mix(vAlpha, 1., cInfl*uHoverAlpha);
+
+        /* life last, so a dying particle still fades even under the
+           cursor's opacity lift */
+        vAlpha *= lifeE;
+      }`,
+    fragmentShader:`
+      precision highp float;
+      uniform float uEdge;
+      varying vec3 vColor; varying float vAlpha;
+      void main(){
+        vec2 c = gl_PointCoord - .5;
+        float d = dot(c,c);
+        if(d > .25) discard;
+        gl_FragColor = vec4(vColor, smoothstep(.25, uEdge, d)*vAlpha);
+      }`
+  }); }
+
+  /* ---- lattice -------------------------------------------------
+     Built once and shared by all three cards: the attribute data is
+     identical, only the bake each samples differs. A regular grid
+     would beat against the ordered dither into moire, so every
+     sample is jittered inside its own cell. */
+  const G = Math.max(16, P.grid|0);
+  /* A is width/height. The SDF cards share one square (A=1) lattice; the
+     image source builds its own at the canvas aspect, at the same density
+     per world unit, so its particles are the same size and spacing. */
+  function lattice(A){
+    const GX = Math.round(G*A), N = GX*G;
+    const aPos  = new Float32Array(N*3), aTgt = new Float32Array(N*3);
+    const aUv   = new Float32Array(N*2), aSeed = new Float32Array(N);
+    for(let i=0, gy=0; gy<G; gy++){
+      for(let gx=0; gx<GX; gx++, i++){
+        const u = (gx+Math.random())/GX, v = (gy+Math.random())/G;
+        aUv[i*2] = u; aUv[i*2+1] = v;
+        aTgt[i*3] = (u-.5)*SPAN*A; aTgt[i*3+1] = (v-.5)*SPAN; aTgt[i*3+2] = 0;
+        aSeed[i] = Math.random();
+        /* scatter start stored as a unit ball, scaled by uScatter */
+        const a = Math.random()*2-1, th = Math.random()*Math.PI*2;
+        const rr = Math.cbrt(Math.random()), sq = Math.sqrt(1-a*a);
+        aPos[i*3] = rr*sq*Math.cos(th)*A;
+        aPos[i*3+1] = rr*sq*Math.sin(th);
+        aPos[i*3+2] = rr*a*0.7;
+      }
+    }
+    return {aPos, aTgt, aUv, aSeed};
+  }
+  const SQUARE = lattice(1);
+  function makeGeo(L){
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(L.aPos, 3));
+    g.setAttribute('aTarget',  new THREE.BufferAttribute(L.aTgt, 3));
+    g.setAttribute('aUV',      new THREE.BufferAttribute(L.aUv, 2));
+    g.setAttribute('aSeed',    new THREE.BufferAttribute(L.aSeed, 1));
+    return g;
+  }
+
+  /* How long one loop of a source's OWN animation takes. Hold is
+     measured in whole loops of this, so the jaw finishes opening AND
+     closing before the field is allowed to break up. */
+  function animPeriod(key){
+    if(key === 'eye') return Math.PI/Math.max(P.blinkSpeed, 1e-3);
+    return SRC[key].period;
+  }
+
+  function cycle(o, tc){
+    const a = P.formSec;
+    const b = P.holdMode === 'one full loop'
+            ? animPeriod(o.key)*P.animLoops : P.holdSec;
+    const c = P.dispSec, d = P.restSec;
+    const period = a + b + c + d;
+    if(period <= 0){ o.phase = 'hold'; return 1; }
+    const u = tc % period;
+    if(u < a)     { o.phase = 'form';     return u/a; }
+    if(u < a+b)   { o.phase = 'hold';     return 1; }
+    if(u < a+b+c) { o.phase = 'disperse'; return 1 - (u-a-b)/c; }
+    o.phase = 'rest'; return 0;
+  }
+
+  const halfTan = Math.tan(FOV*Math.PI/360);
+  const inst = [];
+
+  canvases.forEach(cv => {
+    const key = cv.dataset.fx;
+    if(!SRC[key]) return;
+    /* same guard as the hero background: skip the canvas, keep the page */
+    let rd; try{ rd = new THREE.WebGLRenderer({canvas:cv, antialias:false}); }
+    catch(err){ cv.style.display = 'none'; return; }
+    rd.setPixelRatio(Math.min(window.devicePixelRatio, 1));
+    rd.setClearColor(new THREE.Color(P.bg), 1);
+
+    const src = SRC[key];
+    const aspectOf = () => src.img ? (cv.clientWidth||900)/(cv.clientHeight||300) : 1;
+    let A = aspectOf();
+    const rt = new THREE.WebGLRenderTarget(Math.round(SIZE*A), SIZE);
+    /* nearest, and no mipmaps: the dither must stay crisp, and a
+       particle samples a single pixel rather than an average */
+    rt.texture.minFilter = rt.texture.magFilter = THREE.NearestFilter;
+    rt.texture.generateMipmaps = false;
+
+    /* Sources that lack a given uniform simply never bind it, so one
+       uniform block serves all three. */
+    const bakeMat = new THREE.ShaderMaterial({
+      uniforms:{
+        t:{value:0}, r:{value:new THREE.Vector2(SIZE,SIZE)},
+        uZoom:{value:SRC[key].zoom}, uLevels:{value:P.toneLevels},
+        uOfs:{value:new THREE.Vector2(SRC[key].ofs[0], SRC[key].ofs[1])},
+        uBlinkSpeed:{value:P.blinkSpeed}, uBlinkPow:{value:P.blinkPow},
+        uBlinkAmt:{value:P.blinkAmt},
+        uHeight:{value:P.roomHeight},
+        uLightAz:{value:P.lightAz}, uLightEl:{value:P.lightEl},
+        uWrap:{value:P.lightWrap}, uGamma:{value:P.lightGamma},
+        uAO:{value:P.lightAO},
+        uCamY:{value:P.camY}, uCamR:{value:P.camR},
+        uFaceAmt:{value:P.faceAmt}, uFaceX:{value:P.faceX},
+        uFaceZ:{value:P.faceZ},
+        uImg:{value:null}, uAsp:{value:A}, uReady:{value:0}
+      },
+      vertexShader:'void main(){gl_Position=vec4(position,1.0);}',
+      fragmentShader:HEAD+SRC[key].frag
+    });
+    const bakeScene = new THREE.Scene();
+    bakeScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), bakeMat));
+    const bakeCam = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+
+    const mat = makeMat();
+    const u = mat.uniforms;
+    u.uSize.value = P.pt;             u.uScatter.value = P.scatter;
+    u.uSpread.value = P.spread;       u.uLooseBoost.value = P.looseBoost;
+    /* uDrift gates the wander, the idle motion and the life cycle at
+       once, so reduced motion is a single switch */
+    u.uDrift.value = reduce ? 0 : P.drift;
+    u.uIdleAmt.value = P.idleAmt;     u.uIdleSpeed.value = P.idleSpeed;
+    u.uIdleZ.value = P.idleZ;         u.uIdleMode.value = IDLE.indexOf(P.idleMode);
+    u.uLifeMix.value = P.lifeMix;     u.uLifeRate.value = P.lifeRate;
+    u.uLifeVary.value = P.lifeVary;   u.uLifeSize.value = P.lifeSize;
+    u.uLifeRise.value = P.lifeRise;
+    u.uAlphaS.value = P.alphaS;       u.uAlphaInk.value = P.alphaInk;
+    u.uEdge.value = P.edge;
+    u.uBlinkAmt.value = P.blinkAmt;   u.uBlinkSpeed.value = P.blinkSpeed;
+    u.uBlinkPow.value = P.blinkPow;
+    u.uHoverMode.value = HOVER.indexOf(P.hoverMode);
+    u.uMonoMix.value = P.monoMix;     u.uInkShade.value = P.inkShade;
+    u.uShadeClean.value = P.shadeClean;
+    /* radii are fixed; the STRENGTH of every cursor effect starts at zero
+       and is driven from o.hov in the loop. They must not start at their P
+       values: uPointer rests at the centre of the field, so a non-zero
+       strength paints a gradient there with no cursor present - and under
+       reduced motion the loop never runs to correct it. */
+    u.uHoverR.value = P.hoverR;       u.uHoverColR.value = P.hoverColR;
+    u.uHoverS.value = 0;              u.uParallax.value = 0;
+    u.uHoverColMix.value = 0;         u.uHoverAlpha.value = 0;
+    u.uHuePath.value = HUEP.indexOf(P.huePath);
+    u.uGradSrc.value = GRAD.indexOf(P.gradSrc);
+    u.uBase.value.set(P.baseL, P.baseC, P.baseH);
+    u.uGA.value.set(P.gaL, P.gaC, P.gaH);
+    u.uGB.value.set(P.gbL, P.gbC, P.gbH);
+
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(FOV, 4/3, .1, 100);
+    const pts = new THREE.Points(makeGeo(src.img ? lattice(A) : SQUARE), mat);
+    scene.add(pts);
+
+    /* The image source is not drawable until its texture lands - before
+       that it samples black, which would flash a solid ink slab. It also
+       answers to the film player: once .vid opens, the field disperses
+       and the loop lets it go. */
+    const box = src.img ? cv.closest('.vid') : null;
+    if(box) box.classList.add('fx-live');
+    if(src.img){
+      new THREE.TextureLoader().load(src.img, tex => {
+        bakeMat.uniforms.uImg.value = tex;
+        bakeMat.uniforms.uReady.value = 1;
+        o.ready = true;
+        if(reduce && o.on && !o.drawn){ o.drawn = true; draw(o, P.formEnd); }
+      });
+    }
+
+    const o = {key, rd, rt, bakeMat, bakeScene, bakeCam, mat, scene, cam, box,
+               ready:!src.img, exit:0,
+               on:false, drawn:false, phase:'form', tAnim:0, tCycle:0,
+               halfW:1, halfH:1, ptr:new THREE.Vector2(), ptrMid:new THREE.Vector2(), hovMid:0,
+               /* `over` is the raw hover state, `hov` its eased 0..1 form */
+               over:false, hov:0};
+
+    function size(){
+      const w = cv.clientWidth||600, h = cv.clientHeight||450;
+      rd.setSize(w, h, false);
+      /* the image lattice follows the canvas across the 3:1 / 2:1 step */
+      if(src.img && Math.abs(aspectOf() - A) > .01){
+        A = aspectOf();
+        pts.geometry.dispose(); pts.geometry = makeGeo(lattice(A));
+        rt.setSize(Math.round(SIZE*A), SIZE);
+        bakeMat.uniforms.uAsp.value = A;
+      }
+      const aspect = w/h;
+      cam.aspect = aspect;
+      /* frame the baked square in whichever dimension is tighter */
+      /* the SDF cards float with a margin; the image field is a crop and
+         runs edge to edge */
+      const need = SPAN*(src.img ? 0.5 : 0.54);
+      cam.position.z = Math.max(need/halfTan, need/(halfTan*aspect));
+      cam.updateProjectionMatrix();
+      const db = new THREE.Vector2(); rd.getDrawingBufferSize(db);
+      u.uScale.value = db.y/(2*halfTan);
+      /* world half-extents on z=0, so uHoverR is a real radius */
+      o.halfH = halfTan*cam.position.z;
+      o.halfW = o.halfH*aspect;
+    }
+    size();
+    window.addEventListener('resize', size);
+
+    /* Pointer is per-card and rect-relative, so hovering one case does
+       not tug at the other two, and it recentres on leave. */
+    if(!reduce){
+      const wrap = cv.parentElement;
+      wrap.addEventListener('pointermove', ev => {
+        const b = cv.getBoundingClientRect();
+        o.over = true;
+        o.ptr.set((ev.clientX-b.left)/b.width*2-1,
+                 -((ev.clientY-b.top)/b.height*2-1));
+      });
+      wrap.addEventListener('pointerleave', () => {
+        o.over = false;
+        o.ptr.set(0,0);
+      });
+    }
+
+    new IntersectionObserver(en => {
+      o.on = en[0].isIntersecting;
+      /* reduced motion never starts the loop, so draw the one settled
+         frame here instead, the first time the card is on screen */
+      if(reduce && o.on && o.ready && !o.drawn){ o.drawn = true; draw(o, P.formEnd); }
+    }, {threshold:.05}).observe(cv);
+
+    inst.push(o);
+  });
+
+  function draw(o, form){
+    const u = o.mat.uniforms;
+    u.uForm.value = form;
+    u.uTime.value = o.tAnim;
+    u.uPointerW.value.set(u.uPointer.value.x*o.halfW,
+                          u.uPointer.value.y*o.halfH);
+    /* Bake first, then draw the points: the particles must sample the
+       current frame of the illustration, not the previous one. */
+    o.bakeMat.uniforms.t.value = o.tAnim;
+    o.bakeMat.uniforms.r.value.set(o.rt.width, o.rt.height);
+    o.rd.setRenderTarget(o.rt);
+    o.rd.render(o.bakeScene, o.bakeCam);
+    o.rd.setRenderTarget(null);
+    u.uBake.value = o.rt.texture;
+    o.rd.render(o.scene, o.cam);
+  }
+
+  if(!reduce){
+    let last = performance.now();
+    (function loop(){
+      const now = performance.now();
+      /* frame-rate independent easing - a flat per-frame factor stalls
+         badly on slow hardware, where the field barely moves */
+      const dt = Math.min((now-last)/1000, 0.1); last = now;
+      /* Two exponential stages in series = a critically damped follow:
+         it starts and stops at zero velocity, so entering, crossing and
+         leaving a card all ease instead of jumping. Per stage, so the
+         felt settle time is about 2.5x tau. */
+      const kp = 1 - Math.exp(-dt/P.ptrTau);
+      const kh = 1 - Math.exp(-dt/P.hovTau);
+      inst.forEach(o => {
+        if(!o.on || !o.ready || o.exit >= 1) return;
+        o.tAnim  += dt*P.timeSpeed;
+        o.tCycle += dt*P.timeSpeed;
+        /* the drive is a normalised 0..1 sweep; start/end decide what it
+           spans. start above 0 means the field never fully scatters. */
+        let form = P.formStart + (P.formEnd-P.formStart)*cycle(o, o.tCycle);
+        /* the film opened: scatter fully over ~0.9s while CSS fades the
+           canvas, then stop drawing it for good */
+        if(o.box && o.box.classList.contains('open')){
+          o.exit = Math.min(1, o.exit + dt/0.9);
+          form *= 1 - o.exit;
+        }
+        const u = o.mat.uniforms;
+        o.ptrMid.lerp(o.ptr, kp);
+        u.uPointer.value.lerp(o.ptrMid, kp);
+        /* Gate every cursor-driven effect on actually being over the card.
+           uPointer rests at (0,0), which is the CENTRE of the field, so an
+           ungated hover term sits at full strength there forever - that is
+           what painted a permanent rainbow blob in the middle of all three
+           illustrations. Resting state has to be the monochrome base. */
+        o.hovMid += ((o.over ? 1 : 0) - o.hovMid)*kh;
+        o.hov    += (o.hovMid - o.hov)*kh;
+        u.uHoverColMix.value = P.hoverColMix*o.hov;
+        u.uHoverAlpha.value  = P.hoverAlpha*o.hov;
+        u.uHoverS.value      = P.hoverS*o.hov;
+        u.uParallax.value    = P.parallax*o.hov;
+        draw(o, form);
+      });
+      requestAnimationFrame(loop);
+    })();
+  }
 })();
 </script>
 </body>
