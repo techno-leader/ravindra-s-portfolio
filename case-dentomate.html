@@ -36,6 +36,8 @@
     --ink-3:#6e6e6e;    /* mono labels, chrome      5.1:1 */
     --mut:#767676;      /* secondary prose          4.5:1 */
     --line:#ececec;
+    --line-2:#e7e7e7;
+    --ink-hover:#212121;
     --paper:#ffffff;
     --surface:#fafafa;  /* figure background */
     /* The grey the translucent marks are struck from. Kept as real alpha
@@ -336,6 +338,242 @@
     figure{padding:20px;}
     .case-nav{grid-template-columns:1fr;}
   }
+  /* ---- the product film: ported verbatim from index.html's TAE Ad Studio
+     player, so the two films on the site share one pattern. No particle
+     canvas here, so the still poster is the thumbnail. ---- */
+  /* the player brings its own shell (radius, hairline, paper), so the film's
+     figure drops the page's padded surface card or it reads as a frame in a frame */
+  figure.film{margin-top:44px;padding:0;border:0;background:none;display:block;overflow:visible;}
+
+  /* The shell is .fx-wrap's: same radius, hairline and paper, so it reads as
+     the fourth thumbnail in the set. Rests at 3:1 and morphs to the film's
+     16:9 on play. Poster and video are both full 16:9 frames under
+     object-fit:cover, and the width never changes - so cover's scale stays
+     fixed and the morph only *uncovers* the top and bottom of the frame,
+     it never zooms. The height is tweened through --vid-h (set from JS);
+     aspect-ratio itself does not interpolate reliably. */
+  .vid{
+    position:relative;width:100%;aspect-ratio:3/1;border-radius:var(--r-lg);overflow:hidden;
+    background:var(--paper);border:1px solid var(--line-2);
+  }
+  .vid.open{aspect-ratio:16/9;}
+  .vid.morph{aspect-ratio:auto;height:var(--vid-h);transition:height .8s cubic-bezier(.22,1,.36,1);}
+  .vid video,.vid-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+  /* the video is transparent until its first frame, so paper shows through
+     the morph instead of a black slab; it fades up once frames arrive */
+  .vid video{opacity:0;transition:opacity .5s ease;}
+  .vid.playing-once video{opacity:1;}
+  /* The thumbnail is a particle field, same engine as the three cases. The
+     colour poster stays underneath only as the no-WebGL fallback. */
+  .vid.fx-live .vid-poster{display:none;}
+  .vid-poster{transition:opacity .5s ease;}
+  .vid.playing-once .vid-poster{opacity:0;pointer-events:none;}
+  .vid:fullscreen{border:0;border-radius:0;background:var(--ink);}
+  .vid:fullscreen video{object-fit:contain;}
+
+  /* resting state: the whole thumbnail is the play target */
+  .vid-start{
+    position:absolute;inset:0;z-index:2;display:grid;place-items:center;
+    background:none;border:0;padding:0;cursor:pointer;color:var(--paper);
+  }
+  .vid.open .vid-start{display:none;}
+  .vid-start .ring{
+    position:relative;display:grid;place-items:center;width:88px;height:88px;
+    border-radius:var(--r-pill);background:var(--ink);
+    transition:transform .45s cubic-bezier(.22,1,.36,1),background .25s ease;
+  }
+  /* Optical centre. Phosphor's triangle spans x 64-240 of 256, so its box
+     already sits 24 units right of centre; its centroid sits 5 units left.
+     Halfway between the two is where a triangle reads as centred, which is
+     15 units (.06em) back from where the glyph draws itself. */
+  .vid-start .ring .icon{font-size:var(--t-sub);transform:translateX(-.06em);}
+  /* Solid ink on the paper field - the site's one button form, as on the
+     case links. The pulse: two ink halos breathing out of it, half a beat
+     apart. */
+  .vid-start .ring::before,.vid-start .ring::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;
+    border:1.5px solid var(--ink);opacity:0;
+    animation:vid-pulse 2.6s cubic-bezier(.22,1,.36,1) infinite;
+  }
+  .vid-start .ring::after{animation-delay:1.3s;}
+  @keyframes vid-pulse{
+    0%{transform:scale(1);opacity:.7;}
+    100%{transform:scale(1.7);opacity:0;}
+  }
+  .vid-start:hover .ring{transform:scale(1.05);background:var(--ink-hover);}
+  .vid-start:focus-visible{outline:2px solid var(--ink);outline-offset:-6px;border-radius:var(--r-lg);}
+
+  /* playing state: one solid ink pill, the Explore Case Study shape */
+  .vid-bar{
+    position:absolute;z-index:2;left:50%;bottom:20px;transform:translateX(-50%);
+    display:flex;gap:2px;padding:4px;border-radius:var(--r-pill);background:var(--ink);
+    opacity:0;pointer-events:none;transition:opacity .35s ease;
+  }
+  .vid.open .vid-bar{opacity:1;pointer-events:auto;}
+  .vid.open.idle .vid-bar{opacity:0;pointer-events:none;}
+  .vid.open.idle{cursor:none;}
+  /* twice the 44px target wide: at 44 square the three sat shoulder to
+     shoulder and the pill read cramped */
+  .vid-btn{
+    display:grid;place-items:center;width:88px;height:44px;min-height:44px;
+    border:0;border-radius:var(--r-pill);background:none;color:var(--paper);cursor:pointer;
+    font-size:var(--t-sub);transition:background .25s ease;
+  }
+  .vid-btn:hover{background:var(--ink-hover);}
+  .vid-btn:focus-visible{outline:2px solid var(--paper);outline-offset:-4px;}
+  /* each button holds both glyphs; the state class picks one */
+  .vid-btn .alt{display:none;}
+  .vid.is-paused .vid-play .main,.vid.is-muted .vid-mute .main,.vid.is-fs .vid-fs .main{display:none;}
+  .vid.is-paused .vid-play .alt,.vid.is-muted .vid-mute .alt,.vid.is-fs .vid-fs .alt{display:block;}
+  /* progress: the scroll bar's comet, inverted to paper for a dark surface */
+  .vid-prog{
+    position:absolute;z-index:1;left:0;bottom:0;height:3px;width:calc(var(--vp,0)*100%);
+    background:linear-gradient(90deg,transparent 0%,var(--paper) 100%);
+    opacity:0;transition:opacity .35s ease;pointer-events:none;
+  }
+  .vid.open .vid-prog{opacity:1;}
+  /* Its own reduce block, not the shared one above: that one comes earlier
+     in the file, so these rules would simply win it back. The film still
+     opens to 16:9, in one frame; the halos do not breathe. */
+  @media (prefers-reduced-motion:reduce){
+    .vid.morph,.vid video,.vid-poster,.vid-start .ring,.vid-bar,.vid-btn,.vid-prog{transition:none;}
+    .vid-start .ring::before,.vid-start .ring::after{animation:none;}
+  }
+
+  @media (max-width:640px){
+    .vid{aspect-ratio:2/1;}
+    .vid-start .ring{width:64px;height:64px;}
+    .vid-bar{bottom:12px;}
+  }
+
+  /* ---- tool icons on the attempts: the real apps in their own colours (user's
+     pick). 2020-era Google icons and the 2019 Excel icon, for recognition. ---- */
+  .apps{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .apps img{display:block;width:28px;height:28px;object-fit:contain;}
+
+  /* ================= Dentomate case, visual-first rebuild =================
+     Every section is one claim plus one visual. Nothing here introduces a
+     colour: brand colour only lives inside the real screenshots and app icons. */
+
+  /* problem loop: four states a patient passes through, the last one is the cost */
+  .loop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:44px;}
+  .loop-node{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;}
+  .loop-node .ring{display:grid;place-items:center;width:64px;height:64px;border-radius:var(--r-pill);
+    border:1px solid var(--line);background:var(--paper);font-size:var(--t-sub);color:var(--ink-2);}
+  .loop-node b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-body);line-height:1.3;max-width:14ch;}
+  .loop-node.end .ring{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+  .loop-arrow{flex:none;margin-top:22px;font-size:var(--t-sub);color:var(--ink-3);}
+
+  /* comparison grid */
+  .cmp{width:100%;border-collapse:collapse;margin-top:44px;}
+  .cmp th{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:400;text-align:left;padding:0 16px 14px 0;border-bottom:1px solid var(--line);}
+  .cmp td{padding:18px 16px 18px 0;border-bottom:1px solid var(--line);vertical-align:middle;}
+  .cmp td:first-child{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-body);color:var(--ink);white-space:nowrap;}
+  .cmp .y,.cmp .n{display:inline-flex;align-items:center;gap:8px;}
+  .cmp .y .icon,.cmp .n .icon{font-size:22px;}
+  .cmp .y{color:var(--ink);}
+  .cmp .n{color:var(--ink-3);}
+  .cmp small{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.06em;color:var(--mut);white-space:nowrap;}
+  .cmp .cost{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.06em;color:var(--ink-2);white-space:nowrap;}
+  .cmp tr.us td{border-top:1.5px solid var(--ink);border-bottom:0;}
+  .cmp tr.us td:first-child{font-weight:600;}
+  .cmp-scroll{overflow-x:auto;}
+
+  /* journey: the attempts slide past horizontally while the page scrolls.
+     Height is set from JS so the horizontal travel maps 1:1 to scroll. */
+  .jr{position:relative;margin-top:24px;}
+  .jr-stage{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
+  .jr-track{display:flex;align-items:flex-start;gap:40px;padding:0 var(--jr-pad,44px);will-change:transform;}
+  .jr-card{flex:none;margin:0;display:flex;flex-direction:column;gap:18px;opacity:.38;transition:opacity .5s ease;}
+  .jr-card.on{opacity:1;}
+  /* the page's base figure/figcaption are a padded surface card with an
+     absolutely placed mono caption; journey cards are neither */
+  figure.jr-card{position:static;padding:0;border:0;background:none;border-radius:0;overflow:visible;
+    align-items:flex-start;justify-content:flex-start;}
+  figcaption.jr-cap{position:static;font-family:var(--sans);letter-spacing:0;text-transform:none;color:var(--ink);}
+  .jr-img{height:min(52vh,520px);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);}
+  .jr-img img{display:block;height:100%;width:auto;}
+  .jr-cap{display:flex;flex-direction:column;gap:6px;max-width:420px;}
+  .jr-cap i{font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
+  .jr-cap b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);letter-spacing:-.015em;line-height:1.2;}
+  .jr-cap span.why{font-size:var(--t-body);line-height:1.45;color:var(--mut);}
+  .jr .apps{margin-bottom:4px;}
+  .app-ph{display:grid;place-items:center;width:28px;height:28px;font-size:24px;color:var(--ink-2);}
+  .jr-bar{position:absolute;left:var(--jr-pad,44px);right:var(--jr-pad,44px);bottom:6vh;height:2px;background:var(--line);}
+  .jr-bar i{display:block;height:100%;width:calc(var(--p,0)*100%);background:linear-gradient(90deg,transparent 0%,var(--ink) 100%);}
+
+  /* product beats, after interfere.com: text left, the real screen running
+     off the right edge of the viewport, one pin on the part that matters */
+  .beat{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:start;padding:72px 0;border-top:1px solid var(--line);}
+  /* grid items default to min-width:auto, and a 1100px screenshot would prop
+     the column open on a phone */
+  .beat > *{min-width:0;}
+  .beat .num{font-style:normal;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;color:var(--ink-3);}
+  .beat h3{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub-md);letter-spacing:-.025em;line-height:1.15;margin:12px 0 14px;}
+  .beat-txt p{font-size:var(--t-body);line-height:1.55;color:var(--mut);}
+  .caps{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);}
+  .caps ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin:0;padding:0;}
+  .caps li{font-size:var(--t-body);color:var(--ink-2);}
+  /* bleed: the column reaches past the wrap to the viewport's right edge */
+  .beat-ui{margin-right:calc((min(100vw, 1080px) - 88px - 100vw) / 2);}
+  .crop{position:relative;height:var(--h,460px);overflow:hidden;border:1px solid var(--line);border-right:0;
+    border-radius:var(--r-lg) 0 0 var(--r-lg);background:var(--surface);
+    -webkit-mask:linear-gradient(180deg,var(--ink) 78%,transparent);mask:linear-gradient(180deg,var(--ink) 78%,transparent);}
+  .shot-in{position:relative;width:var(--w,900px);margin:var(--m,0);}
+  .shot-in img{display:block;width:100%;height:auto;}
+  /* numbered dot on the screen; its note sits in the text column (.keys), so
+     nothing is laid over the UI it explains */
+  .pin,.keys .k{display:grid;place-items:center;width:22px;height:22px;border-radius:var(--r-pill);
+    background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:var(--t-label);line-height:1;}
+  .pin{position:absolute;left:var(--x);top:var(--y);margin:-11px 0 0 -11px;
+    box-shadow:0 0 0 5px color-mix(in srgb, var(--ink) 14%, transparent);}
+  .keys{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:12px;}
+  .keys li{display:flex;align-items:center;gap:12px;font-size:var(--t-body);color:var(--ink);}
+  .keys .k{flex:none;}
+  .phones{display:flex;gap:20px;}
+  .phones img{display:block;height:440px;width:auto;border:1px solid var(--line);border-radius:var(--r-device);}
+
+  /* pricing: three message prices as bars, scaled to the most expensive */
+  .bars{margin-top:44px;display:grid;gap:22px;}
+  .bar{display:grid;grid-template-columns:minmax(220px,1fr) 2fr auto;gap:24px;align-items:center;}
+  .bar b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-body);}
+  .bar b small{display:block;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.06em;color:var(--mut);font-weight:400;margin-top:4px;}
+  .bar .track{height:10px;border-radius:var(--r-pill);background:var(--line);overflow:hidden;}
+  .bar .track i{display:block;height:100%;width:var(--w);min-width:4px;border-radius:inherit;background:var(--ink);}
+  .bar .price{font-family:var(--mono);font-size:var(--t-body);color:var(--ink);min-width:72px;text-align:right;}
+
+  @media (max-width:900px){
+    .beat{grid-template-columns:minmax(0,1fr);gap:32px;padding:56px 0;}
+    .crop{height:360px;}
+    .loop{flex-wrap:wrap;}
+    .loop-node{flex:1 1 40%;}
+    .loop-arrow{display:none;}
+    /* the journey stops pinning and stacks */
+    .jr{height:auto!important;}
+    .jr-stage{position:static;height:auto;overflow:visible;}
+    .jr-track{flex-direction:column;gap:56px;transform:none!important;padding:0 44px;}
+    .jr-card{opacity:1;}
+    .jr-img{height:auto;max-width:100%;}
+    .jr-img img{width:100%;height:auto;max-height:70vh;object-fit:contain;}
+    .jr-bar{display:none;}
+    .bar{grid-template-columns:1fr auto;}
+    .bar .track{grid-column:1 / -1;grid-row:2;}
+  }
+  @media (max-width:640px){
+    .beat-ui{margin-right:-22px;}
+    .jr-track{padding:0 22px;}
+    .caps ul{grid-template-columns:1fr;}
+    .phones{gap:10px;}
+    .phones img{height:auto;width:calc((100% - 20px) / 3);border-radius:var(--r-lg);}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .jr{height:auto!important;}
+    .jr-stage{position:static;height:auto;overflow-x:auto;}
+    .jr-track{transform:none!important;}
+    .jr-card{opacity:1;transition:none;}
+    .jr-bar{display:none;}
+  }
 </style>
 <!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
@@ -359,113 +597,196 @@
 <header>
   <canvas id="orb" width="520" height="520"></canvas>
   <div class="wrap">
-    <h1 class="rv">Stop paying the <em>WhatsApp tax.</em></h1>
-    <p class="lede rv rv-d1">Dentomate is a practice platform I designed, built and run for Indian dental clinics - automated patient communication, records and revenue analytics, at a price that makes the ₹6,000–15,000/month messaging spend obsolete.</p>
+    <h1 class="rv">The patient who <em>never came back.</em></h1>
+    <p class="lede rv rv-d1">Practice software for Indian dental clinics. Records, prescriptions and recalls, with WhatsApp built in.</p>
     <div class="facts rv rv-d2">
       <div><small>Role</small><b>Founder - design, build, GTM</b></div>
-      <div><small>Status</small><b>Live · 200+ clinics</b></div>
-      <div><small>Pricing</small><b>₹0 / ₹399 / ₹799 per month</b></div>
-      <div><small>Market</small><b>Indian dental practices</b></div>
+      <div><small>Live</small><b>34 clinics, 30 doctors</b></div>
+      <div><small>Pricing</small><b>₹0 / ₹399 / ₹799 a month</b></div>
+      <div><small>Works on</small><b>Phone, tablet, desktop</b></div>
     </div>
   </div>
 </header>
 
 <main>
+  <!-- THE FILM - the running thing is the evidence -->
+  <section class="film-sec">
+    <div class="wrap">
+      <figure class="film rv">
+            <div class="vid is-paused">
+              <img class="vid-poster" src="assets/dentomate/film-poster.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+              <video playsinline preload="none" aria-label="Dentomate product film, 35 seconds">
+                <source src="assets/dentomate/dentomate-film.mp4" type="video/mp4">
+              </video>
+              <button type="button" class="vid-start" aria-label="Play the Dentomate film, 35 seconds">
+                <span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/></svg></span>
+              </button>
+              <div class="vid-bar">
+                <button type="button" class="vid-btn vid-play" aria-label="Pause">
+                  <svg class="icon main" viewBox="0 0 256 256" aria-hidden="true"><path d="M216,48V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V48a16,16,0,0,1,16-16h40A16,16,0,0,1,216,48ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Z"/></svg>
+                  <svg class="icon alt" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/></svg>
+                </button>
+                <button type="button" class="vid-btn vid-mute" aria-label="Mute">
+                  <svg class="icon main" viewBox="0 0 256 256" aria-hidden="true"><path d="M160,32.25V223.69a8.29,8.29,0,0,1-3.91,7.18,8,8,0,0,1-9-.56l-65.57-51A4,4,0,0,1,80,176.16V79.84a4,4,0,0,1,1.55-3.15l65.57-51a8,8,0,0,1,10,.16A8.27,8.27,0,0,1,160,32.25ZM60,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H60a4,4,0,0,0,4-4V84A4,4,0,0,0,60,80Zm126.77,20.84a8,8,0,0,0-.72,11.3,24,24,0,0,1,0,31.72,8,8,0,1,0,12,10.58,40,40,0,0,0,0-52.88A8,8,0,0,0,186.74,100.84Zm40.89-26.17a8,8,0,1,0-11.92,10.66,64,64,0,0,1,0,85.34,8,8,0,1,0,11.92,10.66,80,80,0,0,0,0-106.66Z"/></svg>
+                  <svg class="icon alt" viewBox="0 0 256 256" aria-hidden="true"><path d="M213.92,210.62a8,8,0,1,1-11.84,10.76L160,175.09v48.6a8.29,8.29,0,0,1-3.91,7.18,8,8,0,0,1-9-.56l-65.55-51A4,4,0,0,1,80,176.18V87.09L42.08,45.38A8,8,0,1,1,53.92,34.62Zm-27.21-55.46a8,8,0,0,0,11.29-.7,40,40,0,0,0,0-52.88,8,8,0,1,0-12,10.57,24,24,0,0,1,0,31.72A8,8,0,0,0,186.71,155.16Zm40.92-80.49a8,8,0,1,0-11.92,10.66,64,64,0,0,1,0,85.34,8,8,0,1,0,11.92,10.66,80,80,0,0,0,0-106.66ZM153,119.87a4,4,0,0,0,7-2.7V32.25a8.27,8.27,0,0,0-2.88-6.4,8,8,0,0,0-10-.16L103.83,59.33a4,4,0,0,0-.5,5.85ZM60,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H60a4,4,0,0,0,4-4V84A4,4,0,0,0,60,80Z"/></svg>
+                </button>
+                <button type="button" class="vid-btn vid-fs" aria-label="Enter full screen">
+                  <svg class="icon main" viewBox="0 0 256 256" aria-hidden="true"><path d="M93.66,202.34A8,8,0,0,1,88,216H48a8,8,0,0,1-8-8V168a8,8,0,0,1,13.66-5.66ZM88,40H48a8,8,0,0,0-8,8V88a8,8,0,0,0,13.66,5.66l40-40A8,8,0,0,0,88,40ZM211.06,160.61a8,8,0,0,0-8.72,1.73l-40,40A8,8,0,0,0,168,216h40a8,8,0,0,0,8-8V168A8,8,0,0,0,211.06,160.61ZM208,40H168a8,8,0,0,0-5.66,13.66l40,40A8,8,0,0,0,216,88V48A8,8,0,0,0,208,40Z"/></svg>
+                  <svg class="icon alt" viewBox="0 0 256 256" aria-hidden="true"><path d="M152,96V48a8,8,0,0,1,13.66-5.66l48,48A8,8,0,0,1,208,104H160A8,8,0,0,1,152,96ZM96,152H48a8,8,0,0,0-5.66,13.66l48,48A8,8,0,0,0,104,208V160A8,8,0,0,0,96,152ZM99.06,40.61a8,8,0,0,0-8.72,1.73l-48,48A8,8,0,0,0,48,104H96a8,8,0,0,0,8-8V48A8,8,0,0,0,99.06,40.61ZM208,152H160a8,8,0,0,0-8,8v48a8,8,0,0,0,13.66,5.66l48-48A8,8,0,0,0,208,152Z"/></svg>
+                </button>
+              </div>
+              <span class="vid-prog" aria-hidden="true"></span>
+      </figure>
+    </div>
+  </section>
+
   <!-- PROBLEM -->
   <section>
     <div class="wrap">
       <div class="sec-label rv">The Problem</div>
       <div class="cols">
-        <div class="rv">
-          <h2>Clinics were renting their own patient relationships back.</h2>
-        </div>
-        <div class="rv rv-d1">
-          <p>To send a simple prescription or <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-recall">recall<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-recall" role="tooltip" hidden>In dentistry, a recall is a scheduled prompt bringing a patient back for a routine check-up or follow-up after a set interval - typically 7, 90 or 180 days.</span></span> reminder on WhatsApp, an Indian clinic needs API access plus a developer to maintain it - <strong>₹6,000–15,000 every month</strong>. Most clinics either pay it, or don't message at all.</p>
-          <p>Meanwhile recalls live in spreadsheets, reminders never go out, and <strong>patients quietly never come back</strong>. A filled chair today hides an empty one next quarter.</p>
-          <div class="pull">One prevented no-show pays for 7+ months of Dentomate.
-            <span class="mono">The core economics of the product</span>
-          </div>
-        </div>
+        <div class="rv"><h2>Paper registers <em>lose patients.</em></h2></div>
+        <div class="rv rv-d1"><p>No reminder, no second visit. The second visit is the profit.</p></div>
       </div>
-      <div class="cards rv">
-        <div class="card"><i>Segment 01</i><b>Solo &amp; small clinics (1–3 chairs)</b><p>Overspending on WhatsApp infrastructure - or skipping patient communication entirely.</p></div>
-        <div class="card"><i>Segment 02</i><b>Multi-location networks (3–15+ clinics)</b><p>Fragmented communications and inconsistent branding across branches, with no unified view.</p></div>
+      <div class="loop rv" role="list">
+        <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/></svg></span><b>Patient visits</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
+        <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span><b>Written in a register</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
+        <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,48H32A16,16,0,0,0,16,64V88a16,16,0,0,0,16,16v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V104a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM208,192H48V104H208ZM224,88H32V64H224V88ZM96,136a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,136Z"/></svg></span><b>Register fills up, shelved</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
+        <div class="loop-node end" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M146.34,98.34,164.69,80,146.34,61.66a8,8,0,0,1,11.32-11.32L176,68.69l18.34-18.35a8,8,0,0,1,11.32,11.32L187.32,80l18.34,18.34a8,8,0,0,1-11.32,11.32L176,91.31l-18.34,18.35a8,8,0,0,1-11.32-11.32Zm77.54,84.74A56.26,56.26,0,0,1,168,232C88.6,232,24,167.4,24,88A56.26,56.26,0,0,1,72.92,32.12a16,16,0,0,1,16.62,9.52l21.12,47.15,0,.12A16,16,0,0,1,109.39,104c-.18.27-.37.52-.57.77L88,129.45c7.49,15.22,23.41,31,38.83,38.51l24.34-20.71a8.12,8.12,0,0,1,.75-.56,16,16,0,0,1,15.17-1.4l.13.06,47.11,21.11A16,16,0,0,1,223.88,183.08Zm-15.88-2s-.07,0-.11,0h0l-47-21.05-24.35,20.71a8.44,8.44,0,0,1-.74.56,16,16,0,0,1-15.75,1.14c-18.73-9.05-37.4-27.58-46.46-46.11a16,16,0,0,1,1-15.7,6.13,6.13,0,0,1,.57-.77L96,95.15l-21-47a.61.61,0,0,1,0-.12A40.2,40.2,0,0,0,40,88,128.14,128.14,0,0,0,168,216,40.21,40.21,0,0,0,208,181.07Z"/></svg></span><b>Patient never recalled</b></div>
       </div>
     </div>
   </section>
 
-  <!-- SOLUTION -->
+  <!-- WHAT CLINICS USE TODAY -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">The Solution</div>
+      <div class="sec-label rv">What clinics use today</div>
       <div class="cols">
-        <div class="rv">
-          <h2>The practice <em>runs itself.</em></h2>
-          <p>One dashboard for records, messaging, invoicing and analytics - set up in <strong>5 minutes, no developer</strong>. Hindi and English templates, data stored in India, <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-dpdp">DPDP<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-dpdp" role="tooltip" hidden>India's Digital Personal Data Protection Act, 2023 - the law governing how personal data, including patient records, must be collected, stored and processed.</span></span>-compliant.</p>
-          <div class="steps">
-            <div class="step"><div><b>Branded prescriptions, automatically</b><p>As the patient walks out, a clinic-branded WhatsApp prescription goes out - logo, doctor's signature, treatment notes.</p></div></div>
-            <div class="step"><div><b>Recalls at 7 / 90 / 180 days</b><p>Smart follow-up campaigns with the patient's name and a booking link - the moments clinics always miss by hand.</p></div></div>
-            <div class="step"><div><b>Everything else in one place</b><p>Records, X-rays, GST invoicing, UPI payment links, Practo / Razorpay / Google Calendar integrations.</p></div></div>
-          </div>
-        </div>
-        <div class="rv rv-d1">
-          <figure style="margin-top:0;">
-            <img src="assets/dentomate/app-prescription.jpg" alt="A Dentomate prescription, listing each medicine with dosage written as 1-0-1 (after food)" />
-            <figcaption>Dosage in Indian notation</figcaption>
-          </figure>
-        </div>
+        <div class="rv"><h2>Six workarounds. <em>None does all three.</em></h2></div>
+        <div class="rv rv-d1"><p>Records, WhatsApp, and made for dentists. From my brother's clinic and from demo calls.</p></div>
       </div>
-      <figure class="rv">
-        <img src="assets/dentomate/app-dashboard.jpg" alt="The Dentomate patient register, grouped into Today, Yesterday and earlier dates, each patient row carrying a registration number" />
-        <figcaption>The register opens on today</figcaption>
-      </figure>
-      <figure class="rv">
-        <img src="assets/dentomate/app-whatsapp.jpg" alt="The WhatsApp view, each patient row showing a delivery state of Sent, Delivered or Read" />
-        <figcaption>Delivery state sits on the patient, not in a separate outbox</figcaption>
-      </figure>
-      <div class="cards rv">
-        <div class="card"><i>Design decision</i><b>Role-based access</b><p>Receptionists see appointments, doctors see history, owners see everything - one product, three honest views.</p></div>
-        <div class="card"><i>Design decision</i><b>Network-wide analytics</b><p>Revenue by branch, treatment and time period. Managers see their clinic; owners see the network.</p></div>
+      <div class="cmp-scroll rv">
+        <table class="cmp">
+          <thead><tr><th></th><th>Patient records</th><th>WhatsApp</th><th>Made for dentists</th><th>Cost a month</th></tr></thead>
+          <tbody>
+            <tr><td>Paper register</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>lost when full</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
+            <tr><td>Excel sheet</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>not a medical record</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
+            <tr><td>Personal WhatsApp</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>number gets banned</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
+            <tr><td>WATI, AiSensy</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹1,500–3,200</td></tr>
+            <tr><td>Practo Ray</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>SMS only</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>made for physicians</small></span></td><td class="cost">₹999–3,999 a doctor</td></tr>
+            <tr><td>Foreign dental EMRs</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>dated</small></span></td><td class="cost">Varies</td></tr>
+            <tr class="us"><td>Dentomate</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>no API to buy</small></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td class="cost">₹0–799</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <!-- THE DECISION -->
-  <section>
+  <!-- HOW IT WAS BUILT - the attempts slide past as you scroll -->
+  <section class="jr-sec">
     <div class="wrap">
-      <div class="sec-label rv">The Decision</div>
+      <div class="sec-label rv">How it was built</div>
       <div class="cols">
-        <div class="rv">
-          <h2>A clinic paying ₹399 cannot be sent <em>₹400 of messages.</em></h2>
+        <div class="rv"><h2>Three tries <em>before the app.</em></h2></div>
+        <div class="rv rv-d1"><p>It started in my brother's dental clinic. Each failure shaped the next version.</p></div>
+      </div>
+    </div>
+    <div class="jr">
+      <div class="jr-stage">
+        <div class="jr-track">
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/01-register.jpg" alt="A clinic's handwritten patient register, names and phone numbers blurred" loading="lazy"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><span class="app-ph"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span></span><i>Start</i><b>Paper register</b><span class="why">Written down. Never called back.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/02-sheet-2021.jpg" alt="The clinic's 2021 patient spreadsheet, names, phone numbers and villages blurred" loading="lazy"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/excel.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"></span><i>Try 01</i><b>A spreadsheet</b><span class="why">Too slow for staff to keep up.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/03-google-form.jpg" alt="The Google Form used to register each patient, with one tick-box per treatment code" loading="lazy"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/forms.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/appsscript.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 02</i><b>Form, sheet and a script</b><span class="why">₹1,500 a month. A developer for every fix. No room for the treatment list.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/04-appsheet.jpg" alt="The AppSheet patient app built on the form's sheet, patient details blurred" loading="lazy"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/appsheet.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 03</i><b>AppSheet</b><span class="why">Data entry fixed. The API bill stayed.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/05-prototype-treatments.jpg" alt="The first prototype's treatment plan: every treatment as a tick-box" loading="lazy"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Prototype</i><b>An app for one clinic</b><span class="why">Treatments as tick-boxes. Under a minute.</span></figcaption></figure>
+          <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/app-dashboard.jpg" alt="Dentomate today: the patient register grouped by day" loading="lazy"></div>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/dentomate.png" alt="" width="28" height="28"></span><i>Today</i><b>Dentomate</b><span class="why">Piloted with 3 dentists. Now in 34 clinics.</span></figcaption></figure>
         </div>
-        <div class="rv rv-d1">
-          <p>Every message Dentomate sends costs me money, and not every message costs the same. A <span class="define"><button type="button" class="define-t" aria-expanded="false" aria-controls="def-utility">utility<svg class="define-i" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></svg></button><span class="define-box" id="def-utility" role="tooltip" hidden>WhatsApp's own billing category for a message the patient's own visit asked for - a prescription, a receipt, an appointment reminder. Anything promotional bills as marketing instead, at several times the rate.</span></span> message - a prescription, a receipt, a reminder the patient's own visit asked for - costs about <strong>₹0.13</strong>. A marketing message costs about <strong>₹0.88</strong>. Seven times more, for the same tap.</p>
-          <p>That ratio designed the plans. The free tier could not be <em>fewer features</em>; it had to be <em>less of the expensive thing</em>. So paying does not unlock buttons - it raises a ceiling on recall campaigns, the single place the ₹0.88 rate applies. Everything a clinic does for the patient in the chair is free at every tier, because it costs me almost nothing to give.</p>
-          <div class="pull">Gate the cost, not the feature.
-            <span class="mono">The rule the price list came out of</span>
-          </div>
-          <p>It sells worse than three columns of ticks and crosses, and I know it - clinics ask what ₹399 buys and the honest answer is a ceiling, not a list. I kept it because the alternative was charging for something that was free to hand over.</p>
-        </div>
+        <div class="jr-bar" aria-hidden="true"><i></i></div>
       </div>
     </div>
   </section>
 
-  <!-- IMPACT -->
+  <!-- THE PRODUCT - interfere-style beats on the real screens -->
   <section>
     <div class="wrap">
-      <div class="sec-label rv">Impact</div>
-      <h2 class="rv">200+ clinics, and counting.</h2>
+      <div class="sec-label rv">The Product</div>
+      <div class="cols">
+        <div class="rv"><h2>Built for the chair, <em>the desk and the patient's phone.</em></h2></div>
+      </div>
+
+      <div class="beat">
+        <div class="beat-txt rv"><i class="num">01</i><h3>Under a minute at the chair</h3><p>Pick treatments from tabs. No typing.</p>
+          <ol class="keys"><li><span class="k">1</span>Tap a tag to add a treatment</li><li><span class="k">2</span>Tick the details, done</li></ol>
+          <div class="caps"><ul><li>Treatment tabs</li><li>Quick tags</li><li>Medical history</li><li>Doctor-only notes</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:672px;--m:28px 0 0 28px">
+          <img src="assets/dentomate/product/01-treatments.png" alt="Treatment plan with tabs for General, Endodontics, Surgery and Extractions, Prostho and Implants, and quick-add tags" loading="lazy">
+          <span class="pin" style="--x:7.5%;--y:25.5%">1</span><span class="pin" style="--x:6.8%;--y:59%">2</span></div></div></div>
+      </div>
+
+      <div class="beat">
+        <div class="beat-txt rv"><i class="num">02</i><h3>The prescription reaches WhatsApp</h3><p>A branded PDF, sent minutes after the visit.</p>
+          <ol class="keys"><li><span class="k">1</span>Prescription attached, care advice included</li><li><span class="k">2</span>Free reply window, counting down</li></ol>
+          <div class="caps"><ul><li>Clinic branding</li><li>Doctor's name</li><li>1-0-1 dosage</li><li>Hindi and English</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="crop" style="--h:520px"><div class="shot-in" style="--w:1100px;--m:-320px 0 0 -280px">
+          <img src="assets/dentomate/app-inbox.jpg" alt="The Dentomate inbox: a WhatsApp conversation about a prescription, with the free reply window counting down above the message box" loading="lazy">
+          <span class="pin" style="--x:66.5%;--y:50%">1</span><span class="pin" style="--x:54.5%;--y:88.5%">2</span></div></div></div>
+      </div>
+
+      <div class="beat">
+        <div class="beat-txt rv"><i class="num">03</i><h3>Recall everyone due in one click</h3><p>Due patients are flagged. One campaign reminds them all.</p>
+          <ol class="keys"><li><span class="k">1</span>Select who is due, send once</li><li><span class="k">2</span>Sent, Delivered, Read on every patient</li></ol>
+          <div class="caps"><ul><li>Due for visit</li><li>Sent, Delivered, Read</li><li>7, 90, 180-day recalls</li><li>No API to buy</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="crop"><div class="shot-in" style="--w:1100px;--m:-80px 0 0 -200px">
+          <img src="assets/dentomate/app-whatsapp.jpg" alt="The WhatsApp patient list: each patient with Sent, Delivered or Read, tags like New patient and High value, and a New Campaign button" loading="lazy">
+          <span class="pin" style="--x:52%;--y:24.7%">1</span>
+          <span class="pin" style="--x:38.5%;--y:52%">2</span></div></div></div>
+      </div>
+
+      <div class="beat">
+        <div class="beat-txt rv"><i class="num">04</i><h3>On whatever is at hand</h3><p>A web app. Phone at the chair, desktop at the desk.</p>
+          <div class="caps"><ul><li>No install</li><li>Phone, tablet, desktop</li><li>Data stored in India</li><li>Set up in 5 minutes</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="phones">
+          <img src="assets/dentomate/product/phone-patients.png" alt="Dentomate on a phone: today's patients" loading="lazy">
+          <img src="assets/dentomate/product/phone-whatsapp.png" alt="Dentomate on a phone: a prescription sent on WhatsApp" loading="lazy">
+          <img src="assets/dentomate/product/phone-analytics.png" alt="Dentomate on a phone: the month's numbers" loading="lazy"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">Pricing</div>
+      <div class="cols">
+        <div class="rv"><h2>Gate the cost, <em>not the feature.</em></h2></div>
+        <div class="rv rv-d1"><p>Meta bills every WhatsApp message. Plans cap only the expensive one.</p></div>
+      </div>
+      <div class="bars rv">
+        <div class="bar"><b>Reply to a patient<small>Within 24 hours, first 1,000 a month</small></b><span class="track"><i style="--w:0%"></i></span><span class="price">₹0</span></div>
+        <div class="bar"><b>Prescription, reminder<small>Utility message</small></b><span class="track"><i style="--w:13.3%"></i></span><span class="price">₹0.12</span></div>
+        <div class="bar"><b>Recall campaign<small>Marketing message</small></b><span class="track"><i style="--w:100%"></i></span><span class="price">₹0.86</span></div>
+      </div>
+      <div class="pull rv">Everything for the patient in the chair is free. Paying raises the recall limit.
+        <span class="mono">₹0 / ₹399 / ₹799 a month</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section>
+    <div class="wrap">
+      <div class="sec-label rv">Results</div>
+      <h2 class="rv">From one clinic <em>to 34.</em></h2>
       <div class="impact rv rv-d1">
-        <div class="lead"><b data-count="200" data-suf="+">0</b><span>Clinics onboard</span></div>
-        <div><b data-count="30" data-pre="+" data-suf="%">+0%</b><span>Returning patients</span></div>
-        <div><b data-count="8" data-pre="₹" data-suf="k">₹0</b><span>Saved / clinic / month</span></div>
-      </div>
-      <figure class="rv">
-        <img src="assets/dentomate/chart-proof.svg" alt="Patient return rate improvement chart" style="max-width:720px;width:100%;" />
-        <figcaption>Pilot data - patient return rates</figcaption>
-      </figure>
-      <div class="pull rv">"Our WhatsApp costs went from ₹12,000 a month to zero - and recall appointments are up 28% in two months."
-        <span class="mono">Dr. Vikram Singh · SmileCraft Dental · 3 clinics, Bengaluru</span>
+        <div class="lead"><b data-count="34">0</b><span>Clinics live</span></div>
+        <div><b data-count="30">0</b><span>Doctors using it</span></div>
+        <div><b data-count="30" data-pre="+" data-suf="%">+0%</b><span>Return visits, pilot clinics</span></div>
       </div>
     </div>
   </section>
@@ -623,6 +944,142 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
     if(!queued){ queued = true; requestAnimationFrame(apply); }
   }, {passive:true});
   apply();
+})();
+
+/* The product film (same player as the TAE Ad Studio film on index.html). The 3:1 thumbnail morphs to the film's 16:9 in place:
+   pin the current height in --vid-h, flip to .morph, then move --vid-h to the
+   16:9 height so the height transition carries it. On transitionend the pin
+   comes off and .open's aspect-ratio holds it, so it stays fluid on resize.
+   preload="none" - 14 MB is fetched on the click, not on page load. */
+(function(){
+  const box = document.querySelector('.vid');
+  if(!box) return;
+  const video = box.querySelector('video');
+  const start = box.querySelector('.vid-start');
+  const btnPlay = box.querySelector('.vid-play');
+  const btnMute = box.querySelector('.vid-mute');
+  const btnFs = box.querySelector('.vid-fs');
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let idleT;
+
+  const sync = () => {
+    box.classList.toggle('is-paused', video.paused);
+    box.classList.toggle('is-muted', video.muted);
+    btnPlay.setAttribute('aria-label', video.paused ? 'Play' : 'Pause');
+    btnMute.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
+  };
+  const play = () => video.play().catch(err => {
+    // a browser that refuses sound even on a click still gets the film.
+    // Only that refusal - a pause() landing before play() settles rejects
+    // with AbortError, and retrying that would un-pause the visitor.
+    if(err.name !== 'NotAllowedError') return;
+    video.muted = true; sync(); return video.play().catch(() => {});
+  });
+
+  // controls step aside after 2s of stillness while playing; any move, tap
+  // or focus brings them back, and they never hide on a paused frame
+  const wake = () => {
+    box.classList.remove('idle');
+    clearTimeout(idleT);
+    if(!video.paused) idleT = setTimeout(() => {
+      if(!box.querySelector(':focus-visible')) box.classList.add('idle');   // keyboard users keep them
+    }, 2000);
+  };
+
+  const open = () => {
+    const from = box.offsetHeight;
+    const to = box.offsetWidth * 9 / 16;
+    box.classList.add('open');
+    if(!reduce){
+      box.style.setProperty('--vid-h', from + 'px');
+      box.classList.add('morph');
+      box.offsetHeight;                       // commit the pinned height first
+      box.style.setProperty('--vid-h', to + 'px');
+      box.addEventListener('transitionend', function done(e){
+        if(e.target !== box || e.propertyName !== 'height') return;
+        box.removeEventListener('transitionend', done);
+        box.classList.remove('morph');
+        box.style.removeProperty('--vid-h');
+      });
+    }
+    // bring the grown frame fully into view if it would hang off the screen
+    const r = box.getBoundingClientRect();
+    if(r.top + to > innerHeight - 24){
+      scrollBy({top: r.top - Math.max(80, (innerHeight - to) / 2), behavior: reduce ? 'auto' : 'smooth'});
+    }
+    play();
+    btnPlay.focus({preventScroll:true});
+  };
+
+  start.addEventListener('click', open);
+  btnPlay.addEventListener('click', () => video.paused ? play() : video.pause());
+  btnMute.addEventListener('click', () => { video.muted = !video.muted; });
+  video.addEventListener('click', () => video.paused ? play() : video.pause());
+
+  btnFs.addEventListener('click', () => {
+    if(document.fullscreenElement) return document.exitFullscreen();
+    if(box.requestFullscreen) return box.requestFullscreen().catch(() => {});
+    if(video.webkitEnterFullscreen) video.webkitEnterFullscreen();  // iOS Safari: video only
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const fs = document.fullscreenElement === box;
+    box.classList.toggle('is-fs', fs);
+    btnFs.setAttribute('aria-label', fs ? 'Exit full screen' : 'Enter full screen');
+  });
+
+  video.addEventListener('playing', () => { box.classList.add('playing-once'); });
+  ['play','pause','volumechange','ended'].forEach(ev => video.addEventListener(ev, () => { sync(); wake(); }));
+  video.addEventListener('timeupdate', () => {
+    if(video.duration) box.style.setProperty('--vp', video.currentTime / video.duration);
+  });
+  ['pointermove','pointerdown','focusin'].forEach(ev => box.addEventListener(ev, wake));
+
+  // scrolled out of sight mid-film: stop it rather than play to nobody
+  new IntersectionObserver(en => {
+    if(!en[0].isIntersecting && !video.paused && !document.fullscreenElement) video.pause();
+  }, {threshold: 0.25}).observe(box);
+})();
+
+
+
+/* journey: pin the stage, slide the track sideways 1:1 with scroll, light the
+   card nearest the centre. Off below 900px and under reduced motion, where the
+   cards stack (CSS). */
+(() => {
+  const jr = document.querySelector('.jr');
+  if(!jr) return;
+  const stage = jr.querySelector('.jr-stage'), track = jr.querySelector('.jr-track');
+  const cards = [...track.querySelectorAll('.jr-card')];
+  const bar = jr.querySelector('.jr-bar');
+  const flat = () => matchMedia('(max-width:900px), (prefers-reduced-motion:reduce)').matches;
+  let travel = 0;
+  function layout(){
+    if(flat()){ jr.style.height = ''; track.style.transform = ''; cards.forEach(c => c.classList.add('on')); return; }
+    /* line the first card up with the page's text column */
+    const wrap = document.querySelector('.jr-sec .wrap');
+    const pad = wrap.getBoundingClientRect().left + parseFloat(getComputedStyle(wrap).paddingLeft);
+    jr.style.setProperty('--jr-pad', pad + 'px');
+    travel = Math.max(0, track.scrollWidth - innerWidth);
+    jr.style.height = (innerHeight + travel) + 'px';
+    tick();
+  }
+  function tick(){
+    if(flat()) return;
+    const r = jr.getBoundingClientRect();
+    const p = travel ? Math.min(1, Math.max(0, -r.top / travel)) : 0;
+    track.style.transform = 'translateX(' + (-p * travel) + 'px)';
+    bar.style.setProperty('--p', p);
+    const mid = innerWidth / 2;
+    let best = 0, bd = Infinity;
+    cards.forEach((c, i) => { const b = c.getBoundingClientRect(); const d = Math.abs(b.left + b.width / 2 - mid); if(d < bd){ bd = d; best = i; } });
+    cards.forEach((c, i) => c.classList.toggle('on', i === best));
+  }
+  addEventListener('scroll', tick, {passive:true});
+  addEventListener('resize', layout);
+  /* images set the track's width, so lay out again as they arrive */
+  track.querySelectorAll('img').forEach(im => im.complete || im.addEventListener('load', layout));
+  addEventListener('load', layout);
+  layout();
 })();
 </script>
 </body>
