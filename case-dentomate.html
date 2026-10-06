@@ -383,10 +383,10 @@
     transition:transform .45s cubic-bezier(.22,1,.36,1),background .25s ease;
   }
   /* Optical centre. Phosphor's triangle spans x 64-240 of 256, so its box
-     already sits 24 units right of centre; its centroid sits 5 units left.
-     Halfway between the two is where a triangle reads as centred, which is
-     15 units (.06em) back from where the glyph draws itself. */
-  .vid-start .ring .icon{font-size:var(--t-sub);transform:translateX(-.06em);}
+     sits 24 units right of centre and its centroid 5 units left. Halfway
+     between the two (+9.5) is where a triangle reads as centred, so the
+     glyph moves back 9.5 units (.037em). 40px makes it ~36% of the ring. */
+  .vid-start .ring .icon{font-size:var(--t-sub-lg);transform:translateX(-.037em);}
   /* Solid ink on the paper field - the site's one button form, as on the
      case links. The pulse: two ink halos breathing out of it, half a beat
      apart. */
@@ -469,6 +469,7 @@
   .cmp th{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.12em;text-transform:uppercase;
     color:var(--ink-3);font-weight:400;text-align:left;padding:0 16px 14px 0;border-bottom:1px solid var(--line);}
   .cmp td{padding:18px 16px 18px 0;border-bottom:1px solid var(--line);vertical-align:middle;}
+  .cmp th:last-child,.cmp td:last-child{padding-right:0;}
   .cmp td:first-child{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-body);color:var(--ink);white-space:nowrap;}
   .cmp .y,.cmp .n{display:inline-flex;align-items:center;gap:8px;}
   .cmp .y .icon,.cmp .n .icon{font-size:22px;}
@@ -531,6 +532,10 @@
   .phone .screen{border-radius:calc(var(--r-lg) - 2px);overflow:hidden;}
   .phone .screen img{display:block;width:100%;height:auto;}
   .phone + .phone{margin-top:56px;}
+  /* tablet + phone on the same dashboard, sized so they share a baseline */
+  .phones:has(.tablet){gap:28px;align-items:flex-end;}
+  figure.phone.tablet{width:auto;flex:0 0 calc(64% - 14px);}
+  .phones:has(.tablet) .phone:not(.tablet){width:auto;flex:0 0 calc(36% - 14px);margin-top:0;}
 
 
   @media (max-width:900px){
@@ -553,6 +558,9 @@
     .phones{gap:14px;}
     figure.phone{width:calc((100% - 14px) / 2);}
     .phone + .phone{margin-top:32px;}
+    .phones:has(.tablet){gap:14px;}
+    figure.phone.tablet{width:auto;flex:0 0 calc(64% - 7px);}
+    .phones:has(.tablet) .phone:not(.tablet){width:auto;flex:0 0 calc(36% - 7px);margin-top:0;}
   }
   @media (prefers-reduced-motion:reduce){
     .jr{height:auto!important;}
@@ -710,14 +718,15 @@
         <div class="rv"><h2>Paper registers <em>lose patients.</em></h2></div>
         <div class="rv rv-d1">
           <p>Most private dental clinics in India still record every visit in a paper register. Clinics that have gone digital usually keep an Excel sheet. Neither is a secure medical record, and both end the same way: the pages fill up, the register goes on a shelf, and nobody opens it again.</p>
-          <p>So nobody calls the patient back. A patient who needed a follow-up, a second sitting or a six-month cleaning simply does not return, and for a dental clinic <strong>the returning patient is where most of the revenue is.</strong></p>
+          <p>So nobody calls the patient back. A patient who needed a follow-up, a second sitting or a six-month cleaning simply does not return. Every missed patient is lost revenue, because for a dental clinic <strong>the returning patient is where most of the revenue is.</strong></p>
         </div>
       </div>
       <div class="loop rv" role="list">
         <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/></svg></span><b>Patient visits</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
         <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span><b>Written in a register</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
-        <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M224,48H32A16,16,0,0,0,16,64V88a16,16,0,0,0,16,16v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V104a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM208,192H48V104H208ZM224,88H32V64H224V88ZM96,136a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,136Z"/></svg></span><b>Register fills up, shelved</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
-        <div class="loop-node end" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M146.34,98.34,164.69,80,146.34,61.66a8,8,0,0,1,11.32-11.32L176,68.69l18.34-18.35a8,8,0,0,1,11.32,11.32L187.32,80l18.34,18.34a8,8,0,0,1-11.32,11.32L176,91.31l-18.34,18.35a8,8,0,0,1-11.32-11.32Zm77.54,84.74A56.26,56.26,0,0,1,168,232C88.6,232,24,167.4,24,88A56.26,56.26,0,0,1,72.92,32.12a16,16,0,0,1,16.62,9.52l21.12,47.15,0,.12A16,16,0,0,1,109.39,104c-.18.27-.37.52-.57.77L88,129.45c7.49,15.22,23.41,31,38.83,38.51l24.34-20.71a8.12,8.12,0,0,1,.75-.56,16,16,0,0,1,15.17-1.4l.13.06,47.11,21.11A16,16,0,0,1,223.88,183.08Zm-15.88-2s-.07,0-.11,0h0l-47-21.05-24.35,20.71a8.44,8.44,0,0,1-.74.56,16,16,0,0,1-15.75,1.14c-18.73-9.05-37.4-27.58-46.46-46.11a16,16,0,0,1,1-15.7,6.13,6.13,0,0,1,.57-.77L96,95.15l-21-47a.61.61,0,0,1,0-.12A40.2,40.2,0,0,0,40,88,128.14,128.14,0,0,0,168,216,40.21,40.21,0,0,0,208,181.07Z"/></svg></span><b>Patient never recalled</b></div>
+        <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M231.65,194.55,198.46,36.75a16,16,0,0,0-19-12.39L132.65,34.42a16.08,16.08,0,0,0-12.3,19l33.19,157.8A16,16,0,0,0,169.16,224a16.25,16.25,0,0,0,3.38-.36l46.81-10.06A16.09,16.09,0,0,0,231.65,194.55ZM136,50.15c0-.06,0-.09,0-.09l46.8-10,3.33,15.87L139.33,66Zm6.62,31.47,46.82-10.05,3.34,15.9L146,97.53Zm6.64,31.57,46.82-10.06,13.3,63.24-46.82,10.06ZM216,197.94l-46.8,10-3.33-15.87L212.67,182,216,197.85C216,197.91,216,197.94,216,197.94ZM104,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V48A16,16,0,0,0,104,32ZM56,48h48V64H56Zm0,32h48v96H56Zm48,128H56V192h48v16Z"/></svg></span><b>Register fills up, shelved</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
+        <div class="loop-node" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M146.34,98.34,164.69,80,146.34,61.66a8,8,0,0,1,11.32-11.32L176,68.69l18.34-18.35a8,8,0,0,1,11.32,11.32L187.32,80l18.34,18.34a8,8,0,0,1-11.32,11.32L176,91.31l-18.34,18.35a8,8,0,0,1-11.32-11.32Zm77.54,84.74A56.26,56.26,0,0,1,168,232C88.6,232,24,167.4,24,88A56.26,56.26,0,0,1,72.92,32.12a16,16,0,0,1,16.62,9.52l21.12,47.15,0,.12A16,16,0,0,1,109.39,104c-.18.27-.37.52-.57.77L88,129.45c7.49,15.22,23.41,31,38.83,38.51l24.34-20.71a8.12,8.12,0,0,1,.75-.56,16,16,0,0,1,15.17-1.4l.13.06,47.11,21.11A16,16,0,0,1,223.88,183.08Zm-15.88-2s-.07,0-.11,0h0l-47-21.05-24.35,20.71a8.44,8.44,0,0,1-.74.56,16,16,0,0,1-15.75,1.14c-18.73-9.05-37.4-27.58-46.46-46.11a16,16,0,0,1,1-15.7,6.13,6.13,0,0,1,.57-.77L96,95.15l-21-47a.61.61,0,0,1,0-.12A40.2,40.2,0,0,0,40,88,128.14,128.14,0,0,0,168,216,40.21,40.21,0,0,0,208,181.07Z"/></svg></span><b>Patient never recalled</b></div><span class="loop-arrow" aria-hidden="true"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></span>
+        <div class="loop-node end" role="listitem"><span class="ring"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M208,80a8,8,0,0,1-8,8H167.85c.09,1.32.15,2.65.15,4a60.07,60.07,0,0,1-60,60H92.69l72.69,66.08a8,8,0,1,1-10.76,11.84l-88-80A8,8,0,0,1,72,136h36a44.05,44.05,0,0,0,44-44c0-1.35-.07-2.68-.19-4H72a8,8,0,0,1,0-16h75.17A44,44,0,0,0,108,48H72a8,8,0,0,1,0-16H200a8,8,0,0,1,0,16H148.74a60.13,60.13,0,0,1,15.82,24H200A8,8,0,0,1,208,80Z"/></svg></span><b>Revenue lost</b></div>
       </div>
     </div>
   </section>
@@ -727,14 +736,14 @@
     <div class="wrap">
       <div class="sec-label rv">Research</div>
       <div class="cols">
-        <div class="rv"><h2>Why clinics <em>stay on paper.</em></h2></div>
+        <div class="rv"><h2>Why clinics still use <em>old registers.</em></h2></div>
         <div class="rv rv-d1">
-          <p>I started with a dentist I worked with: their register, their staff and their day at the chair. Then I ran demo calls with clinics that had already paid for software. Digital tools exist. Dentists don't use them for four reasons.</p>
+          <p>I started with one dentist, talking to them regularly to understand their daily practice at the clinic. Then I ran demo calls with clinics that had already paid for software. Digital tools exist. Dentists don't use them for four reasons.</p>
         </div>
       </div>
       <div class="cards rv">
-        <div class="card"><i>Finding 01</i><b>There is no time at the chair</b><p>A patient is waiting. Any tool that takes longer than writing in the register is dropped within days.</p></div>
-        <div class="card"><i>Finding 02</i><b>The staff are not technical</b><p>Records are kept by front-desk staff, and most of them have never used practice software.</p></div>
+        <div class="card"><i>Finding 01</i><b>There is no time at the chair</b><p>They can't keep a patient waiting. Any tool that takes longer than writing in the register is dropped within days.</p></div>
+        <div class="card"><i>Finding 02</i><b>The staff are not technical</b><p>Records are kept by front-desk staff, and most of them have never used advanced software.</p></div>
         <div class="card"><i>Finding 03</i><b>Software is costly and generic</b><p>One dentist was paying ₹70,000 a year for Practo to run two clinics, on software built for general physicians.</p></div>
         <div class="card"><i>Finding 04</i><b>Years of records already exist</b><p>No clinic starts from zero. Old registers and sheets have to come along, or the new tool is never adopted.</p></div>
       </div>
@@ -761,7 +770,7 @@
           <i class="num">The Google Form</i>
           <ol class="keys" start="4">
             <li><span class="k">4</span>One form served two clinics, Jhadol and Phalasia, told apart by a tag.</li>
-            <li><span class="k">5</span>Treatments squeezed into codes like ED, MB and ORT that only the staff understood.</li>
+            <li><span class="k">5</span>Treatments squeezed into codes: ED for endodontics, MB for mobile teeth, ORT for orthodontics. Quick, but the staff made mistakes and ended up putting the same 4-5 tags on every treatment.</li>
           </ol>
         </div>
       </div>
@@ -774,7 +783,7 @@
       <div class="sec-label rv">What clinics use today</div>
       <div class="cols">
         <div class="rv"><h2>Six workarounds. <em>None does all three.</em></h2></div>
-        <div class="rv rv-d1"><p>A clinic needs secure patient records, WhatsApp, because that is where Indian patients actually reply, and software made for dental work. Every option on the market covers one of the three at most.</p></div>
+        <div class="rv rv-d1"><p>A clinic needs <strong>secure patient records</strong>, <strong>WhatsApp</strong>, because that is where Indian patients actually reply, and <strong>software made for dental work</strong>. Every option on the market covers one of the three at most.</p></div>
       </div>
       <div class="cmp-scroll rv">
         <table class="cmp">
@@ -783,9 +792,9 @@
             <tr><td>Paper register</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>lost when full</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
             <tr><td>Excel sheet</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>not a medical record</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
             <tr><td>Personal WhatsApp</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>number gets banned</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹0</td></tr>
-            <tr><td>WATI, AiSensy</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹1,500–3,200 a month</td></tr>
+            <tr><td>WATI, AiSensy</td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>needs a developer</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td class="cost">₹1,500–3,200 a month</td></tr>
             <tr><td>Practo Ray</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>SMS only</small></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg><small>made for physicians</small></span></td><td class="cost">₹70,000 a year, 2 clinics</td></tr>
-            <tr><td>Foreign dental EMRs</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>dated</small></span></td><td class="cost">Varies</td></tr>
+            <tr><td>Foreign dental EMRs</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="n"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>dated, expensive</small></span></td><td class="cost">Varies</td></tr>
             <tr class="us"><td>Dentomate</td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg><small>no API to buy</small></span></td><td><span class="y"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></svg></span></td><td class="cost">No extra cost per clinic</td></tr>
           </tbody>
         </table>
@@ -806,11 +815,11 @@
       <div class="jr-stage">
         <div class="jr-track">
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-1-register.jpg" alt="The paper register: serial number, work done, lab sent and received, and a hand-ticked call column. Names blurred." width="700" height="651"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><span class="app-ph"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span></span><i>Start</i><b>Paper register</b><span class="why">Every visit, lab order and phone call written by hand. Nothing reminds anyone.</span></figcaption></figure>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><span class="app-ph"><svg class="icon" viewBox="0 0 256 256" aria-hidden="true"><path d="M184,112a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h64A8,8,0,0,1,184,112Zm-8,24H112a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm48-88V208a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32H208A16,16,0,0,1,224,48ZM48,208H72V48H48Zm160,0V48H88V208H208Z"/></svg></span></span><i>Start</i><b>Paper register</b><span class="why">Every visit, lab order and phone call written by hand. Staff sat and called patients whenever footfall dropped.</span></figcaption></figure>
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-2-sheet.jpg" alt="The 2021 patient spreadsheet: date, name, age, sex, phone and village. Personal details blurred." width="760" height="470"></div>
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/excel.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"></span><i>Try 01</i><b>A spreadsheet</b><span class="why">Searchable, but too slow for the front desk to keep up with during a working day.</span></figcaption></figure>
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-3-form.jpg" alt="The Google Form used to register each patient, with treatment tags as tick-boxes" width="372" height="524"></div>
-            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/forms.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/appsscript.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 02</i><b>Form, sheet and a script</b><span class="why">A Google Form per patient and an Apps Script sending WhatsApp messages. ₹1,500 a month, a developer for every fix, and no room for the treatment list.</span></figcaption></figure>
+            <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/forms.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/sheets.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/appsscript.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 02</i><b>Form, sheet and a script</b><span class="why">A Google Form per patient and an Apps Script sending WhatsApp messages. ₹1,500 a month plus per-message charges, a developer for every fix, and no room for the treatment list.</span></figcaption></figure>
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-4-appsheet.jpg" alt="The AppSheet patient app built on the same sheet. Patient details blurred." width="290" height="500"></div>
             <figcaption class="jr-cap"><span class="apps" aria-hidden="true"><img src="assets/dentomate/icons/appsheet.svg" alt="" width="28" height="28"><img src="assets/dentomate/icons/whatsapp.svg" alt="" width="28" height="28"></span><i>Try 03</i><b>AppSheet</b><span class="why">A real app on the same sheet. Data entry got easier. The API bill and the developer stayed.</span></figcaption></figure>
           <figure class="jr-card"><div class="jr-img"><img src="assets/dentomate/attempts/strip-5-prototype.jpg" alt="The first prototype's treatment plan: every treatment as a tick-box" width="600" height="520"></div>
@@ -828,7 +837,7 @@
     <div class="wrap">
       <div class="sec-label rv">The Product</div>
       <div class="cols">
-        <div class="rv"><h2>Built for the chair, <em>the desk and the patient's phone.</em></h2></div>
+        <div class="rv"><h2>Built for the chair, the desk <em>and every device.</em></h2></div>
         <div class="rv rv-d1"><p>Each part of the app answers one of the findings. The screens below are the shipped product.</p></div>
       </div>
 
@@ -845,7 +854,7 @@
           <p>As the patient leaves, a PDF with the clinic's branding and the doctor's name goes to their WhatsApp, with care advice in the message. If they reply, the front desk answers from the same screen.</p>
           <ol class="keys"><li><span class="k">1</span>Prescription attached, care advice included</li><li><span class="k">2</span>WhatsApp's reply window, counting down</li></ol>
           <div class="caps"><ul><li>Clinic branding</li><li>Doctor's name</li><li>1-0-1 dosage</li><li>Hindi and English</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/02-prescription.jpg" alt="A WhatsApp conversation in Dentomate: the clinic's message with the prescription attached, the patient's reply, and the reply window counting down above the message box" width="715" height="814"><span class="pin" style="--x:29%;--y:32%">1</span><span class="pin" style="--x:4.5%;--y:83.5%">2</span></div></div></div>
+        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/02-prescription.jpg" alt="A WhatsApp conversation in Dentomate: the clinic's message with the prescription PDF attached and a preview of its first page, the patient's reply, and the reply window counting down above the message box" width="1069" height="1714"><span class="pin" style="--x:30.8%;--y:18%">1</span><span class="pin" style="--x:3.5%;--y:88.3%">2</span></div></div></div>
       </div>
 
       <div class="beat">
@@ -876,19 +885,19 @@
 
       <div class="beat">
         <div class="beat-txt rv"><i class="num">05</i><h3>Every clinic under one account</h3>
-          <p>Many dentists run more than one clinic. Dentomate keeps every branch under one account at no extra cost, and old registers and sheets can be imported, so no clinic starts from zero.</p>
+          <p>Many dentists run more than one clinic. Dentomate keeps every branch and every doctor profile under one account at no extra cost, and old registers and sheets can be imported, so no clinic starts from zero.</p>
           <ol class="keys"><li><span class="k">1</span>Pick the branch when the day starts</li></ol>
-          <div class="caps"><ul><li>Multiple branches</li><li>No extra cost per clinic</li><li>Import old records</li><li>Doctor and staff roles</li></ul></div></div>
-        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/05-clinics.png" alt="Select clinic location: Main Clinic and Branch Clinic" width="599" height="365"><span class="pin" style="--x:7%;--y:44%">1</span></div></div></div>
+          <div class="caps"><ul><li>Multiple branches</li><li>No extra cost per clinic</li><li>Easy to import old records</li><li>Doctor and staff roles</li></ul></div></div>
+        <div class="beat-ui rv rv-d1"><div class="mat"><div class="shot"><img src="assets/dentomate/product/05-clinics.png" alt="Select clinic: Sharma Dental Care and its Bandra and Powai branches" width="800" height="745"><span class="pin" style="--x:5.6%;--y:16%">1</span></div></div></div>
       </div>
 
       <div class="beat">
         <div class="beat-txt rv"><i class="num">06</i><h3>On whatever device is at hand</h3>
-          <p>It is a web app, so there is nothing to install. The doctor uses it on a phone at the chair, the front desk on a desktop, and both see the same records.</p>
+          <p>It is a web app, so there is nothing to install. The doctor uses it on a phone or tablet at the chair, the front desk on a desktop, and everyone sees the same records.</p>
           <div class="caps"><ul><li>No install</li><li>Phone, tablet, desktop</li><li>Data stored in India</li><li>Set up in 5 minutes</li></ul></div></div>
         <div class="beat-ui phones-ui rv rv-d1"><div class="phones">
+          <figure class="phone tablet"><div class="screen"><img src="assets/dentomate/product/tablet-patients.jpg" alt="Dentomate on a tablet: the same patient dashboard, grouped by day" width="820" height="1080"></div></figure>
           <figure class="phone"><div class="screen"><img src="assets/dentomate/product/phone-patients.png" alt="Dentomate on a phone: today's patients" width="393" height="844"></div></figure>
-          <figure class="phone"><div class="screen"><img src="assets/dentomate/product/phone-whatsapp.png" alt="Dentomate on a phone: a prescription sent on WhatsApp" width="393" height="844"></div></figure>
         </div></div>
       </div>
     </div>
@@ -922,25 +931,39 @@
 </main>
 
 <script>
-/* ---- one-shot Bayer-dithered orb ---- */
+/* ---- one-shot Bayer-dithered Dentomate mark ----
+   The same dither as the other case pages' orb, but the field is the logo:
+   a mask image, blurred twice, gives each shape a dense core that thins
+   to single light dots at its edge. */
 (function(){
   const c = document.getElementById('orb'), x = c.getContext('2d');
   const W = c.width, H = c.height, cell = 5;
   const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
   const cols = ['#939393','#b9b9b9','#dedede'];
-  for(let py=0; py<H; py+=cell){
-    for(let px=0; px<W; px+=cell){
-      const dx=(px-W*0.5)/(W*0.4), dy=(py-H*0.46)/(H*0.44);
-      let v = 1 - Math.sqrt(dx*dx+dy*dy);
-      v += 0.15*Math.sin(px*0.04-1.2)+0.14*Math.cos(py*0.026+px*0.015);
-      if(v<=0) continue;
-      const t = B[(py/cell)&3][(px/cell)&3]/16;
-      if(v>t){
-        x.fillStyle = v>t+0.45 ? cols[0] : (v>t+0.2 ? cols[1] : cols[2]);
-        x.beginPath();x.arc(px,py,cell*0.34,0,7);x.fill();
+  const img = new Image();
+  img.onload = () => {
+    const field = blur => {
+      const o = document.createElement('canvas'); o.width = W; o.height = H;
+      const g = o.getContext('2d'); g.filter = 'blur(' + blur + 'px)';
+      g.drawImage(img, W*0.03, H*0.03, W*0.94, H*0.94);
+      return g.getImageData(0, 0, W, H).data;
+    };
+    const edge = field(3), core = field(26);
+    for(let py=0; py<H; py+=cell){
+      for(let px=0; px<W; px+=cell){
+        const k = (py*W + px)*4, a = edge[k]/255;
+        if(a < 0.12) continue;
+        let v = a*0.55 + (core[k]/255)*0.6 - 0.12;
+        v += 0.1*Math.sin(px*0.04-1.2)+0.09*Math.cos(py*0.026+px*0.015);
+        const t = B[(py/cell)&3][(px/cell)&3]/16;
+        if(v>t){
+          x.fillStyle = v>t+0.45 ? cols[0] : (v>t+0.2 ? cols[1] : cols[2]);
+          x.beginPath();x.arc(px,py,cell*0.34,0,7);x.fill();
+        }
       }
     }
-  }
+  };
+  img.src = 'assets/dentomate/logo-mask.png';
 })();
 
 const progress = document.getElementById('progress');

@@ -644,10 +644,10 @@
     transition:transform .45s cubic-bezier(.22,1,.36,1),background .25s ease;
   }
   /* Optical centre. Phosphor's triangle spans x 64-240 of 256, so its box
-     already sits 24 units right of centre; its centroid sits 5 units left.
-     Halfway between the two is where a triangle reads as centred, which is
-     15 units (.06em) back from where the glyph draws itself. */
-  .vid-start .ring .icon{font-size:var(--t-sub);transform:translateX(-.06em);}
+     sits 24 units right of centre and its centroid 5 units left. Halfway
+     between the two (+9.5) is where a triangle reads as centred, so the
+     glyph moves back 9.5 units (.037em). 40px makes it ~36% of the ring. */
+  .vid-start .ring .icon{font-size:var(--t-sub-lg);transform:translateX(-.037em);}
   /* Solid ink on the paper field - the site's one button form, as on the
      case links. The pulse: two ink halos breathing out of it, half a beat
      apart. */
