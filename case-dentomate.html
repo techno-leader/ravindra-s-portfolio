@@ -148,7 +148,7 @@
     -webkit-mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
             mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
   }
-  #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;
+  #orb{position:absolute;right:-10px;top:84px;width:400px;height:400px;z-index:-1;opacity:.9;
        animation:orbdrift 14s ease-in-out infinite alternate;}
   @keyframes orbdrift{from{transform:translateY(-12px) rotate(-2deg)}to{transform:translateY(16px) rotate(2.5deg)}}
   /* stepped at 900/640 rather than clamp() - a clamp lands on off-scale sizes */
@@ -937,7 +937,7 @@
    to single light dots at its edge. */
 (function(){
   const c = document.getElementById('orb'), x = c.getContext('2d');
-  const W = c.width, H = c.height, cell = 5;
+  const W = c.width, H = c.height, cell = 8;
   const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
   const cols = ['#939393','#b9b9b9','#dedede'];
   const img = new Image();
@@ -948,17 +948,17 @@
       g.drawImage(img, W*0.03, H*0.03, W*0.94, H*0.94);
       return g.getImageData(0, 0, W, H).data;
     };
-    const edge = field(3), core = field(26);
+    const edge = field(7), core = field(30);
     for(let py=0; py<H; py+=cell){
       for(let px=0; px<W; px+=cell){
         const k = (py*W + px)*4, a = edge[k]/255;
-        if(a < 0.12) continue;
-        let v = a*0.55 + (core[k]/255)*0.6 - 0.12;
-        v += 0.1*Math.sin(px*0.04-1.2)+0.09*Math.cos(py*0.026+px*0.015);
+        if(a < 0.06) continue;
+        let v = a*0.45 + (core[k]/255)*0.4 - 0.2;
+        v += 0.16*Math.sin(px*0.04-1.2)+0.14*Math.cos(py*0.026+px*0.015);
         const t = B[(py/cell)&3][(px/cell)&3]/16;
         if(v>t){
           x.fillStyle = v>t+0.45 ? cols[0] : (v>t+0.2 ? cols[1] : cols[2]);
-          x.beginPath();x.arc(px,py,cell*0.34,0,7);x.fill();
+          x.beginPath();x.arc(px,py,cell*0.26,0,7);x.fill();
         }
       }
     }
