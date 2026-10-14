@@ -17,3 +17,12 @@ particles.html
 redaction.html
 review.html
 tokens.html
+
+# Herbius case: raw captures and extractions (140 MB) stay local; the generator scripts are tracked
+herbius/source/ads/*.jpg
+herbius/source/carousel/
+herbius/source/ebooks/
+herbius/source/press/
+herbius/source/lp/
+herbius/source/_sheets/
+herbius/assets/_sizes.json
