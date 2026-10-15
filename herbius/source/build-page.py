@@ -1,7 +1,9 @@
 # Assembles herbius/case-herbius.html:
 #   case-viewryt.html head + stylesheet (verbatim)  +  _extra.css
 #   + Clarity + nav  +  _body.html  +  case-viewryt.html script (verbatim)  +  the press-loop script
-import os, re
+import os, re, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from sys_port import parts as sys_parts
 S = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(S, '..', '..')
 vr = open(os.path.join(ROOT, 'case-viewryt.html')).read().split('\n')
@@ -23,6 +25,10 @@ script = '\n'.join(vr[script_start:vr.index('</script>', script_start) + 1])
 
 extra = open(os.path.join(S, '_extra.css')).read()
 body = open(os.path.join(S, '_body.html')).read()
+sys_css, sys_html, sys_js = sys_parts()
+extra += sys_css
+assert '<!--SYSTEM-->' in body
+body = body.replace('      <!--SYSTEM-->\n', sys_html)
 press = '''<script>
 /* press-check loop: plays only while on screen, never under reduced motion
    (then the poster stays as a still) */
@@ -38,7 +44,7 @@ press = '''<script>
 })();
 </script>'''
 
-out = '\n'.join([head, extra, clarity, nav, '', body, '', script, press, '</body>', '</html>', ''])
+out = '\n'.join([head, extra, clarity, nav, '', body, '', script, press, sys_js, '</body>', '</html>', ''])
 dst = os.path.join(S, '..', 'case-herbius.html')
 open(dst, 'w').write(out)
 print('wrote', dst, len(out.split('\n')), 'lines')

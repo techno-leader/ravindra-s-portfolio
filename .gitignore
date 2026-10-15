@@ -26,3 +26,6 @@ herbius/source/press/
 herbius/source/lp/
 herbius/source/_sheets/
 herbius/assets/_sizes.json
+# Herbius system-illustration bench (published as a claude.ai artifact, not part of the site)
+herbius/bench-system.html
+herbius/assets/fonts/

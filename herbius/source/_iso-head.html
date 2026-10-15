@@ -1,0 +1,168 @@
+<meta charset="utf-8">
+<title>Launch System Bench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400..600&display=swap" rel="stylesheet">
+<style>
+  /* The Herbius launch system as an isometric production line, in the portfolio's
+     monochrome tokens (case-viewryt.html :root). Clicking a unit turns the stage
+     to that station's detail: its illustration, what happened there, the stack. */
+  @font-face{font-family:"Redaction 35";font-style:italic;font-weight:400;font-display:swap;src:url(assets/fonts/redaction-35-italic.woff2) format("woff2");}
+  :root{
+    --ink:#161616; --ink-hover:#212121; --ink-2:#4a4a4a; --ink-body:#5c5c5c; --ink-3:#6e6e6e; --mut:#767676;
+    --line:#ececec; --line-2:#e7e7e7; --paper:#ffffff; --surface:#fafafa; --surface-3:#efefef;
+    /* the two side faces of every box, one step apart so the solid reads */
+    --face-l:#f3f3f3; --face-r:#e6e6e6; --grid:#f1f1f1;
+    /* inactive units: the same opaque solids, drawn in grey */
+    --idle:#bdbdbd;
+    --r-sm:8px; --r-md:14px; --r-lg:20px; --r-pill:99px;
+    --t-body:18px; --t-sub:24px; --t-sub-md:32px; --t-label:12px; --w-head:450;
+    --sans:"Onest",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    --serif:"Redaction 35",Georgia,serif; --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --ease:cubic-bezier(.22,1,.36,1);
+    color-scheme:light;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;}
+  .page{max-width:1180px;margin:0 auto;padding-inline:clamp(16px,4vw,44px);padding-block:56px 96px;}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;}
+  button:disabled{opacity:.35;cursor:default;}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:var(--r-sm);}
+  .kicker{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3);}
+  h1{font-weight:var(--w-head);font-size:clamp(34px,5vw,56px);letter-spacing:-.035em;line-height:1.05;margin-top:16px;max-width:20ch;text-wrap:balance;}
+  h1 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--ink-2);}
+  .intro{margin-top:18px;font-size:var(--t-body);line-height:1.6;color:var(--ink-body);max-width:62ch;}
+
+  /* ---------- the turning stage: two faces in one grid cell ---------- */
+  .stage{margin-top:40px;perspective:2400px;}
+  .flip{display:grid;transition:transform .9s var(--ease);transform-style:preserve-3d;}
+  .face{grid-area:1/1;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--paper);overflow:hidden;
+    backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+  .face-detail{transform:rotateY(180deg);display:flex;flex-direction:column;}
+  .stage.flipped .flip{transform:rotateY(180deg);}
+
+  /* ---------- svg ---------- */
+  .iso{display:block;width:100%;height:auto;}
+  .iso .edge{fill:none;stroke:var(--ink);stroke-width:1.25;stroke-linejoin:round;vector-effect:non-scaling-stroke;transition:stroke .35s ease;}
+  .iso .top{fill:var(--paper);} .iso .fl{fill:var(--face-l);} .iso .fr{fill:var(--face-r);}
+  .iso .grid line{stroke:var(--grid);stroke-width:1;vector-effect:non-scaling-stroke;}
+  .iso .lab{font-family:var(--mono);fill:var(--ink-2);letter-spacing:.14em;text-transform:uppercase;transition:fill .35s ease;}
+  .iso .lab.sm{fill:var(--ink-3);}
+  .iso .ico,.iso .dot{fill:var(--ink);transition:fill .35s ease;}
+  .iso .ico-f{display:none;}
+  .iso .st.on .ico-f{display:inline;}
+  .iso .st.on .ico-r{display:none;}
+  .iso .tube-o{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round;transition:stroke .35s ease;}
+  .iso .tube-i{fill:none;stroke:var(--paper);stroke-linecap:round;stroke-linejoin:round;}
+  /* comet: hidden until its tube is live, then the head runs and the tail fades behind it */
+  .iso .comet path{fill:none;stroke:var(--ink);stroke-linecap:round;opacity:0;transition:opacity .3s ease;}
+  .iso .tube.on .comet path{opacity:var(--o);animation-duration:1.7s;animation-timing-function:linear;animation-iteration-count:infinite;}
+  .iso .bus .comet path,.iso .feed .comet path{opacity:calc(var(--o) * .45);animation-duration:3.4s;animation-timing-function:linear;animation-iteration-count:infinite;}
+  .iso .pill rect{fill:var(--paper);stroke:var(--ink-3);stroke-width:1;vector-effect:non-scaling-stroke;transition:fill .35s ease,stroke .35s ease;}
+  .iso .pill text{font-family:var(--mono);fill:var(--ink-2);letter-spacing:.08em;transition:fill .35s ease;}
+  .iso .pill.win rect{stroke:var(--ink);stroke-width:1.6;}
+  .iso .pills.on .pill rect{fill:var(--ink);stroke:var(--ink);}
+  .iso .pills.on .pill text{fill:var(--paper);}
+  /* idle: grey lines, grey type, solids stay opaque */
+  .iso .idle .edge,.iso .idle .tube-o{stroke:var(--idle);}
+  .iso .idle .ico,.iso .idle .dot,.iso .idle .lab{fill:var(--idle);}
+  .iso .pills.idle .pill rect{stroke:var(--idle);}
+  .iso .pills.idle .pill text{fill:var(--idle);}
+  .iso .pills.idle .pill.win rect{stroke:var(--ink-3);}
+  .iso .st{cursor:pointer;outline:none;}
+  .iso .st:focus-visible .top{stroke-width:2.4;}
+  .iso .st .lift{transition:transform .45s var(--ease);}
+  .iso .st.on .lift{transform:translateY(-7px);}
+  /* the GPU */
+  .iso .pcb{fill:var(--ink);}
+  .iso .finger{fill:var(--paper);}
+  .iso .fin{stroke-width:.9;}
+  .iso .hubdot{fill:var(--ink);}
+  .iso .fan{animation:spin 9s linear infinite;transform-box:view-box;transform-origin:0 0;}
+  .iso .grn{fill:var(--ink);}
+  .iso .breath{animation:breathe 6s ease-in-out infinite alternate;}
+  .iso .breath.b1{animation-delay:-2s;} .iso .breath.b2{animation-delay:-4s;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes breathe{from{opacity:.35;transform:scale(.985);}to{opacity:1;transform:scale(1.035);}}
+
+  /* ---------- map face ---------- */
+  .panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:32px;align-items:start;border-top:1px solid var(--line);padding:24px clamp(16px,3vw,32px) 28px;}
+  .num{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;color:var(--ink-3);}
+  .panel h2,.dtext h2{font-weight:var(--w-head);font-size:var(--t-sub-md);letter-spacing:-.025em;line-height:1.1;margin-top:8px;}
+  .panel p{font-size:var(--t-body);line-height:1.55;color:var(--ink-body);}
+  .stat{margin-top:12px;font-family:var(--mono);font-size:15px;color:var(--ink);}
+  .stations{display:flex;flex-wrap:wrap;gap:8px;padding:0 clamp(16px,3vw,32px) 24px;align-items:center;}
+  .stations button{min-height:44px;padding:0 16px;border:1px solid var(--line-2);border-radius:var(--r-pill);font-size:15px;color:var(--ink-2);background:var(--paper);
+    transition:background .3s ease,color .3s ease,border-color .3s ease;}
+  .stations button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+  .stations .auto{margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.08em;}
+  .stations .hint{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink-3);margin-left:6px;}
+
+  /* ---------- detail face: the station on the left, the story and its stack on the right ---------- */
+  .dbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(16px,3vw,24px);border-bottom:1px solid var(--line);}
+  .dbar button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid var(--line-2);border-radius:var(--r-pill);font-size:15px;color:var(--ink-2);background:var(--paper);}
+  .dbar button:not(:disabled):hover{border-color:var(--ink-3);color:var(--ink);}
+  .dbar .pn{display:flex;gap:8px;}
+  .dbody{flex:1;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(16px,3vw,40px);}
+  .dart{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px;}
+  .dtext p{margin-top:16px;font-size:var(--t-body);line-height:1.6;color:var(--ink-body);max-width:52ch;}
+  .stack-h{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);}
+  /* the tech stack: real app marks in their own colours, as on the Dentomate attempts */
+  .stack{list-style:none;display:flex;flex-wrap:wrap;gap:16px 18px;margin-top:14px;}
+  .stack li{display:flex;flex-direction:column;align-items:center;gap:8px;width:76px;text-align:center;}
+  .logo{display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--paper);color:var(--ink);}
+  .logo svg,.logo img{display:block;width:26px;height:26px;}
+  .logo img{border-radius:6px;}
+  .logo.mono{font-family:var(--mono);font-size:14px;font-weight:600;letter-spacing:.04em;background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .nm{font-size:13px;line-height:1.3;color:var(--ink-2);}
+
+  @media (max-width:760px){
+    .panel,.dbody{grid-template-columns:1fr;gap:16px;}
+    .stations .auto{margin-left:0;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{transition:none!important;animation:none!important;}
+    /* no turn: the faces swap in place */
+    .face-detail{transform:none;visibility:hidden;}
+    .stage.flipped .flip{transform:none;}
+    .stage.flipped .face-map{visibility:hidden;}
+    .stage.flipped .face-detail{visibility:visible;}
+  }
+</style>
+
+<div class="page">
+  <p class="kicker">Herbius case &middot; The System &middot; bench v5</p>
+  <h1>Five stations in a line, <em>one power source.</em></h1>
+  <p class="intro">The launch runs in order: research, ads, pages, translations, launch. The AI skills power every station. Hover a station to light it up; click one to see how it worked and what it ran on.</p>
+
+  <div class="stage" id="stage">
+    <div class="flip">
+      <section class="face face-map" id="faceMap" aria-label="The launch line">
+        <svg id="map" class="iso" role="img" aria-labelledby="mapT" xmlns="http://www.w3.org/2000/svg"><title id="mapT">Isometric production line: Research, Ads, Pages, Translations and Launch in sequence, each with its sub-stations, powered by an AI-skills graphics card behind the line</title></svg>
+        <div class="panel" aria-live="polite">
+          <div><span class="num" id="pNum">01 / 05</span><h2 id="pName">Research</h2></div>
+          <div><p id="pText"></p><p class="stat" id="pStat"></p></div>
+        </div>
+        <div class="stations" id="stations"></div>
+      </section>
+      <section class="face face-detail" id="faceDetail" aria-label="Station detail" aria-hidden="true">
+        <div class="dbar">
+          <button type="button" id="dBack">&larr; Back to the line</button>
+          <div class="pn"><button type="button" id="dPrev" aria-label="Previous station">&larr;</button><button type="button" id="dNext" aria-label="Next station">&rarr;</button></div>
+        </div>
+        <div class="dbody">
+          <div class="dart"><svg id="dmap" class="iso" role="img" aria-label="The station, its sub-stations and its connections" xmlns="http://www.w3.org/2000/svg"></svg></div>
+          <div class="dtext" aria-live="polite">
+            <span class="num" id="dNum">01 / 05</span>
+            <h2 id="dName">Research</h2>
+            <p id="dText"></p>
+            <p class="stat" id="dStat"></p>
+            <p class="stack-h">Tech stack</p>
+            <ul class="stack" id="dStack"></ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+

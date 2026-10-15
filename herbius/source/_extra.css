@@ -113,22 +113,6 @@
   /* figures that are ranges, not counts, so they do not count up */
   .impact b.static{font-size:var(--t-sub-md);}
 
-  /* the launch system: six stations, the AI skills tagged */
-  .flow{list-style:none;margin:44px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:st;}
-  .flow li{position:relative;border:1px solid var(--line);border-radius:var(--r-md);padding:18px 16px;background:var(--paper);
-    display:flex;flex-direction:column;gap:8px;counter-increment:st;}
-  .flow li::before{content:counter(st, decimal-leading-zero);font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;color:var(--ink-3);}
-  .flow b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-body);line-height:1.25;}
-  .flow span{font-size:var(--t-body);line-height:1.45;color:var(--mut);}
-  .flow .ai{border-color:var(--ink);}
-  .tag{align-self:flex-start;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper);
-    background:var(--ink);border-radius:var(--r-pill);padding:3px 9px;}
-  .also{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
-  .also > span{font-size:var(--t-body);color:var(--ink-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:8px 16px;min-height:44px;display:inline-flex;align-items:center;gap:10px;}
-  .also .tag{align-self:center;}
-  /* .flow span sets body copy; the chip must win over it */
-  .flow span.tag,.also span.tag{font-size:10.5px;line-height:1.4;color:var(--paper);}
-
   /* ebooks: one cover per angle, then the spreads, then the translations */
   .covers{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px;}
   .covers img{display:block;width:100%;height:auto;border-radius:var(--r-md);border:1px solid var(--line);}
@@ -152,7 +136,6 @@
     .gap-row .mat{max-width:420px;}
     .steps{grid-template-columns:repeat(3,1fr);gap:12px;}
     .angles{grid-template-columns:repeat(3,1fr);}
-    .flow{grid-template-columns:repeat(2,1fr);}
     .langs{grid-template-columns:repeat(2,1fr);}
     .cards.three{grid-template-columns:repeat(2,1fr);}
     .bars,.months{gap:10px;}
@@ -164,7 +147,6 @@
     .steps{grid-template-columns:1fr;max-width:360px;gap:28px;}
     .angles{grid-template-columns:repeat(2,1fr);}
     .covers{grid-template-columns:1fr;max-width:360px;}
-    .flow{grid-template-columns:1fr;}
     .cards.three{grid-template-columns:1fr;}
     figure.chart{padding:18px 0;}
     .bars{height:240px;gap:6px;}
