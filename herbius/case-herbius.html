@@ -539,6 +539,10 @@
   .gap-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:56px;align-items:start;margin-top:44px;}
   .gap-row .cards{grid-template-columns:1fr;margin:0;}
 
+  /* the category shelf: competitors' own product shots, brand marks blurred */
+  figure.shelf{display:block;margin:0 0 56px;padding:0;border:0;background:none;overflow:visible;border-radius:0;}
+  .shelf img{display:block;width:100%;height:auto;border-radius:var(--r-lg);}
+  .shelf figcaption{margin-top:14px;font-size:var(--t-body);line-height:1.5;color:var(--mut);}
   /* packaging: four frames, dieline to shelf, all at one aspect so none leads */
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px;}
   .steps figure{margin:0;padding:0;border:0;background:none;display:block;overflow:visible;border-radius:0;}
@@ -744,6 +748,10 @@
   <section>
     <div class="wrap">
       <div class="sec-label rv">Packaging</div>
+      <figure class="shelf rv">
+        <img src="assets/category-shelf.jpg" alt="Five Shilajit products from competing brands side by side: black jars, black boxes and gold lids, brand marks blurred" width="2000" height="469" loading="lazy">
+        <figcaption>Five Shilajit brands we studied, as they sell online. Brand marks blurred.</figcaption>
+      </figure>
       <div class="cols">
         <div class="rv">
           <h2>A jar that doesn't look <em>like the shelf.</em></h2>
