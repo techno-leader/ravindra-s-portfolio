@@ -92,14 +92,24 @@
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 
   /* one page, four markets: the first screen of each */
-  .markets{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px;}
-  .markets figure,.trio figure,.covers figure,.langs figure{margin:0;padding:0;border:0;background:none;display:block;overflow:visible;border-radius:0;}
-  .markets img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-md);}
-  .markets figcaption,.trio figcaption,.langs figcaption{margin-top:10px;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);}
-  .markets figcaption em{font-family:var(--sans);font-style:normal;text-transform:none;letter-spacing:0;font-size:var(--t-body);color:var(--ink);display:block;margin-top:4px;}
-  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;}
-  .trio .frame{aspect-ratio:4/5;}
-  .trio .frame img{object-fit:contain;}
+  .covers figure,.langs figure{margin:0;padding:0;border:0;background:none;display:block;overflow:visible;border-radius:0;}
+  .langs figcaption{margin-top:10px;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);}
+  /* every market: two loops side by side, the language or country is the loudest thing on each slide */
+  .loops{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px;}
+  figure.loop-card{display:block;margin:0;padding:0;border:0;background:none;overflow:visible;border-radius:0;}
+  .slides{position:relative;aspect-ratio:4/5;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--surface);}
+  .slide{position:absolute;inset:0;opacity:0;animation:cycle 9s infinite;}
+  .slide:nth-child(1){opacity:1;}
+  .slide:nth-child(2){animation-delay:3s;}
+  .slide:nth-child(3){animation-delay:6s;}
+  .s4 .slide{animation-name:cycle4;animation-duration:12s;}
+  .s4 .slide:nth-child(4){animation-delay:9s;}
+  @keyframes cycle4{0%{opacity:0}5%{opacity:1}25%{opacity:1}30%{opacity:0}100%{opacity:0}}
+  .slide img{position:absolute;inset:96px 24px 24px;width:calc(100% - 48px);height:calc(100% - 120px);object-fit:contain;}
+  .chip{position:absolute;left:24px;right:24px;top:24px;display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    border-bottom:1px solid var(--line);padding-bottom:16px;}
+  .chip b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub-md);letter-spacing:-.025em;line-height:1;color:var(--ink);}
+  .chip small{font-size:var(--t-body);color:var(--mut);text-align:right;}
   /* figures that are ranges, not counts, so they do not count up */
   .impact b.static{font-size:var(--t-sub-md);}
 
@@ -142,7 +152,6 @@
     .gap-row .mat{max-width:420px;}
     .steps{grid-template-columns:repeat(3,1fr);gap:12px;}
     .angles{grid-template-columns:repeat(3,1fr);}
-    .markets{grid-template-columns:repeat(2,1fr);}
     .flow{grid-template-columns:repeat(2,1fr);}
     .langs{grid-template-columns:repeat(2,1fr);}
     .cards.three{grid-template-columns:repeat(2,1fr);}
@@ -150,10 +159,10 @@
   }
   @media (max-width:640px){
     .pair{grid-template-columns:1fr;gap:14px;}
+    .loops{grid-template-columns:1fr;}
+    .chip b{font-size:var(--t-sub);}
     .steps{grid-template-columns:1fr;max-width:360px;gap:28px;}
     .angles{grid-template-columns:repeat(2,1fr);}
-    .trio{grid-template-columns:1fr 1fr;}
-    .trio figure:last-child{grid-column:1 / -1;max-width:calc(50% - 10px);}
     .covers{grid-template-columns:1fr;max-width:360px;}
     .flow{grid-template-columns:1fr;}
     .cards.three{grid-template-columns:1fr;}
@@ -165,5 +174,7 @@
   @media (prefers-reduced-motion:reduce){
     .tip{transition:none;}
     .cycle img{animation:none;}
+    .slide{animation:none;}
+    .slide:not(:first-child){display:none;}
     .cycle img:not(:first-child){display:none;}
   }
