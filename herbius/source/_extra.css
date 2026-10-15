@@ -61,9 +61,7 @@
   .angles .frame img{object-fit:contain;}
   .angles figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:12px;}
   .angles figcaption b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-body);}
-  .angles figcaption span{font-family:var(--mono);font-size:var(--t-label);letter-spacing:.06em;color:var(--mut);white-space:nowrap;}
   .angles .lead .frame{border-color:var(--ink);}
-  .angles .lead figcaption span{color:var(--ink);}
 
   /* creatives per month, libido at the baseline so its growth is the read */
   figure.chart{display:block;margin:56px 0 0;padding:32px;background:var(--paper);}
