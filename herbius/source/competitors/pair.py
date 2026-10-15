@@ -19,4 +19,4 @@ def place(o,w,x,base):
 place(shi,700,430,935)     # back, higher baseline
 place(ash,760,40,1145)      # front
 cv.convert('RGB').save('/home/my-computer/portfolio/herbius/assets/cartons-pair.jpg',quality=84,optimize=True,progressive=True)
-cv.convert('RGB').resize((400,500)).save('pair-check.jpg')
+# preview: cv.convert('RGB').resize((400,500)).save('/tmp/pair-check.jpg')
