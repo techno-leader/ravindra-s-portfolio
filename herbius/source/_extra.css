@@ -42,15 +42,21 @@
   .shelf img{display:block;width:100%;height:auto;border-radius:var(--r-lg);}
   .shelf figcaption{margin-top:14px;font-size:var(--t-body);line-height:1.5;color:var(--mut);}
   /* packaging: four frames, dieline to shelf, all at one aspect so none leads */
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px;}
   .steps figure{margin:0;padding:0;border:0;background:none;display:block;overflow:visible;border-radius:0;}
-  .frame{aspect-ratio:3/4;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);}
+  .frame{aspect-ratio:4/5;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--surface);}
   .frame img,.frame video{display:block;width:100%;height:100%;object-fit:cover;}
-  .rename{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:center;margin-top:56px;
-    border-top:1px solid var(--line);padding-top:44px;}
-  .rename .frame{aspect-ratio:4/5;}
-  .rename h3{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);letter-spacing:-.015em;line-height:1.2;margin-bottom:12px;}
+  /* the rename is now a short note under the frames; its photos live in frame 01's loop */
+  .rename{margin-top:44px;border-top:1px solid var(--line);padding-top:32px;max-width:62ch;}
+  .rename h3{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);letter-spacing:-.015em;line-height:1.2;margin-bottom:10px;}
   .rename p{margin:0;}
+  /* frame 01: three stills on a 9s crossfade, the first one resting in place */
+  .cycle{position:relative;}
+  .cycle img{position:absolute;inset:0;opacity:0;animation:cycle 9s infinite;}
+  .cycle img:nth-child(1){opacity:1;}
+  .cycle img:nth-child(2){animation-delay:3s;}
+  .cycle img:nth-child(3){animation-delay:6s;}
+  @keyframes cycle{0%{opacity:0}6%{opacity:1}33%{opacity:1}40%{opacity:0}100%{opacity:0}}
 
   /* angles: one ad per angle, same frame, the count under each */
   .angles{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:44px;}
@@ -140,9 +146,7 @@
   @media (max-width:900px){
     .gap-row{grid-template-columns:1fr;gap:28px;}
     .gap-row .mat{max-width:420px;}
-    .steps{grid-template-columns:repeat(2,1fr);}
-    .rename{grid-template-columns:1fr 1fr;}
-    .rename > div{grid-column:1 / -1;}
+    .steps{grid-template-columns:repeat(3,1fr);gap:12px;}
     .angles{grid-template-columns:repeat(3,1fr);}
     .markets{grid-template-columns:repeat(2,1fr);}
     .flow{grid-template-columns:repeat(2,1fr);}
@@ -152,6 +156,7 @@
   }
   @media (max-width:640px){
     .pair{grid-template-columns:1fr;gap:14px;}
+    .steps{grid-template-columns:1fr;max-width:360px;gap:28px;}
     .angles{grid-template-columns:repeat(2,1fr);}
     .trio{grid-template-columns:1fr 1fr;}
     .trio figure:last-child{grid-column:1 / -1;max-width:calc(50% - 10px);}
@@ -165,4 +170,6 @@
   }
   @media (prefers-reduced-motion:reduce){
     .tip{transition:none;}
+    .cycle img{animation:none;}
+    .cycle img:not(:first-child){display:none;}
   }
