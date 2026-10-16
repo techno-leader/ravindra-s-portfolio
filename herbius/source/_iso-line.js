@@ -11,12 +11,12 @@ const STEP = 7, UP = -2.6, DOWN = 2.6;
 const T = {   // tech stack entries: a brand mark (path + colour), a favicon, or a monogram
   claude:{n:'Claude', logo:'claude'}, claudecode:{n:'Claude Code', logo:'claude'},
   meta:{n:'Meta Ad Library', logo:'meta'}, metaads:{n:'Meta Ads Manager', logo:'meta'},
-  amazon:{n:'Amazon', logo:'amazon'}, motion:{n:'Motion', img:'assets/stack/motion.png'},
-  adstudio:{n:'TAE Ad Studio', mono:'AS'}, fal:{n:'fal.ai', img:'assets/stack/fal.png'},
-  higgs:{n:'Higgsfield', img:'assets/stack/higgsfield.png'}, ps:{n:'Photoshop', logo:'adobephotoshop'},
-  ae:{n:'After Effects', logo:'adobeaftereffects'}, figma:{n:'Figma', logo:'figma'},
+  amazon:{n:'Amazon', logo:'amazon', s:20}, motion:{n:'Motion', img:'assets/stack/motion.png', s:22},
+  adstudio:{n:'TAE Ad Studio', svg:'adstudio', s:24}, fal:{n:'fal.ai', img:'assets/stack/fal.png', s:22},
+  higgs:{n:'Higgsfield', img:'assets/stack/higgsfield.png', s:22}, ps:{n:'Photoshop', logo:'adobephotoshop', s:20},
+  ae:{n:'After Effects', logo:'adobeaftereffects', s:20}, figma:{n:'Figma', svg:'figma', s:24},
   shopify:{n:'Shopify', logo:'shopify'}, reviewer:{n:'Native reviewer', ph:'user-check'},
-  klaviyo:{n:'Klaviyo', img:'assets/stack/klaviyo.png'}, tiktok:{n:'TikTok Shop', logo:'tiktok'}
+  klaviyo:{n:'Klaviyo', img:'assets/stack/klaviyo.png', s:24}, tiktok:{n:'TikTok Shop', logo:'tiktok'}
 };
 const STATIONS = [
   {name:'Research', icon:'magnifying-glass',
@@ -40,6 +40,12 @@ const STATIONS = [
    text:'The same campaign live in six markets through Meta Ads Manager, sold on Shopify, followed up with email and SMS flows in Klaviyo, then listed on Amazon and TikTok Shop.',
    stat:'6 markets', stack:['metaads','shopify','klaviyo','amazon','tiktok']}
 ];
+/* marks drawn here rather than taken from Simple Icons: Figma's real five-colour mark,
+   and the TAE Ad Studio app icon as it appears in the film (lime sparkle on green) */
+const SVGS = {
+  figma:'<svg viewBox="0 0 38 57" aria-hidden="true"><path fill="#1ABCFE" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/><path fill="#0ACF83" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z"/><path fill="#FF7262" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/><path fill="#F24E1E" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/><path fill="#A259FF" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/></svg>',
+  adstudio:'<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="asg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f6233"/><stop offset="1" stop-color="#17401f"/></linearGradient></defs><rect width="48" height="48" rx="12" fill="url(#asg)"/><path d="M22 13Q24 24 34 26Q24 28 22 39Q20 28 10 26Q20 24 22 13Z" fill="none" stroke="#d2e02a" stroke-width="2.6" stroke-linejoin="round"/><path d="M35 9v8M31 13h8" stroke="#d2e02a" stroke-width="2.6" stroke-linecap="round"/><circle cx="12.5" cy="36.5" r="2" fill="#d2e02a"/></svg>'
+};
 const USER_CHECK = 'M144,157.68a68,68,0,1,0-71.9,0c-20.65,6.76-39.23,19.39-54.17,37.17a8,8,0,0,0,12.25,10.3C50.25,181.19,77.91,168,108,168s57.75,13.19,77.87,37.15a8,8,0,0,0,12.25-10.3C183.18,177.07,164.6,164.44,144,157.68ZM56,100a52,52,0,1,1,52,52A52.06,52.06,0,0,1,56,100Zm197.66,33.66-32,32a8,8,0,0,1-11.32,0l-16-16a8,8,0,0,1,11.32-11.32L216,148.69l26.34-26.35a8,8,0,0,1,11.32,11.32Z';
 
 const P = (x, y, z = 0) => [(x - y) * C * U, (x + y) * S * U - z * U];
@@ -101,56 +107,56 @@ function unit(parent, s, i, cx, cy, W, H){
   });
   return [g, pg];
 }
-/* the AI skills: a graphics card lying on the floor, two fans on its shroud,
-   heatsink fins down its side, and a halo of grain breathing around it */
-function gpu(parent, gx, gy){
-  const g = el('g', {'data-name':'AI skills GPU'}, parent);
-  const GW = 7, GD = 3.2, PCB = .14, SH = .62;
-  /* grain first, so the card occludes whatever falls behind it */
-  const [ox, oy] = P(gx + GW / 2, gy + GD / 2, .4);
+/* the AI skills: a chip in the manner of Apple's M-series renders - a dark package,
+   a raised metal die with the name engraved, memory beside it, a row of capacitors -
+   and a halo of grain breathing around it */
+function chip(parent, gx, gy){
+  const g = el('g', {'data-name':'AI skills chip'}, parent);
+  const PS = 5.4, PH = .28, DS = 2.9, DH = .2;
+  const [ox, oy] = P(gx + PS / 2, gy + PS / 2, .3);
+  /* grain first, so the package occludes whatever falls behind it */
   const grain = el('g', {class:'grain', 'data-name':'Grain'}, g);
   const layers = [0, 1, 2].map(k => el('g', {class:'breath b' + k, style:`transform-origin:${ox}px ${oy}px`}, grain));
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(2 * Math.PI * rnd());
-  for(let n = 0; n < 1600; n++){
-    const dx = gauss() * 96, dy = gauss() * 44;
-    if((dx * dx) / (112 * 112) + (dy * dy) / (54 * 54) < 1) continue;   // keep the card itself clear
+  for(let n = 0; n < 1700; n++){
+    const dx = gauss() * 92, dy = gauss() * 50;
+    if((dx * dx) / (112 * 112) + (dy * dy) / (62 * 62) < 1) continue;   // keep the package clear
     el('circle', {cx:(ox + dx).toFixed(1), cy:(oy + dy).toFixed(1), r:(.4 + rnd() * .8).toFixed(2), class:'grn', 'fill-opacity':(.1 + rnd() * .45).toFixed(2)}, layers[n % 3]);
   }
-  /* board, then shroud */
-  el('polygon', {points:pts([P(gx-.15,gy+GD+.15,0),P(gx+GW+.15,gy+GD+.15,0),P(gx+GW+.15,gy+GD+.15,PCB),P(gx-.15,gy+GD+.15,PCB)]), class:'pcb'}, g);
-  el('polygon', {points:pts([P(gx+GW+.15,gy-.15,0),P(gx+GW+.15,gy+GD+.15,0),P(gx+GW+.15,gy+GD+.15,PCB),P(gx+GW+.15,gy-.15,PCB)]), class:'pcb'}, g);
-  const fingers = el('g', {transform:sideYM(gx, gy + GD + .15, PCB)}, g);
-  for(let k = 0; k < 14; k++) el('rect', {x:1.1 + k * .2, y:.02, width:.11, height:PCB - .04, class:'finger'}, fingers);
-  box(g, gx, gy, GW, GD, SH, PCB);
-  /* fins on the long side */
-  const fin = el('g', {transform:sideYM(gx, gy + GD, PCB + SH)}, g);
-  for(let k = 0; k < 30; k++) el('line', {x1:.4 + k * .21, y1:.12, x2:.4 + k * .21, y2:SH - .1, class:'edge fin'}, fin);
-  /* fans, turning slowly */
-  const top = el('g', {transform:floorM(gx, gy, PCB + SH)}, g);
-  el('rect', {x:.22, y:.22, width:GW - .44, height:GD - .44, rx:.2, class:'edge', fill:'none'}, top);
-  [[GW * .3, GD / 2], [GW * .7, GD / 2]].forEach(([fx, fy]) => {
-    const R = 1.22;
-    el('circle', {cx:fx, cy:fy, r:R, class:'edge', fill:'var(--face-l)'}, top);
-    const rot = el('g', {transform:`translate(${fx},${fy})`}, top);
-    const blades = el('g', {class:'fan'}, rot);
-    for(let b = 0; b < 9; b++){
-      const a = b / 9 * Math.PI * 2, a2 = a + .75;
-      el('path', {d:`M${(.34*Math.cos(a)).toFixed(3)},${(.34*Math.sin(a)).toFixed(3)} Q${(.9*Math.cos(a+.2)).toFixed(3)},${(.9*Math.sin(a+.2)).toFixed(3)} ${(1.1*Math.cos(a2)).toFixed(3)},${(1.1*Math.sin(a2)).toFixed(3)}`, class:'edge blade'}, blades);
-    }
-    el('circle', {cx:0, cy:0, r:.34, class:'hubdot'}, rot);
-  });
-  const lab = el('text', {transform:sideXR(gx + GW, gy + GD, PCB + SH), class:'lab', 'font-size':.3, x:.3, y:.4}, g); lab.textContent = 'AI skills';
-  /* its floor label sits behind the card, away from the power bus */
-  const l1 = floorText(g, gx - 1.5, gy + .9, 'AI skills', .55), l2 = floorText(g, gx - 1.5, gy + 1.65, 'Powers every station', .36, 'lab sm');
+  /* a solid with its own three face fills */
+  const solid = (x, y, w, d, h, z, top, l, r) => {
+    el('polygon', {points:pts([P(x,y+d,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x,y+d,z+h)]), class:l + ' chip-edge'}, g);
+    el('polygon', {points:pts([P(x+w,y,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x+w,y,z+h)]), class:r + ' chip-edge'}, g);
+    return el('polygon', {points:pts([P(x,y,z+h),P(x+w,y,z+h),P(x+w,y+d,z+h),P(x,y+d,z+h)]), class:top + ' chip-edge'}, g);
+  };
+  solid(gx, gy, PS, PS, PH, 0, 'pkg', 'pkg-l', 'pkg-r');
+  /* capacitors along the front edge of the package */
+  const caps = el('g', {transform:floorM(gx, gy, PH)}, g);
+  for(let k = 0; k < 9; k++) el('rect', {x:.5 + k * .5, y:PS - .42, width:.22, height:.12, class:'cap'}, caps);
+  for(let k = 0; k < 7; k++) el('rect', {x:PS - .42, y:.6 + k * .5, width:.12, height:.22, class:'cap'}, caps);
+  /* the die, brushed metal, and two memory packages beside it */
+  const dx0 = gx + .55, dy0 = gy + (PS - DS) / 2 - .15;
+  const dieTop = solid(dx0, dy0, DS, DS, DH, PH, 'die-top', 'die-l', 'die-r');
+  dieTop.setAttribute('fill', 'url(#dieMetal)');
+  [0, 1].forEach(k => solid(gx + PS - 1.75, gy + .65 + k * 2.05, 1.1, 1.75, .16, PH, 'mem', 'mem-l', 'mem-r'));
+  /* the engraving */
+  const eng = el('g', {transform:floorM(dx0, dy0, PH + DH)}, g);
+  const t1 = el('text', {x:DS / 2, y:DS / 2 + .15, 'text-anchor':'middle', 'font-size':1.05, class:'die-txt'}, eng); t1.textContent = 'AI';
+  const t2 = el('text', {x:DS / 2, y:DS / 2 + .78, 'text-anchor':'middle', 'font-size':.26, class:'die-sub'}, eng); t2.textContent = 'SKILLS';
+  /* its floor label sits behind the package, away from the power bus */
+  const l1 = floorText(g, gx - 1.2, gy + .9, 'AI skills', .55), l2 = floorText(g, gx - 1.2, gy + 1.65, 'Powers every station', .36, 'lab sm');
   l1.setAttribute('text-anchor', 'end'); l2.setAttribute('text-anchor', 'end');
-  return {g, GW, GD};
+  return g;
 }
 
 /* ---------------- the line ---------------- */
 const svg = document.getElementById('map');
+const defs = el('defs', {}, svg);
+const lg = el('linearGradient', {id:'dieMetal', x1:'0', y1:'0', x2:'1', y2:'1'}, defs);
+[['0','#f4f4f4'],['.55','#d6d6d6'],['1','#b8b8b8']].forEach(([o, c]) => el('stop', {offset:o, 'stop-color':c}, lg));
 const root = el('g', {}, svg);
-const W = 2.8, H = 1.1, BUS = UP - W / 2 - 2.2, HUB = [(STATIONS.length - 1) * STEP / 2 - 2.6, BUS - 7.4];
+const W = 2.8, H = 1.1, BUS = UP - W / 2 - 2.2, HUB = [(STATIONS.length - 1) * STEP / 2 - 2.2, BUS - 7.6];
 const xs = STATIONS.map((s, i) => i * STEP), ys = STATIONS.map((s, i) => i % 2 ? DOWN : UP);
 
 const grid = el('g', {class:'grid', transform:floorM(0, 0), 'data-name':'Floor grid'}, root);
@@ -159,11 +165,11 @@ for(let j = -22; j <= 20; j++) el('line', {x1:-20, y1:j, x2:40, y2:j}, grid);
 
 const power = el('g', {'data-name':'Power'}, root);
 tube(power, `M${xs[0]},${BUS} L${xs[xs.length - 1]},${BUS}`, .25, .26, 'bus', 'Power bus');
-tube(power, `M${HUB[0] + 1},${HUB[1] + 3.4} L${HUB[0] + 1},${BUS}`, .25, .26, 'feed', 'Power feed');
+tube(power, `M${HUB[0] + 1.4},${HUB[1] + 5.4} L${HUB[0] + 1.4},${BUS}`, .25, .26, 'feed', 'Power feed');
 const drops = xs.map((x, i) => tube(power, `M${x},${BUS} L${x},${ys[i] - W / 2}`, .25, .26, 'drop', `Power drop ${i + 1}`));
 xs.forEach(x => { const c = el('g', {transform:floorM(x, BUS, .25)}, power); el('circle', {cx:0, cy:0, r:.26, class:'edge', fill:'var(--paper)'}, c); });
 
-gpu(root, HUB[0], HUB[1]);
+chip(root, HUB[0], HUB[1]);
 
 const line = el('g', {'data-name':'Pipeline'}, root);
 const segs = xs.slice(1).map((x, i) => { const m = x - W / 2 - 1.2; return tube(line, `M${xs[i] + W / 2},${ys[i]} L${m},${ys[i]} L${m},${ys[i + 1]} L${x - W / 2},${ys[i + 1]}`, .4, .78, 'seg', `Pipe ${i + 1}-${i + 2}`); });
@@ -186,38 +192,49 @@ root.setAttribute('clip-path', 'url(#frame)');
   document.head.appendChild(st);
 })();
 
-/* ---------------- the detail face ---------------- */
+/* ---------------- the camera ---------------- */
+/* Clicking a station glides the map's viewBox in until that station and its
+   sub-stations fill the left of the frame; its story slides in on the right.
+   Phones stack the story under the map, so there the station is centred. */
 const stage = document.getElementById('stage');
-const dsvg = document.getElementById('dmap');
+const dpanel = document.getElementById('dpanel');
 function logoTile(key){
   const t = T[key], li = document.createElement('li');
   const tile = document.createElement('span'); tile.className = 'logo';
+  if(t.s) tile.style.setProperty('--s', t.s + 'px');
   if(t.logo){ const L = LOGOS[t.logo]; tile.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="${L.hex}" d="${L.d}"/></svg>`; }
+  else if(t.svg){ tile.innerHTML = SVGS[t.svg]; }
   else if(t.img){ tile.innerHTML = `<img src="${t.img}" alt="" width="96" height="96">`; }
   else if(t.ph){ tile.innerHTML = `<svg viewBox="0 0 256 256" aria-hidden="true"><path fill="currentColor" d="${USER_CHECK}"/></svg>`; }
-  else { tile.classList.add('mono'); tile.textContent = t.mono; }
   const n = document.createElement('span'); n.className = 'nm'; n.textContent = t.n;
   li.append(tile, n); return li;
 }
-function drawDetail(i){
-  dsvg.innerHTML = '';
-  const s = STATIONS[i], r = el('g', {}, dsvg);
-  const DW = 3.6, DH = 1.35;
-  const dg = el('g', {class:'grid', transform:floorM(0, 0)}, r);
-  for(let k = -14; k <= 14; k++){ el('line', {x1:k, y1:-14, x2:k, y2:14}, dg); el('line', {x1:-14, y1:k, x2:14, y2:k}, dg); }
-  /* power from behind, the line in from the left and out to the right */
-  tube(r, `M0,-6 L0,${-DW / 2}`, .25, .26, 'drop on', 'Power');
-  if(i > 0) tube(r, `M-6.5,0 L${-DW / 2},0`, .4, .78, 'seg on', 'In');
-  if(i < STATIONS.length - 1) tube(r, `M${DW / 2},0 L6.5,0`, .4, .78, 'seg', 'Out');
-  const [g, pg] = unit(r, s, i, 0, 0, DW, DH);
-  g.classList.add('on'); g.removeAttribute('tabindex'); g.removeAttribute('role'); g.removeAttribute('aria-label');
-  pg.classList.add('on');
-  dg.style.display = 'none';
-  const b = r.getBBox(), p = 18;
-  dg.style.display = '';
-  dsvg.setAttribute('viewBox', `${b.x - p} ${b.y - p} ${b.width + p * 2} ${b.height + p * 2}`);
-  const c = el('clipPath', {id:'dframe'}, dsvg); el('rect', {x:b.x - p, y:b.y - p, width:b.width + p * 2, height:b.height + p * 2}, c);
-  r.setAttribute('clip-path', 'url(#dframe)');
+const FULL = svg.getAttribute('viewBox').split(' ').map(Number);
+let vb = FULL.slice(), anim = null, detailAt = -1;
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+function moveTo(target){
+  cancelAnimationFrame(anim);
+  if(REDUCED){ vb = target.slice(); svg.setAttribute('viewBox', vb.join(' ')); return; }
+  const from = vb.slice(), t0 = performance.now(), D = 950;
+  const step = now => {
+    const k = ease(Math.min(1, (now - t0) / D));
+    vb = from.map((v, n) => v + (target[n] - v) * k);
+    svg.setAttribute('viewBox', vb.map(v => v.toFixed(2)).join(' '));
+    if(k < 1) anim = requestAnimationFrame(step);
+  };
+  anim = requestAnimationFrame(step);
+}
+function shotOf(i){
+  const a = stG[i].getBBox(), b = pillG[i].getBBox();
+  const x0 = Math.min(a.x, b.x), y0 = Math.min(a.y, b.y), x1 = Math.max(a.x + a.width, b.x + b.width), y1 = Math.max(a.y + a.height, b.y + b.height);
+  const bw = x1 - x0, bh = y1 - y0, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, A = FULL[2] / FULL[3];
+  const side = innerWidth > 760;                       // panel over the map on the right, or under it
+  const room = side ? .5 : .82;                         // share of the frame the station may use
+  const h = Math.max(bh / .76, bw / room / A), w = h * A;
+  return [cx - w * (side ? .3 : .5), cy - h / 2, w, h];
+}
+function fillPanel(i){
+  const s = STATIONS[i];
   document.getElementById('dNum').textContent = String(i + 1).padStart(2, '0') + ' / ' + String(STATIONS.length).padStart(2, '0');
   document.getElementById('dName').textContent = s.name;
   document.getElementById('dText').textContent = s.text;
@@ -226,30 +243,26 @@ function drawDetail(i){
   document.getElementById('dPrev').disabled = i === 0;
   document.getElementById('dNext').disabled = i === STATIONS.length - 1;
 }
-let detailAt = -1;
 function openDetail(i){
-  stopAuto(); set(i); drawDetail(i); detailAt = i;
-  stage.classList.add('flipped');
-  document.getElementById('faceMap').setAttribute('aria-hidden', 'true');
-  document.getElementById('faceMap').inert = true;
-  document.getElementById('faceDetail').setAttribute('aria-hidden', 'false');
-  document.getElementById('faceDetail').inert = false;
-  setTimeout(() => document.getElementById('dBack').focus({preventScroll:true}), REDUCED ? 0 : 450);
+  stopAuto(); set(i); fillPanel(i); detailAt = i;
+  stage.classList.add('zoomed');
+  dpanel.setAttribute('aria-hidden', 'false'); dpanel.inert = false;
+  moveTo(shotOf(i));
+  setTimeout(() => document.getElementById('dBack').focus({preventScroll:true}), REDUCED ? 0 : 600);
 }
 function closeDetail(){
-  stage.classList.remove('flipped');
-  document.getElementById('faceMap').setAttribute('aria-hidden', 'false');
-  document.getElementById('faceMap').inert = false;
-  document.getElementById('faceDetail').setAttribute('aria-hidden', 'true');
-  document.getElementById('faceDetail').inert = true;
+  stage.classList.remove('zoomed');
+  dpanel.setAttribute('aria-hidden', 'true'); dpanel.inert = true;
+  moveTo(FULL);
   const back = stG[detailAt]; detailAt = -1;
-  setTimeout(() => back && back.focus({preventScroll:true}), REDUCED ? 0 : 450);
+  setTimeout(() => back && back.focus({preventScroll:true}), REDUCED ? 0 : 600);
 }
-document.getElementById('faceDetail').inert = true;
+dpanel.inert = true;
 document.getElementById('dBack').addEventListener('click', closeDetail);
-document.getElementById('dPrev').addEventListener('click', () => { if(detailAt > 0){ detailAt--; set(detailAt); drawDetail(detailAt); } });
-document.getElementById('dNext').addEventListener('click', () => { if(detailAt < STATIONS.length - 1){ detailAt++; set(detailAt); drawDetail(detailAt); } });
-document.addEventListener('keydown', e => { if(e.key === 'Escape' && stage.classList.contains('flipped')) closeDetail(); });
+document.getElementById('dPrev').addEventListener('click', () => { if(detailAt > 0) openDetail(detailAt - 1); });
+document.getElementById('dNext').addEventListener('click', () => { if(detailAt < STATIONS.length - 1) openDetail(detailAt + 1); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && stage.classList.contains('zoomed')) closeDetail(); });
+addEventListener('resize', () => { if(detailAt >= 0){ cancelAnimationFrame(anim); vb = shotOf(detailAt); svg.setAttribute('viewBox', vb.join(' ')); } });
 
 /* ---------------- state ---------------- */
 const btnBox = document.getElementById('stations');
@@ -276,8 +289,8 @@ function stopAuto(){ clearInterval(timer); timer = null; autoBtn.textContent = '
 function startAuto(){ if(REDUCED) return; clearInterval(timer); timer = setInterval(() => set((cur + 1) % STATIONS.length), 3200); autoBtn.textContent = 'Pause'; autoBtn.setAttribute('aria-pressed', true); }
 autoBtn.addEventListener('click', () => timer ? stopAuto() : startAuto());
 stG.forEach((g, i) => {
-  g.addEventListener('mouseenter', () => { stopAuto(); set(i); });
-  g.addEventListener('focus', () => { stopAuto(); set(i); });
+  g.addEventListener('mouseenter', () => { if(detailAt >= 0) return; stopAuto(); set(i); });
+  g.addEventListener('focus', () => { if(detailAt >= 0) return; stopAuto(); set(i); });
   g.addEventListener('click', () => openDetail(i));
   g.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openDetail(i); } });
 });

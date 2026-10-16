@@ -40,7 +40,7 @@ def parts():
     head = rd('_iso-head.html')
     style = head[head.index('<style>') + 7:head.index('</style>')]
     # keep only the illustration's own rules; the page chrome above them belongs to the bench
-    style = style[style.index('  /* ---------- the turning stage'):]
+    style = style[style.index('  /* ---------- the stage:'):]
     css = '''
   /* ================= The System: the isometric launch line, ported from bench-system.html =================
      Everything below is scoped to .sys so it cannot reach the rest of the page. */
@@ -51,14 +51,15 @@ def parts():
   .sys p{margin:0;max-width:none;}
 ''' + _prefix(style)
     css = css.replace('.sys .stage{margin-top:40px;', '.sys .stage{margin-top:0;')
-    html = head[head.index('<div class="stage" id="stage">'):head.rindex('</div>\n</div>')]
+    # include the stage's own closing tag; the last </div> closes the bench's .page
+    html = head[head.index('<div class="stage" id="stage">'):head.rindex('</div>\n</div>') + len('</div>')]
     html = html.strip() + '\n'
     html = '      <div class="sys rv">\n' + '\n'.join('        ' + l if l.strip() else l for l in html.split('\n')) + '      </div>\n'
     js = bench_script()
     body = js[js.index('<script>') + 8:js.rindex('</script>')]
     # play only while the line is on screen; the bench plays from load
     body = body.replace("set(0);\nREDUCED ? stopAuto() : startAuto();",
-        "set(0);\nstopAuto();\nif(!REDUCED){ new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting && !stage.classList.contains('flipped')) startAuto(); else if(!e.isIntersecting) stopAuto(); }), {threshold:.35}).observe(stage); }")
+        "set(0);\nstopAuto();\nif(!REDUCED){ new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting && !stage.classList.contains('zoomed')) startAuto(); else if(!e.isIntersecting) stopAuto(); }), {threshold:.35}).observe(stage); }")
     assert 'IntersectionObserver' in body
     js = '<script>\n/* The System: isometric launch line. Wrapped so its names stay out of the page scope. */\n(() => {\n' + body + '\n})();\n</script>'
     return css, html, js
