@@ -108,22 +108,11 @@ function unit(parent, s, i, cx, cy, W, H){
   return [g, pg];
 }
 /* the AI skills: a chip in the manner of Apple's M-series renders - a dark package,
-   a raised metal die with the name engraved, memory beside it, a row of capacitors -
-   and a halo of grain breathing around it */
+   a raised metal die with the name engraved, memory beside it, a row of capacitors */
 function chip(parent, gx, gy){
   const g = el('g', {'data-name':'AI skills chip'}, parent);
   const PS = 5.4, PH = .28, DS = 2.9, DH = .2;
   const [ox, oy] = P(gx + PS / 2, gy + PS / 2, .3);
-  /* grain first, so the package occludes whatever falls behind it */
-  const grain = el('g', {class:'grain', 'data-name':'Grain'}, g);
-  const layers = [0, 1, 2].map(k => el('g', {class:'breath b' + k, style:`transform-origin:${ox}px ${oy}px`}, grain));
-  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(2 * Math.PI * rnd());
-  for(let n = 0; n < 1700; n++){
-    const dx = gauss() * 92, dy = gauss() * 50;
-    if((dx * dx) / (112 * 112) + (dy * dy) / (62 * 62) < 1) continue;   // keep the package clear
-    el('circle', {cx:(ox + dx).toFixed(1), cy:(oy + dy).toFixed(1), r:(.4 + rnd() * .8).toFixed(2), class:'grn', 'fill-opacity':(.1 + rnd() * .45).toFixed(2)}, layers[n % 3]);
-  }
   /* a solid with its own three face fills */
   const solid = (x, y, w, d, h, z, top, l, r) => {
     el('polygon', {points:pts([P(x,y+d,z),P(x+w,y+d,z),P(x+w,y+d,z+h),P(x,y+d,z+h)]), class:l + ' chip-edge'}, g);
@@ -163,11 +152,34 @@ const grid = el('g', {class:'grid', transform:floorM(0, 0), 'data-name':'Floor g
 for(let i = -20; i <= 40; i++) el('line', {x1:i, y1:-22, x2:i, y2:20}, grid);
 for(let j = -22; j <= 20; j++) el('line', {x1:-20, y1:j, x2:40, y2:j}, grid);
 
+/* power: one hollow pipe from the chip, along the bus and down into every station.
+   Branches leave the bus on rounded fillets, and all outlines are drawn before all
+   cores, so the joins read as one continuous pipe rather than tubes laid on tubes. */
 const power = el('g', {'data-name':'Power'}, root);
-tube(power, `M${xs[0]},${BUS} L${xs[xs.length - 1]},${BUS}`, .25, .26, 'bus', 'Power bus');
-tube(power, `M${HUB[0] + 1.4},${HUB[1] + 5.4} L${HUB[0] + 1.4},${BUS}`, .25, .26, 'feed', 'Power feed');
-const drops = xs.map((x, i) => tube(power, `M${x},${BUS} L${x},${ys[i] - W / 2}`, .25, .26, 'drop', `Power drop ${i + 1}`));
-xs.forEach(x => { const c = el('g', {transform:floorM(x, BUS, .25)}, power); el('circle', {cx:0, cy:0, r:.26, class:'edge', fill:'var(--paper)'}, c); });
+const pOut = el('g', {'data-name':'Power outline'}, power), pIn = el('g', {'data-name':'Power core'}, power), pCm = el('g', {'data-name':'Power flow'}, power);
+function pipe(d, cls, name, flow = d, fill = null, z = .25, wide = .26){
+  const parts = [pOut, pIn, pCm].map(L => el('g', {transform:floorM(0, 0, z), class:'tube ' + cls, 'data-name':name}, L));
+  el('path', {d, class:'tube-o', 'stroke-width':wide}, parts[0]);
+  el('path', {d, class:'tube-i', 'stroke-width':wide * .7}, parts[1]);
+  const cm = el('g', {class:'comet'}, parts[2]);
+  COMET.forEach(([l, o, w], k) => el('path', {d:flow, pathLength:100, class:'c' + k, 'stroke-width':wide * .7 * w}, cm));
+  /* a tee's two arms leave a sliver of outline between them; the core layer fills it */
+  if(fill) el('path', {d:fill, class:'tube-fill'}, parts[1]);
+  /* one handle that toggles the pipe's state on all three layers */
+  return {classList:{toggle:(c, v) => parts.forEach(q => q.classList.toggle(c, v))}};
+}
+const R = .7, last = xs.length - 1, FX = HUB[0] + 1.4;
+pipe(`M${xs[0] + R},${BUS} L${xs[last] - R},${BUS}`, 'bus', 'Power bus');
+pipe(`M${FX},${HUB[1] + 5.4} L${FX},${BUS - R} Q${FX},${BUS} ${FX + R},${BUS} M${FX},${BUS - R} Q${FX},${BUS} ${FX - R},${BUS}`, 'feed', 'Power feed', `M${FX},${HUB[1] + 5.4} L${FX},${BUS}`,
+  `M${FX - R},${BUS} Q${FX},${BUS} ${FX},${BUS - R} Q${FX},${BUS} ${FX + R},${BUS} Z`);
+const drops = xs.map((x, i) => {
+  const end = ys[i] - W / 2;
+  const left = `M${x - R},${BUS} Q${x},${BUS} ${x},${BUS + R}`, right = `M${x + R},${BUS} Q${x},${BUS} ${x},${BUS + R}`;
+  const arms = i === 0 ? right : i === last ? left : left + ' ' + right;   // the ends turn, the middle ones tee
+  /* packets take the left arm in, or the right one at the first station */
+  const tee = i > 0 && i < last ? `M${x - R},${BUS} Q${x},${BUS} ${x},${BUS + R} Q${x},${BUS} ${x + R},${BUS} Z` : null;
+  return pipe(`${arms} L${x},${end}`, 'drop', `Power drop ${i + 1}`, `${i === 0 ? right : left} L${x},${end}`, tee);
+});
 
 chip(root, HUB[0], HUB[1]);
 

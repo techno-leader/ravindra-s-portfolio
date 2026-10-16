@@ -54,6 +54,7 @@
   .iso .st.on .ico-r{display:none;}
   .iso .tube-o{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round;transition:stroke .35s ease;}
   .iso .tube-i{fill:none;stroke:var(--paper);stroke-linecap:round;stroke-linejoin:round;}
+  .iso .tube-fill{fill:var(--paper);stroke:var(--paper);stroke-width:.18;stroke-linejoin:round;}
   /* comet: hidden until its tube is live, then the head runs and the tail fades behind it */
   .iso .comet path{fill:none;stroke:var(--ink);stroke-linecap:round;opacity:0;transition:opacity .3s ease;}
   .iso .tube.on .comet path{opacity:var(--o);animation-duration:1.7s;animation-timing-function:linear;animation-iteration-count:infinite;}
@@ -81,10 +82,6 @@
   .iso .cap{fill:#9a9a9a;}
   .iso .die-txt{font-family:var(--sans);font-weight:600;fill:#3a3a3a;letter-spacing:-.02em;}
   .iso .die-sub{font-family:var(--mono);fill:#5a5a5a;letter-spacing:.2em;}
-  .iso .grn{fill:var(--ink);}
-  .iso .breath{animation:breathe 6s ease-in-out infinite alternate;}
-  .iso .breath.b1{animation-delay:-2s;} .iso .breath.b2{animation-delay:-4s;}
-  @keyframes breathe{from{opacity:.35;transform:scale(.985);}to{opacity:1;transform:scale(1.035);}}
 
   /* ---------- map face ---------- */
   .panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:32px;align-items:start;border-top:1px solid var(--line);padding:24px clamp(16px,3vw,32px) 28px;}
