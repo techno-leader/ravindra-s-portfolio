@@ -767,7 +767,7 @@
   /* Colour is the whole signal, so nothing else dims and nothing moves. The
      grade comes off with the grayscale: it exists to reconcile ten greys, and
      the images in colour are already the artist's own grade. */
-  .tile.lit img{filter:none;}
+  .tile.lit img,.tile.hint img{filter:none;}
   .tile:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;z-index:3;}
 
   /* Film grain, rest state only. Overlay blend, deliberately: overlay against a
@@ -780,7 +780,7 @@
     content:"";position:absolute;inset:calc(var(--gap) / 2);pointer-events:none;
     mix-blend-mode:overlay;opacity:1;transition:opacity .45s ease;
   }
-  .tile.lit::after{opacity:0;}
+  .tile.lit::after,.tile.hint::after{opacity:0;}
 
   /* The void holds the contact pitch at rest and the group's line on hover, the
      two stacked in one grid cell so they cross-fade in place. Padded to the
@@ -3103,6 +3103,65 @@ tiles.forEach(t => {
   t.addEventListener('focus', () => light(t));
   t.addEventListener('blur', () => { if (!held) clear(); });
 });
+
+/* One-time hint: the first time the whole section is on screen, colour runs
+   once around the field, clockwise from twelve o'clock, one tile at a time, so
+   a visitor learns the tiles light up before they ever hover one. It uses its
+   own .hint class rather than light(), so the pitch never swaps for a group
+   line and aria-pressed stays honest. Any real interaction ends it on the spot.
+   Skipped under reduced motion, like the hero's hint.
+
+   "Whole section" is measured against the visible viewport, not 100vh: on a
+   phone 100vh is the height with the URL bar gone, so a 100vh section can sit
+   at an intersection ratio of ~0.9 forever and a ratio threshold never fires. */
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const STEP = 200, HOLD = 400, SETTLE = 400;   /* ms */
+  let timers = [], done = false;
+
+  const stop = () => {
+    done = true;
+    timers.forEach(clearTimeout); timers = [];
+    tiles.forEach(t => t.classList.remove('hint'));
+    io.disconnect();
+  };
+
+  const play = () => {
+    const f = field.getBoundingClientRect();
+    const cx = f.left + f.width / 2, cy = f.top + f.height / 2;
+    /* atan2(dx, -dy): 0 at twelve o'clock, growing clockwise in screen space.
+       Tiles dropped by the portrait layout have no box and sit out. */
+    const ring = tiles
+      .map(t => ({ t, r: t.getBoundingClientRect() }))
+      .filter(({ r }) => r.width)
+      .map(({ t, r }) => {
+        const a = Math.atan2(r.left + r.width / 2 - cx, cy - (r.top + r.height / 2));
+        return { t, a: (a + 2 * Math.PI) % (2 * Math.PI) };
+      })
+      .sort((x, y) => x.a - y.a);
+    ring.forEach(({ t }, i) => {
+      timers.push(setTimeout(() => t.classList.add('hint'), i * STEP));
+      timers.push(setTimeout(() => t.classList.remove('hint'), i * STEP + HOLD));
+    });
+    timers.push(setTimeout(stop, ring.length * STEP + HOLD));
+  };
+
+  const io = new IntersectionObserver(([e]) => {
+    if (done || document.hidden) return;
+    const full = e.intersectionRect.height >= Math.min(e.boundingClientRect.height, innerHeight) - 2;
+    if (!full) return;
+    io.disconnect();
+    timers.push(setTimeout(play, SETTLE));
+  }, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
+  io.observe(sec);
+
+  /* A touch pointerover is a finger scrolling past, not a hover - same rule as
+     the hover handler above; taps still arrive as clicks. */
+  field.addEventListener('pointerover', e => {
+    if (!done && e.pointerType !== 'touch' && e.target.closest('.tile')) stop();
+  });
+  ['click', 'focusin'].forEach(ev => field.addEventListener(ev, () => { if (!done) stop(); }));
+})();
 })();
 
 /* ====================================================================
