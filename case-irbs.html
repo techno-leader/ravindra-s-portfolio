@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#ffffff">
 <title>IRBS - Case Study · Ravindra Pratap</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16.png">
@@ -99,9 +100,14 @@
      A fixed-length tail (the other candidate) reads as a constant-size object
      sliding across, which fights the idea that the bar measures the page. */
   .progress{
-    position:fixed;top:0;left:0;height:2px;z-index:40;width:0;
+    position:fixed;top:0;left:0;height:2px;z-index:40;width:calc(100% - 1px);
     background:linear-gradient(90deg,transparent 0%,var(--ink) 100%);
+    transform-origin:left;transform:scaleX(0);
   }
+  /* The head: a 2px dot centred on the tail's end, so the leading edge is
+     round like the ends of its container. Tail scales, head translates:
+     neither touches width, so scrolling never re-runs layout. */
+  .progress-head{position:fixed;top:0;left:0;width:2px;height:2px;z-index:40;border-radius:50%;background:var(--ink);opacity:0;}
 
   /* Opaque, not a wash. The bar used to be a --paper gradient fading to
      nothing, which only works while whatever passes under it is also white -
@@ -118,7 +124,7 @@
     background:var(--paper);
     border-bottom:1px solid var(--line);
     transform:translateY(0);
-    transition:transform .32s cubic-bezier(.22,1,.36,1);
+    transition:transform .24s cubic-bezier(.22,1,.36,1);
   }
   /* Pinned for the first 5% of the document, then tucks on a downward scroll
      and returns on an upward one - driven by the header IIFE at the foot of
@@ -138,7 +144,7 @@
     color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
     display:inline-flex;align-items:center;min-height:44px;
   }
-  nav a:hover{opacity:1;}
+  @media (hover:hover) and (pointer:fine){nav a:hover{opacity:1;}}
 
   .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
   .wrap-wide{max-width:1240px;margin:0 auto;padding:0 44px;}
@@ -204,7 +210,7 @@
   /* Phosphor arrows, inlined and sized in em so each one tracks the type it
      sits in rather than needing a size per context */
   .icon{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.125em;}
-  .define-t:hover,.define-t[aria-expanded="true"]{color:var(--ink-2);}
+  .define-t[aria-expanded="true"]{color:var(--ink-2);} @media (hover:hover) and (pointer:fine){.define-t:hover{color:var(--ink-2);}}
   .define-box{
     position:absolute;z-index:20;left:0;top:calc(100% + 10px);
     width:max-content;max-width:min(400px,78vw);
@@ -293,9 +299,10 @@
   }
   .case-nav a{
     text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;
-    transition:border-color .3s, color .3s;
+    transition:border-color .3s, color .3s, scale 160ms cubic-bezier(.22,1,.36,1);
   }
-  .case-nav a:hover{border-color:var(--ink-3);color:var(--ink-2);}
+  .case-nav a:active{scale:.985;}
+  @media (hover:hover) and (pointer:fine){.case-nav a:hover{border-color:var(--ink-3);color:var(--ink-2);}}
   .case-nav small{display:block;font-family:var(--mono);font-size:var(--t-label);letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;}
   .case-nav b{font-family:var(--sans);font-weight:var(--w-head);font-size:var(--t-sub);line-height:1.2;letter-spacing:-.015em;}
   .case-nav .next{text-align:right;}
@@ -321,7 +328,7 @@
     opacity:1;transition:opacity .3s;
   }
   /* pure black artwork - it dims, it cannot recolour */
-  footer .sig:hover{opacity:.6;}
+  @media (hover:hover) and (pointer:fine){footer .sig:hover{opacity:.6;}}
   footer .sig img{display:block;height:32px;width:auto;}
 
   /* ---------------- evidence reel ---------------- */
@@ -370,10 +377,10 @@
   }
 
   /* ---------------- motion ---------------- */
-  .rv{opacity:0;transform:translateY(36px);filter:blur(6px);
-      transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
-  .rv.in{opacity:1;transform:translateY(0);filter:blur(0);}
-  .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}
+  .rv{opacity:0;transform:translateY(12px);
+      transition:opacity .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1);}
+  .rv.in{opacity:1;transform:translateY(0);}
+  .rv-d1{transition-delay:.03s}.rv-d2{transition-delay:.06s}
   @media (prefers-reduced-motion:reduce){
     .rv{opacity:1;transform:none;filter:none;transition:none;}
     .define-t,.case-nav a,nav a,footer .sig{transition:none;}
@@ -432,14 +439,17 @@
      no border, firmer on hover. -webkit- rules only for Safari. */
   :root{--scroll-thumb:color-mix(in srgb,var(--ink,#161616) 14%,transparent);--scroll-thumb-hover:color-mix(in srgb,var(--ink,#161616) 32%,transparent);}
   *{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent;}
-  *:hover{scrollbar-color:var(--scroll-thumb-hover) transparent;}
+  @media (hover:hover) and (pointer:fine){*:hover{scrollbar-color:var(--scroll-thumb-hover) transparent;}}
   @supports not (scrollbar-color:auto){
     ::-webkit-scrollbar{width:10px;height:10px;background:transparent;}
     ::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent;border:0;box-shadow:none;}
     ::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb);background-clip:padding-box;border:3px solid transparent;border-radius:99px;}
-    :hover::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb-hover);}
+    @media (hover:hover) and (pointer:fine){:hover::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb-hover);}}
     ::-webkit-scrollbar-button{display:none;}
   }
+
+  /* no grey flash on tap; presses answer with their own :active state */
+  a,button,summary,label{-webkit-tap-highlight-color:transparent;}
 </style>
 <!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
@@ -451,7 +461,7 @@
 </script>
 </head>
 <body>
-<div class="progress" id="progress"></div>
+<div class="progress" id="progress"></div><div class="progress-head" id="progressHead"></div>
 
 <nav>
   <a class="logo" href="index.html"><img src="assets/brand/mark.webp" alt="Ravindra Pratap - home" width="202" height="280"></a>
@@ -727,10 +737,13 @@
 })();
 
 /* ---- progress bar ---- */
-const progress = document.getElementById('progress');
+const progress = document.getElementById('progress'), progressHead = document.getElementById('progressHead');
 addEventListener('scroll', () => {
   const max = document.documentElement.scrollHeight - innerHeight;
-  progress.style.width = (max>0 ? (scrollY/max)*100 : 0) + '%';
+  const p = max > 0 ? Math.min(1, scrollY / max) : 0;
+  progress.style.transform = `scaleX(${p})`;
+  progressHead.style.transform = `translateX(${p * progress.offsetWidth - 1}px)`;
+  progressHead.style.opacity = p > 0 ? 1 : 0;
 }, {passive:true});
 
 /* ---- reveals + count-ups (shared language with home) ---- */

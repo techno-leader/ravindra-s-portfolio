@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#ffffff">
 <title>Components - one a day · Ravindra Pratap</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/brand/favicon-16.png">
@@ -87,7 +88,7 @@
     color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
     display:inline-flex;align-items:center;min-height:44px;
   }
-  nav a:hover{opacity:1;}
+  @media (hover:hover) and (pointer:fine){nav a:hover{opacity:1;}}
 
   /* 32px, matching the cluster pages. Set by eye, not by the scale: the name's
      cap is 0.256 of the lockup's height, so this renders it at 8.2px - under
@@ -101,7 +102,7 @@
     display:inline-flex;align-items:center;min-height:44px;text-decoration:none;
     opacity:1;transition:opacity .3s;
   }
-  footer .sig:hover{opacity:.6;}
+  @media (hover:hover) and (pointer:fine){footer .sig:hover{opacity:.6;}}
   footer .sig img{display:block;height:32px;width:auto;}
 
   /* ---------- page shell ---------- */
@@ -156,7 +157,7 @@
     transition:opacity .6s var(--ease-out),transform .9s var(--ease-out);
   }
   .frame.ready img{opacity:1;transform:none;}
-  .frame.ready:hover img{transform:scale(1.028);}
+  @media (hover:hover) and (pointer:fine){.frame.ready:hover img{transform:scale(1.028);}}
   .frame:active img{transform:scale(.995);}
 
   /* skeleton: a monochrome sheen, removed only once the bitmap has decoded */
@@ -194,7 +195,7 @@
     opacity:0;transform:translateY(6px);
     transition:opacity .28s var(--ease-out),transform .38s var(--ease-out);
   }
-  .frame.ready:hover .cap,.frame:focus-visible .cap{opacity:1;transform:none;}
+  .frame:focus-visible .cap{opacity:1;transform:none;} @media (hover:hover) and (pointer:fine){.frame.ready:hover .cap{opacity:1;transform:none;}}
   .cap b{font-weight:500;font-size:12px;letter-spacing:.02em;color:var(--ink);text-transform:none;}
 
   /* ---------- stage one: the deck ---------- */
@@ -223,7 +224,7 @@
     color:var(--ink-2);cursor:pointer;
     -webkit-tap-highlight-color:transparent;outline:none;
   }
-  .back:hover{background:var(--line-2);color:var(--ink);}
+  @media (hover:hover) and (pointer:fine){.back:hover{background:var(--line-2);color:var(--ink);}}
   .back:active{scale:.94;}
   .back svg{width:18px;height:18px;fill:currentColor;flex:none;}
 
@@ -241,14 +242,14 @@
     -webkit-tap-highlight-color:transparent;outline:none;
     transition:box-shadow .24s var(--ease-out),translate .24s var(--ease-out),scale .18s var(--ease-out);
   }
-  .cta:hover{translate:0 -2px;box-shadow:0 20px 34px -16px rgba(13,13,16,.85);}
+  @media (hover:hover) and (pointer:fine){.cta:hover{translate:0 -2px;box-shadow:0 20px 34px -16px rgba(13,13,16,.85);}}
   .cta:active{scale:.98;translate:0 0;}
   .cta .chev{
     display:inline-flex;align-items:center;justify-content:center;
     width:40px;height:40px;border-radius:var(--r-pill);background:rgba(255,255,255,.15);
     transition:translate .34s var(--ease-out);
   }
-  .cta:hover .chev{translate:3px 0;}
+  @media (hover:hover) and (pointer:fine){.cta:hover .chev{translate:3px 0;}}
   .cta svg{width:16px;height:16px;fill:currentColor;flex:none;}
 
   /* same gradient ring as the tiles. these buttons do not clip their overflow,
@@ -277,16 +278,18 @@
     --gap:46px;--step:.05;
   }
   /* 200×.04 = 8 → gap 62 gives a 54px sliver */
-  [data-stage="stack"] .gal:hover,[data-stage="stack"] .gal:focus-within{
+  [data-stage="stack"] .gal:focus-within{
     --gap:62px;--step:.04;
-  }
+  } @media (hover:hover) and (pointer:fine){[data-stage="stack"] .gal:hover{
+    --gap:62px;--step:.04;
+  }}
   /* the cards sit to the RIGHT of the deck box, so the stack is wider than
      .gal by 2 slivers. once the deck stops being 400px and starts filling the
      screen, that surplus runs off the viewport and scrolls the page - so below
      this breakpoint the deck gives the spread its room back. */
   @media (max-width:760px){
     [data-stage="stack"] .gal{width:min(400px,calc(100% - 88px));--gap:30px;}
-    [data-stage="stack"] .gal:hover,[data-stage="stack"] .gal:focus-within{--gap:42px;}
+    [data-stage="stack"] .gal:focus-within{--gap:42px;} @media (hover:hover) and (pointer:fine){[data-stage="stack"] .gal:hover{--gap:42px;}}
   }
   [data-stage="stack"] .gal-row{display:contents;}
   [data-stage="stack"] .tile{
@@ -370,7 +373,7 @@
     color:var(--ink-2);cursor:pointer;
     transition:background .18s var(--ease-out),color .18s var(--ease-out);
   }
-  .ctl:hover{background:var(--line-2);color:var(--ink);}
+  @media (hover:hover) and (pointer:fine){.ctl:hover{background:var(--line-2);color:var(--ink);}}
   .ctl:disabled{opacity:.32;cursor:default;background:none;}
   .ctl:focus-visible{outline:2px solid var(--ink);outline-offset:-4px;}
   .ctl svg{width:18px;height:18px;fill:currentColor;flex:none;}
@@ -414,7 +417,7 @@
     -webkit-tap-highlight-color:transparent;outline:none;
     transition:background .2s var(--ease-out),color .2s var(--ease-out);
   }
-  .undo:hover{background:var(--line-2);color:var(--ink);}
+  @media (hover:hover) and (pointer:fine){.undo:hover{background:var(--line-2);color:var(--ink);}}
   .undo:active{scale:.96;}
   .undo:focus-visible{box-shadow:inset 0 0 0 1px var(--line),0 0 0 3px var(--ink);}
   .undo svg{width:15px;height:15px;fill:currentColor;flex:none;}
@@ -428,7 +431,7 @@
     -webkit-tap-highlight-color:transparent;outline:none;
     transition:background .2s var(--ease-out),color .2s var(--ease-out);
   }
-  .bin:hover:not(:disabled){background:var(--line-2);color:var(--ink);}
+  @media (hover:hover) and (pointer:fine){.bin:hover:not(:disabled){background:var(--line-2);color:var(--ink);}}
   .bin:active:not(:disabled){scale:.94;}
   .bin:disabled{color:var(--mut);cursor:default;}
   .bin svg{
@@ -572,14 +575,17 @@
      no border, firmer on hover. -webkit- rules only for Safari. */
   :root{--scroll-thumb:color-mix(in srgb,var(--ink,#161616) 14%,transparent);--scroll-thumb-hover:color-mix(in srgb,var(--ink,#161616) 32%,transparent);}
   *{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent;}
-  *:hover{scrollbar-color:var(--scroll-thumb-hover) transparent;}
+  @media (hover:hover) and (pointer:fine){*:hover{scrollbar-color:var(--scroll-thumb-hover) transparent;}}
   @supports not (scrollbar-color:auto){
     ::-webkit-scrollbar{width:10px;height:10px;background:transparent;}
     ::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent;border:0;box-shadow:none;}
     ::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb);background-clip:padding-box;border:3px solid transparent;border-radius:99px;}
-    :hover::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb-hover);}
+    @media (hover:hover) and (pointer:fine){:hover::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb-hover);}}
     ::-webkit-scrollbar-button{display:none;}
   }
+
+  /* no grey flash on tap; presses answer with their own :active state */
+  a,button,summary,label{-webkit-tap-highlight-color:transparent;}
 </style>
 <!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#ffffff">
 <title>Ravindra - Designs that convert</title>
 <!-- PNG, not the .webp the nav uses: Safari does not accept a WebP favicon,
      and iOS composites any transparency in apple-touch-icon to solid BLACK.
@@ -135,7 +136,7 @@
   #runway{height:100vh;position:relative;}
 
   canvas#gl{
-    position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;
+    position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;display:block;z-index:0;
   }
 
   /* ---------- the code field ----------
@@ -197,7 +198,7 @@
     background:var(--paper);
     border-bottom:1px solid var(--line);
     transform:translateY(0);
-    transition:transform .32s cubic-bezier(.22,1,.36,1);
+    transition:transform .24s cubic-bezier(.22,1,.36,1);
   }
   /* Pinned for the first 5% of the document, then tucks on a downward scroll
      and returns on an upward one - driven by the header IIFE at the foot of
@@ -221,7 +222,7 @@
     color:var(--ink);text-decoration:none;opacity:.65;transition:opacity .2s;
     display:inline-flex;align-items:center;min-height:44px;
   }
-  nav a:hover{opacity:1;}
+  @media (hover:hover) and (pointer:fine){nav a:hover{opacity:1;}}
 
   /* ---------- hero copy ---------- */
   /* The inner .wrap is the same container every section below uses, so the
@@ -509,7 +510,7 @@
   /* Phosphor arrows, inlined and sized in em so each one tracks the type it
      sits in rather than needing a size per context */
   .icon{width:1em;height:1em;fill:currentColor;flex:none;vertical-align:-.125em;}
-  .define-t:hover,.define-t[aria-expanded="true"]{color:var(--ink-2);}
+  .define-t[aria-expanded="true"]{color:var(--ink-2);} @media (hover:hover) and (pointer:fine){.define-t:hover{color:var(--ink-2);}}
   .define-box{
     position:absolute;z-index:20;left:0;top:calc(100% + 10px);
     width:max-content;max-width:min(400px,78vw);
@@ -541,12 +542,12 @@
   .did li::before{content:"→";position:absolute;left:0;color:var(--ink-3);}
 
   /* ---- scroll-reveal motion (hero-matched easing) ---- */
-  .rv{opacity:0;transform:translateY(38px);filter:blur(7px);
-      transition:opacity .95s cubic-bezier(.22,1,.36,1),transform .95s cubic-bezier(.22,1,.36,1),filter .95s ease;}
-  .rv.in{opacity:1;transform:translateY(0);filter:blur(0);}
-  .rv-vis{transform:translateY(46px) scale(.965);}
+  .rv{opacity:0;transform:translateY(12px);
+      transition:opacity .4s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1);}
+  .rv.in{opacity:1;transform:translateY(0);}
+  .rv-vis{transform:translateY(12px) scale(.985);}
   .rv-vis.in{transform:translateY(0) scale(1);}
-  .rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
+  .rv-d1{transition-delay:.03s}.rv-d2{transition-delay:.06s}.rv-d3{transition-delay:.09s}
   @media (prefers-reduced-motion:reduce){
     .rv,.rv-vis{opacity:1;transform:none;filter:none;transition:none;}
     .case-link,.case-link .icon,.contact-actions a,nav a,.define-t{transition:none;}
@@ -579,11 +580,12 @@
     font-size:var(--t-body);text-decoration:none;
     color:var(--paper);background:var(--ink);
     padding:12px 28px;border-radius:var(--r-pill);letter-spacing:.02em;
-    transition:background .25s ease;
+    transition:background .25s ease, scale 160ms cubic-bezier(.22,1,.36,1);
   }
-  .case-link .icon{transition:transform .45s cubic-bezier(.22,1,.36,1);}
-  .case-link:hover{background:var(--ink-hover);}
-  .case-link:hover .icon{transform:translateX(3px);}
+  .case-link:active{scale:.97;}
+  .case-link .icon{transition:transform .2s cubic-bezier(.22,1,.36,1);}
+  @media (hover:hover) and (pointer:fine){.case-link:hover{background:var(--ink-hover);}}
+  @media (hover:hover) and (pointer:fine){.case-link:hover .icon{transform:translateX(3px);}}
 
   /* ---- mockup panels ---- */
   /* flat panel fill and no lift - the mockup is read, not clicked */
@@ -641,8 +643,9 @@
   .vid-start .ring{
     position:relative;display:grid;place-items:center;width:88px;height:88px;
     border-radius:var(--r-pill);background:var(--ink);
-    transition:transform .45s cubic-bezier(.22,1,.36,1),background .25s ease;
+    transition:transform .45s cubic-bezier(.22,1,.36,1),background .25s ease,scale 160ms cubic-bezier(.22,1,.36,1);
   }
+  .vid-start:active .ring{scale:.97;}
   /* Optical centre. Phosphor's triangle spans x 64-240 of 256, so its box
      sits 24 units right of centre and its centroid 5 units left. Halfway
      between the two (+9.5) is where a triangle reads as centred, so the
@@ -661,7 +664,7 @@
     0%{transform:scale(1);opacity:.7;}
     100%{transform:scale(1.7);opacity:0;}
   }
-  .vid-start:hover .ring{transform:scale(1.05);background:var(--ink-hover);}
+  @media (hover:hover) and (pointer:fine){.vid-start:hover .ring{transform:scale(1.05);background:var(--ink-hover);}}
   .vid-start:focus-visible{outline:2px solid var(--ink);outline-offset:-6px;border-radius:var(--r-lg);}
 
   /* playing state: one solid ink pill, the Explore Case Study shape */
@@ -678,9 +681,10 @@
   .vid-btn{
     display:grid;place-items:center;width:88px;height:44px;min-height:44px;
     border:0;border-radius:var(--r-pill);background:none;color:var(--paper);cursor:pointer;
-    font-size:var(--t-sub);transition:background .25s ease;
+    font-size:var(--t-sub);transition:background .25s ease, scale 160ms cubic-bezier(.22,1,.36,1);
   }
-  .vid-btn:hover{background:var(--ink-hover);}
+  .vid-btn:active{scale:.97;}
+  @media (hover:hover) and (pointer:fine){.vid-btn:hover{background:var(--ink-hover);}}
   .vid-btn:focus-visible{outline:2px solid var(--paper);outline-offset:-4px;}
   /* each button holds both glyphs; the state class picks one */
   .vid-btn .alt{display:none;}
@@ -709,7 +713,7 @@
   .about-grid p strong{color:var(--ink);font-weight:600;}
   /* inline prose link - ported verbatim from .facts a in case-viewryt.html */
   .about-grid p a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--tint) 55%, transparent);transition:border-color .25s,color .25s;}
-  .about-grid p a:hover{color:var(--ink);border-bottom-color:var(--ink-3);}
+  @media (hover:hover) and (pointer:fine){.about-grid p a:hover{color:var(--ink);border-bottom-color:var(--ink-3);}}
   /* The skills taglist used to sit here; the column now holds the mark, framed
      on a wall. Top-aligned so it reads against the first paragraph rather than
      stretching down the whole prose column. */
@@ -726,7 +730,7 @@
   /* margin, not padding: the grid is exactly one viewport tall */
   #contact{padding:0;margin-top:var(--case-pad);}
   .gridsec{
-    position:relative;height:100vh;width:100%;
+    position:relative;height:100vh;height:100svh;width:100%;
     background:var(--paper);overflow:hidden;
   }
   .field{
@@ -794,6 +798,7 @@
     display:grid;place-items:center;
     pointer-events:none;text-align:center;
     padding:calc(100vh * 4 / 14) calc(25% + 24px) calc(100vh * 5 / 14);
+    padding:calc(100svh * 4 / 14) calc(25% + 24px) calc(100svh * 5 / 14);
   }
   /* opacity alone is not enough to hide these. Both layers stay in the
      accessibility tree at opacity 0, so a screen reader reads the contact pitch
@@ -832,12 +837,13 @@
   .contact-actions a{
     display:inline-flex;align-items:center;gap:10px;min-height:44px;
     text-decoration:none;font-size:var(--t-body);padding:12px 32px;border-radius:var(--r-pill);letter-spacing:.02em;
-    transition:background .25s ease, border-color .25s ease, color .25s ease;
+    transition:background .25s ease, border-color .25s ease, color .25s ease, scale 160ms cubic-bezier(.22,1,.36,1);
   }
+  .contact-actions a:active{scale:.97;}
   .contact-actions .primary{background:var(--ink);color:var(--paper);}
-  .contact-actions .primary:hover{background:var(--ink-hover);}
+  @media (hover:hover) and (pointer:fine){.contact-actions .primary:hover{background:var(--ink-hover);}}
   .contact-actions .ghost{border:1px solid var(--line-2);color:var(--ink);}
-  .contact-actions .ghost:hover{border-color:var(--ink-3);color:var(--ink-2);}
+  @media (hover:hover) and (pointer:fine){.contact-actions .ghost:hover{border-color:var(--ink-3);color:var(--ink-2);}}
   /* The lockup alone, centred - and hidden. It sits out of flow at the very
      bottom of #content, UNDER the last stretch of the closing grid, so the
      page ends on the grid's edge and the mark only shows when the overscroll
@@ -891,7 +897,7 @@
        caption is centred on the section too, so the two have to agree or the
        headline lands on top of a tile. */
     .field{grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(18,1fr);}
-    .cap{padding:calc(100vh * 6 / 18) 6vw;}
+    .cap{padding:calc(100vh * 6 / 18) 6vw;padding:calc(100svh * 6 / 18) 6vw;}
     .pitch h2{margin-bottom:24px;}
   }
   @media (max-width:900px){
@@ -936,14 +942,17 @@
      no border, firmer on hover. -webkit- rules only for Safari. */
   :root{--scroll-thumb:color-mix(in srgb,var(--ink,#161616) 14%,transparent);--scroll-thumb-hover:color-mix(in srgb,var(--ink,#161616) 32%,transparent);}
   *{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) transparent;}
-  *:hover{scrollbar-color:var(--scroll-thumb-hover) transparent;}
+  @media (hover:hover) and (pointer:fine){*:hover{scrollbar-color:var(--scroll-thumb-hover) transparent;}}
   @supports not (scrollbar-color:auto){
     ::-webkit-scrollbar{width:10px;height:10px;background:transparent;}
     ::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent;border:0;box-shadow:none;}
     ::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb);background-clip:padding-box;border:3px solid transparent;border-radius:99px;}
-    :hover::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb-hover);}
+    @media (hover:hover) and (pointer:fine){:hover::-webkit-scrollbar-thumb{background-color:var(--scroll-thumb-hover);}}
     ::-webkit-scrollbar-button{display:none;}
   }
+
+  /* no grey flash on tap; presses answer with their own :active state */
+  a,button,summary,label{-webkit-tap-highlight-color:transparent;}
 </style>
 <!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
