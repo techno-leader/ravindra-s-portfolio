@@ -150,14 +150,13 @@
   .wrap{max-width:1080px;margin:0 auto;padding:0 44px;}
 
   header{position:relative;padding:180px 0 90px;overflow:hidden;}
-  header::before{
-    content:"";position:absolute;inset:0;z-index:-2;
-    background:radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--tint) 16%, transparent) 1px, transparent 1.6px);
-    background-size:11px 11px;
-    -webkit-mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
-            mask-image:radial-gradient(720px 560px at 82% 20%, #000 0%, transparent 72%);
-  }
-  #orb{position:absolute;right:-70px;top:40px;width:520px;height:520px;z-index:-1;opacity:.9;}
+  /* the case's own thumbnail, faint and slow, where the dithered orb was.
+     The wrapper carries the view-transition name, so the home card's field
+     grows into this spot when the case is opened; the canvas carries the
+     opacity, so the snapshot fades from the card's full ink to this. */
+  .hero-fx{position:absolute;right:-60px;top:56px;width:640px;aspect-ratio:4/3;z-index:-1;pointer-events:none;
+           view-transition-name:fx-viewryt;}
+  .hero-fx canvas{display:block;width:100%;height:100%;opacity:.3;}
   h1{
     font-family:var(--sans);
     /* stepped, not fluid: a clamp would slide through sizes that are not on the
@@ -488,7 +487,8 @@
     /* four across in a 812px column is ~190px per ad, below the point where
        the headline inside each one is legible. Two rows of two instead. */
     .ads img{flex:1 1 calc(50% - 12px);}
-    #orb{opacity:.4;}
+    .hero-fx{width:min(640px,120vw);right:-30vw;top:40px;}
+    .hero-fx canvas{opacity:.18;}
   }
   @media (max-width:640px){
     /* h1 and h2 were both 40px here, which flattened the two. The 32px step
@@ -523,6 +523,17 @@
 
   /* no grey flash on tap; presses answer with their own :active state */
   a,button,summary,label{-webkit-tap-highlight-color:transparent;}
+
+  /* ---- page to page ----
+     Opening a case morphs its home card's field into the faint field behind
+     the case title (the two share a view-transition name); the nav holds
+     still and the rest crossfades. Browsers without cross-document view
+     transitions simply navigate. */
+  @view-transition{navigation:auto;}
+  nav{view-transition-name:site-nav;}
+  ::view-transition-group(*){animation-duration:.65s;animation-timing-function:cubic-bezier(.22,1,.36,1);}
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.4s;}
+  @media (prefers-reduced-motion:reduce){@view-transition{navigation:none;}}
 </style>
 <!-- Microsoft Clarity - visits, heatmaps and session recordings for heyrav.in -->
 <script type="text/javascript">
@@ -544,7 +555,7 @@
 </nav>
 
 <header>
-  <canvas id="orb" width="520" height="520"></canvas>
+  <div class="hero-fx" aria-hidden="true"><canvas class="fx" data-fx="eye" data-mode="bg" data-speed=".35"></canvas></div>
   <div class="wrap">
     <h1 class="rv">Same copy. Same product. <em>Different design.</em></h1>
     <p class="lede rv rv-d1">At The Ayurveda Experience (TAE) we run performance marketing driven ads and long form sales pages. This is an example of landing page CRO redesign I did for ViewRyt an eye supplement by TAE.</p>
@@ -832,27 +843,6 @@
 </main>
 
 <script>
-/* ---- one-shot Bayer-dithered orb ---- */
-(function(){
-  const c = document.getElementById('orb'), x = c.getContext('2d');
-  const W = c.width, H = c.height, cell = 5;
-  const B = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
-  const cols = ['#939393','#b9b9b9','#dedede'];
-  for(let py=0; py<H; py+=cell){
-    for(let px=0; px<W; px+=cell){
-      const dx=(px-W*0.48)/(W*0.44), dy=(py-H*0.5)/(H*0.4);
-      let v = 1 - Math.sqrt(dx*dx+dy*dy);
-      v += 0.18*Math.sin(px*0.028+2.0)+0.12*Math.cos(py*0.033-px*0.01);
-      if(v<=0) continue;
-      const t = B[(py/cell)&3][(px/cell)&3]/16;
-      if(v>t){
-        x.fillStyle = v>t+0.45 ? cols[0] : (v>t+0.2 ? cols[1] : cols[2]);
-        x.beginPath();x.arc(px,py,cell*0.34,0,7);x.fill();
-      }
-    }
-  }
-})();
-
 /* ---- annotated phone-scroll sync ---- */
 (function(){
   const sc = document.getElementById('scrolly');
@@ -1198,5 +1188,7 @@ document.querySelectorAll('.ev-scrolly').forEach(evidenceReel);
   apply();
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/case-fx.js"></script>
 </body>
 </html>
