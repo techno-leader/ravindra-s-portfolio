@@ -1229,7 +1229,20 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
   layout();
 })();
 </script>
+<script>
+/* The morph belongs to arriving. Leaving a case drops this field's
+   view-transition name just before the page is captured, so going back
+   home is a plain crossfade; it is restored whenever the page is shown
+   again (a forward visit out of history still morphs in). */
+(function(){
+  const f = document.querySelector('.hero-fx');
+  if(!f) return;
+  addEventListener('pageswap', () => { f.style.viewTransitionName = 'none'; });
+  addEventListener('pagereveal', () => { f.style.viewTransitionName = ''; });
+  addEventListener('pageshow', () => { f.style.viewTransitionName = ''; });
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="assets/case-fx.js"></script>
+<script src="assets/case-fx.js?v=b4f071b087"></script>
 </body>
 </html>
