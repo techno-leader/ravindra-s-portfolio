@@ -6,6 +6,9 @@
    Use:  window.windowLightConfig = WindowLightStyles['mono-canopy'];
          then load window-light.js with data-mount. */
 window.WindowLightStyles = {
+  // the engine's own defaults: window frame and leaves swaying outside, mostly lit,
+  // on the visitor's clock - the first look, from the screen recording
+  'window-leaves': {},
   // dappled morning canopy in grey light, with shafts, grain and a little rainbow fringe
   'mono-canopy': {
     pattern: 'canopy', hour: 9.25, palette: 'mono', sun: '#fff6e8',
