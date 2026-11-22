@@ -1,0 +1,24 @@
+{
+ "site": "heyrav.in",
+ "repo": "techno-leader/ravindra-s-portfolio",
+ "made": "2026-11-22T02:56:57.549Z",
+ "changes": [
+  {
+   "id": "qx8oyxo",
+   "slug": "case-irbs",
+   "src": "case-irbs.html",
+   "type": "text",
+   "kind": "",
+   "tag": "p",
+   "ord": 1,
+   "outer": "<p><strong>No time restrictions, confusing UI, and near-zero admin control</strong> meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.</p>",
+   "nth": 0,
+   "before": "<strong>No time restrictions, confusing UI, and near-zero admin control</strong> meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.",
+   "after": "<strong>No time restrictions, confusing UI, and nearly zero admin control</strong> meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.",
+   "was": "No time restrictions, confusing UI, and near-zero admin control meant rooms were double-booked, hoarded, or simply grabbed by whoever showed up first.",
+   "at": 1795316210497,
+   "url": "/case-irbs.html"
+  }
+ ],
+ "notes": []
+}
