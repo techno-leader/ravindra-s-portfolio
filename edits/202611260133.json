@@ -1,0 +1,72 @@
+{
+ "site": "heyrav.in",
+ "repo": "techno-leader/ravindra-s-portfolio",
+ "made": "2026-11-26T01:33:41.290Z",
+ "changes": [
+  {
+   "id": "5fz4gc6",
+   "slug": "index",
+   "src": "index.html",
+   "type": "text",
+   "kind": "",
+   "tag": "h3",
+   "ord": 1,
+   "outer": "<h3>Dentomate - killing the \"WhatsApp tax\" for Indian dental clinics</h3>",
+   "nth": 0,
+   "before": "Dentomate - killing the \"WhatsApp tax\" for Indian dental clinics",
+   "after": "Dentomate - a CRM solution for Indian dental clinics",
+   "was": "Dentomate - killing the \"WhatsApp tax\" for Indian dental clinics",
+   "at": 1795656283128,
+   "url": "/index.html"
+  },
+  {
+   "id": "lg45ztx",
+   "slug": "index",
+   "src": "index.html",
+   "type": "text",
+   "kind": "",
+   "tag": "p",
+   "ord": 1,
+   "outer": "<p>A platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month \"WhatsApp tax\" Indian dental clinics pay to message patients - and bring them back automatically.</p>",
+   "nth": 0,
+   "before": "A platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month \"WhatsApp tax\" Indian dental clinics pay to message patients - and bring them back automatically.",
+   "after": "A platform I <strong>founded, designed and built</strong> to end the ₹6–15k/month WhatsApp bills Indian dental clinics pay to message patients - and bring them back automatically.",
+   "was": "A platform I founded, designed and built to end the ₹6–15k/month \"WhatsApp tax\" Indian dental clinics pay to message patients - and bring them back automatically.",
+   "at": 1795656311753,
+   "url": "/index.html"
+  },
+  {
+   "id": "cklhjlz",
+   "slug": "index",
+   "src": "index.html",
+   "type": "text",
+   "kind": "",
+   "tag": "h3",
+   "ord": 3,
+   "outer": "<h3>TAE Ad Studio - from one brief to every market</h3>",
+   "nth": 0,
+   "before": "TAE Ad Studio - from one brief to every market",
+   "after": "TAE Ad Studio - agentic engine for Meta ads",
+   "was": "TAE Ad Studio - from one brief to every market",
+   "at": 1795656464169,
+   "url": "/index.html"
+  },
+  {
+   "id": "xs7kzwz",
+   "slug": "index",
+   "src": "index.html",
+   "type": "text",
+   "kind": "",
+   "tag": "p",
+   "ord": 3,
+   "outer": "<p>An app concept I <strong>ideated and built</strong> that grew into an agentic content engine. It reads performance data and makes on-brand ads that convert. The app helps conceptualize, makes variants, translates for different geographies and learns from every round of feedback.</p>",
+   "nth": 0,
+   "before": "An app concept I <strong>ideated and built</strong> that grew into an agentic content engine. It reads performance data and makes on-brand ads that convert. The app helps conceptualize, makes variants, translates for different geographies and learns from every round of feedback.",
+   "after": "An app concept I <strong>ideated and built</strong> that grew into an agentic content engine. It reads performance data and makes on-brand ads that convert. Actively used to make variants, accurate translations for different languages with 80+ ads on peak days.",
+   "was": "An app concept I ideated and built that grew into an agentic content engine. It reads performance data and makes on-brand ads that convert. The app helps conceptualize, makes variants, translates for different geographies and learns from every round of feedback.",
+   "at": 1795656779487,
+   "url": "/index.html"
+  }
+ ],
+ "notes": []
+}
